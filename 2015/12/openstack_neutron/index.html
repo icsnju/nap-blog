@@ -44,20 +44,20 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
-  <div class="post-content">
-    <header>
-      
+<div class="post-content">
+  <header>
+    
   
     <h1 class="title">OpenStack平台Neutron服务初探</h1>
   
 
-      
-        <time datetime="2015-12-01T16:00:00.000Z">2015-12-02</time>
-      
-    </header>
-    <div class="entry">
-      
-        <blockquote>
+    
+      <time datetime="2015-12-01T16:00:00.000Z">2015-12-02</time>
+    
+  </header>
+<div class="entry">
+  
+    <blockquote>
 <p>之前搭建了一个两个结点的OpenStack集群，老板说太简单了太low了，于是最近又重新搭建了一个四个结点的OpenStack集群。其中包含一个Controller结点，一个Network结点和两个Compute结点。其中Network结点主要运行OpenStack中的网络服务，即Neutron组件。下面对这个集群的部署过程做一下总结，并且简单介绍一下Neutron服务。</p>
 </blockquote>
 <a id="more"></a>
@@ -126,33 +126,58 @@
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过这两天的尝试，感觉OpenStack的灵活性很高。就像我们这一次把Neutron服务从Controller结点迁移到Network结点，都是直接把网络代理从这边关闭，到那边打开就可以。给我的感觉就像是传说中的那种可以在硬件层面上组装的手机，需要什么零件自己选择。</p>
 <p>还有一点就是，在出现错误时，我目前都是看log的。log的目录是在/var/log/$(service)/*.log中，每次都查看最近更新过的log，然后看里面有什么错误之类的。</p>
 
-      
-    </div>
-      
-      <footer>
-        
+  
+</div>
+
+  <footer>
+  
   
   <div class="categories">
-    <a href="/categories/OpenStack/">OpenStack</a>
+  类别： <a href="/categories/OpenStack/">OpenStack</a>
   </div>
 
-        
+
+  
   
   <div class="tags">
-    <a href="/tags/OpenStack/">OpenStack</a>, <a href="/tags/Neutron/">Neutron</a>
+  Tags： <a href="/tags/OpenStack/">OpenStack</a>, <a href="/tags/Neutron/">Neutron</a>
   </div>
 
+
+  
+  <br />
+  <hr />
+  <br />
+  
+<nav id="article-nav">
+  <div class="article-nav-title">
+  
+    <a style="color:black" href="/2015/12/zookeeper-note/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">新文章: </strong>
         
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
+          ZooKeeper 学习笔记
+        
+    </a>
+  
+  
+      <a style="float:right;color:black" href="/2015/11/openstack_floating_ip/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">旧文章: </strong>
+        
+          OpenStack平台手动搭建以及floating-ip的使用
+        
+      </a>
+  
+    </div>
+</nav>
+
+
+  
+
+  <div class="clearfix"></div>
+</footer>
+</div>
 </article>
 
-
-<section id="comment">
-  
-</section>
 
 
 </div></div>
@@ -185,11 +210,13 @@
     <div class="clearfix"></div>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
+  <a href=http://blog.nxap.org>NAP - Next Application Platform</a> &nbsp;
   
   &copy; 2017 NAP Group
   
 </div>
-<div class="clearfix"></div></footer>
+<div class="clearfix"></div>
+</footer>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 

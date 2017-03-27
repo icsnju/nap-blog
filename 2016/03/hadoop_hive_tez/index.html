@@ -44,20 +44,20 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
-  <div class="post-content">
-    <header>
-      
+<div class="post-content">
+  <header>
+    
   
     <h1 class="title">Hadoop, Hive, Tez 搭建笔记</h1>
   
 
-      
-        <time datetime="2016-03-14T16:00:00.000Z">2016-03-15</time>
-      
-    </header>
-    <div class="entry">
-      
-        <p>详细介绍了一个Hadoop，Hive和Tez集群的搭建过程。</p>
+    
+      <time datetime="2016-03-14T16:00:00.000Z">2016-03-15</time>
+    
+  </header>
+<div class="entry">
+  
+    <p>详细介绍了一个Hadoop，Hive和Tez集群的搭建过程。</p>
 <a id="more"></a>
 <hr>
 <h1 id="Hadoop-Hive-Tez-搭建"><a href="#Hadoop-Hive-Tez-搭建" class="headerlink" title="Hadoop Hive Tez 搭建"></a>Hadoop Hive Tez 搭建</h1><p>集群192.168.100.[205-220],主节点205,其余为从节点，以用户experiment为例</p>
@@ -99,33 +99,51 @@
 <h3 id="修改tez-site-xml"><a href="#修改tez-site-xml" class="headerlink" title="修改tez-site.xml"></a>修改tez-site.xml</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;tez.lib.uris&lt;/name&gt;</div><div class="line">        &lt;value&gt;$&#123;fs.defaultFS&#125;/apps/tez-0.8.2.tar.gz&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;tez.use.cluster.hadoop-libs&lt;/name&gt;</div><div class="line">        &lt;value&gt;false&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
 <h3 id="在hive中使用tez"><a href="#在hive中使用tez" class="headerlink" title="在hive中使用tez"></a>在hive中使用tez</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">hive</div><div class="line"></div><div class="line">hive &gt; set hive.execution.engine=tez;</div><div class="line">	 &gt;</div></pre></td></tr></table></figure>
 
-      
-    </div>
-      
-      <footer>
-        
+  
+</div>
+
+  <footer>
+  
   
   <div class="categories">
-    <a href="/categories/大数据/">大数据</a>
+  类别： <a href="/categories/大数据/">大数据</a>
   </div>
 
-        
+
+  
   
   <div class="tags">
-    <a href="/tags/hadoop/">hadoop</a>, <a href="/tags/Hive/">Hive</a>, <a href="/tags/Tez/">Tez</a>
+  Tags： <a href="/tags/hadoop/">hadoop</a>, <a href="/tags/Hive/">Hive</a>, <a href="/tags/Tez/">Tez</a>
   </div>
 
+
+  
+  <br />
+  <hr />
+  <br />
+  
+<nav id="article-nav">
+  <div class="article-nav-title">
+  
+  
+      <a style="float:right;color:black" href="/2016/01/nap-doc/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">旧文章: </strong>
         
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
+          NAP使用手册
+        
+      </a>
+  
+    </div>
+</nav>
+
+
+  
+
+  <div class="clearfix"></div>
+</footer>
+</div>
 </article>
 
-
-<section id="comment">
-  
-</section>
 
 
 </div></div>
@@ -158,11 +176,13 @@
     <div class="clearfix"></div>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
+  <a href=http://blog.nxap.org>NAP - Next Application Platform</a> &nbsp;
   
   &copy; 2017 NAP Group
   
 </div>
-<div class="clearfix"></div></footer>
+<div class="clearfix"></div>
+</footer>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 

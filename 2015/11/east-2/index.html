@@ -44,20 +44,20 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
-  <div class="post-content">
-    <header>
-      
+<div class="post-content">
+  <header>
+    
   
     <h1 class="title">HBase ORM以及schema设计</h1>
   
 
-      
-        <time datetime="2015-11-08T08:00:32.000Z">2015-11-08</time>
-      
-    </header>
-    <div class="entry">
-      
-        <p>近期在做从oracle到HBase的数据库迁移，接触到了ORM以及如何设计HBase的schema，下面把这几天的学习成果记录下来。</p>
+    
+      <time datetime="2015-11-08T08:00:32.000Z">2015-11-08</time>
+    
+  </header>
+<div class="entry">
+  
+    <p>近期在做从oracle到HBase的数据库迁移，接触到了ORM以及如何设计HBase的schema，下面把这几天的学习成果记录下来。</p>
 <a id="more"></a>
 <hr>
 <h1 id="schema设计"><a href="#schema设计" class="headerlink" title="schema设计"></a>schema设计</h1><p>schema我的理解就是把逻辑上的数据模型和物理上的存储实现结合起来。考虑到nosql最大的特点在于横向扩展方便，结合HBase按列存储的特点（同一个column family，CF）存储在同一个store中，它的schema（schema用词可能不准，因为它是schemaless的）设计主要考虑如何扩展方便、如何减少存储/查询开销。一般有如下三条设计原则Denormalization、Duplication和Intelligent Keys。</p>
@@ -75,33 +75,58 @@
 <p>这些@符号就把该类中的属性映射到HBase中了，至于数据库连接和class与CF的映射通常是通过xml文件来描述。</p>
 <h1 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h1><p>1、根据先有对象的逻辑，再设计HBase，其实考虑的就是业务需求，把哪些字段放在一起，rowkey怎么设计，哪些需要join合并起来等等。<br>2、迁移数据的话肯定是设计好schema然后抽数据(不会通过两次ORM来迁移)，ORM只是说在开发过程中层次分离，偏向于数据库开发，而不是数据库迁移。<br>所以感觉这两个不是同一个东西= =||</p>
 
-      
-    </div>
-      
-      <footer>
-        
+  
+</div>
+
+  <footer>
+  
   
   <div class="categories">
-    <a href="/categories/east/">east</a>
+  类别： <a href="/categories/east/">east</a>
   </div>
 
-        
+
+  
   
   <div class="tags">
-    <a href="/tags/ORM/">ORM</a>, <a href="/tags/nosql/">nosql</a>, <a href="/tags/schema/">schema</a>
+  Tags： <a href="/tags/ORM/">ORM</a>, <a href="/tags/nosql/">nosql</a>, <a href="/tags/schema/">schema</a>
   </div>
 
+
+  
+  <br />
+  <hr />
+  <br />
+  
+<nav id="article-nav">
+  <div class="article-nav-title">
+  
+    <a style="color:black" href="/2015/11/nap-restapi/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">新文章: </strong>
         
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
+          Restful Api for NAP
+        
+    </a>
+  
+  
+      <a style="float:right;color:black" href="/2015/11/nap-compose-2/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">旧文章: </strong>
+        
+          跨主机的docker容器编排 nap-compose （二）
+        
+      </a>
+  
+    </div>
+</nav>
+
+
+  
+
+  <div class="clearfix"></div>
+</footer>
+</div>
 </article>
 
-
-<section id="comment">
-  
-</section>
 
 
 </div></div>
@@ -134,11 +159,13 @@
     <div class="clearfix"></div>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
+  <a href=http://blog.nxap.org>NAP - Next Application Platform</a> &nbsp;
   
   &copy; 2017 NAP Group
   
 </div>
-<div class="clearfix"></div></footer>
+<div class="clearfix"></div>
+</footer>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 

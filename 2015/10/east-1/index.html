@@ -44,20 +44,20 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
-  <div class="post-content">
-    <header>
-      
+<div class="post-content">
+  <header>
+    
   
     <h1 class="title">east数据质量合规分析（一）</h1>
   
 
-      
-        <time datetime="2015-10-23T11:04:22.000Z">2015-10-23</time>
-      
-    </header>
-    <div class="entry">
-      
-        <p>关于第一次讨论east数据质量合规分析的记录</p>
+    
+      <time datetime="2015-10-23T11:04:22.000Z">2015-10-23</time>
+    
+  </header>
+<div class="entry">
+  
+    <p>关于第一次讨论east数据质量合规分析的记录</p>
 <a id="more"></a>
 <hr>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>中国银监会会检查各银行的存、贷款数据是否合规，于是银行自己要先检查一遍。银行外包给某K公司，某K公司根据中国银监会监管数据标准化数据结构建立了一个数据库，称为MODEL库，共79张表。某K定时从银行的数据库（称为ODS）抽取、合并、筛选得到MODEL库，在MODEL库的基础上做数据质量合规分析。</p>
@@ -71,33 +71,58 @@
 <p>模型说明：这里只是筛选出数据，这个模型本身并不违法，但是可以进一步挖掘，看有没有做洗钱等非法的事情。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>模型理解起来应该不难，基本都是一条select语句，关键是理解业务逻辑和有关银行知识，比如很多都是对资金流向的检查，这就要对相关知识比较熟悉。技术方面，sql可以优化，有的结果集可以用R做进一步的数据挖掘。</p>
 
-      
-    </div>
-      
-      <footer>
-        
+  
+</div>
+
+  <footer>
+  
   
   <div class="categories">
-    <a href="/categories/east/">east</a>
+  类别： <a href="/categories/east/">east</a>
   </div>
 
-        
+
+  
   
   <div class="tags">
-    <a href="/tags/east/">east</a>
+  Tags： <a href="/tags/east/">east</a>
   </div>
 
+
+  
+  <br />
+  <hr />
+  <br />
+  
+<nav id="article-nav">
+  <div class="article-nav-title">
+  
+    <a style="color:black" href="/2015/11/restful-note/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">新文章: </strong>
         
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
+          Restful API浅析 之设计原则与案例修正
+        
+    </a>
+  
+  
+      <a style="float:right;color:black" href="/2015/10/books/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">旧文章: </strong>
+        
+          我们的书架
+        
+      </a>
+  
+    </div>
+</nav>
+
+
+  
+
+  <div class="clearfix"></div>
+</footer>
+</div>
 </article>
 
-
-<section id="comment">
-  
-</section>
 
 
 </div></div>
@@ -130,11 +155,13 @@
     <div class="clearfix"></div>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
+  <a href=http://blog.nxap.org>NAP - Next Application Platform</a> &nbsp;
   
   &copy; 2017 NAP Group
   
 </div>
-<div class="clearfix"></div></footer>
+<div class="clearfix"></div>
+</footer>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 

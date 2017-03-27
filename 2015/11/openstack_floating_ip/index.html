@@ -44,20 +44,20 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
-  <div class="post-content">
-    <header>
-      
+<div class="post-content">
+  <header>
+    
   
     <h1 class="title">OpenStack平台手动搭建以及floating-ip的使用</h1>
   
 
-      
-        <time datetime="2015-11-19T16:00:00.000Z">2015-11-20</time>
-      
-    </header>
-    <div class="entry">
-      
-        <blockquote>
+    
+      <time datetime="2015-11-19T16:00:00.000Z">2015-11-20</time>
+    
+  </header>
+<div class="entry">
+  
+    <blockquote>
 <p>最近尝试着根据OpenStack官方网站的教程搭建一个简单的OpenStack集群，并且使用floating-ip机制。下面简单对这些工作进行介绍。</p>
 </blockquote>
 <a id="more"></a>
@@ -95,33 +95,58 @@
 <li>在运行的例子中，由于我们最后选择的是第二项网络拓扑，所以运行的实例不论是共有(public instance)的还是私有(private instance)的，都应该可以正常运行。但是我们只能成功运行私有实例，并可以使用floating-ip机制访问进新建的private虚拟机实例。而公共实例却不能正常访问，这是因为虚拟机在启动的时候DHCP没有分配好IP地址，所以尽管我们在DashBoard中发现这个实例已经有了IP地址，但是通过console进入虚拟机之后发现并没有分配正确的ip地址。通过实例的log分析，应该是DHCP的配置出了一些问题，也在网上找了很久，都没有找到解决办法。</li>
 </ul>
 
-      
-    </div>
-      
-      <footer>
-        
+  
+</div>
+
+  <footer>
+  
   
   <div class="categories">
-    <a href="/categories/OpenStack/">OpenStack</a>
+  类别： <a href="/categories/OpenStack/">OpenStack</a>
   </div>
 
-        
+
+  
   
   <div class="tags">
-    <a href="/tags/OpenStack/">OpenStack</a>, <a href="/tags/floating-ip/">floating-ip</a>
+  Tags： <a href="/tags/OpenStack/">OpenStack</a>, <a href="/tags/floating-ip/">floating-ip</a>
   </div>
 
+
+  
+  <br />
+  <hr />
+  <br />
+  
+<nav id="article-nav">
+  <div class="article-nav-title">
+  
+    <a style="color:black" href="/2015/12/openstack_neutron/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">新文章: </strong>
         
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
+          OpenStack平台Neutron服务初探
+        
+    </a>
+  
+  
+      <a style="float:right;color:black" href="/2015/11/fcws-api-doc/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">旧文章: </strong>
+        
+          凤城卫士API文档
+        
+      </a>
+  
+    </div>
+</nav>
+
+
+  
+
+  <div class="clearfix"></div>
+</footer>
+</div>
 </article>
 
-
-<section id="comment">
-  
-</section>
 
 
 </div></div>
@@ -154,11 +179,13 @@
     <div class="clearfix"></div>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
+  <a href=http://blog.nxap.org>NAP - Next Application Platform</a> &nbsp;
   
   &copy; 2017 NAP Group
   
 </div>
-<div class="clearfix"></div></footer>
+<div class="clearfix"></div>
+</footer>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 

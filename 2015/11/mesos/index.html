@@ -44,20 +44,20 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
-  <div class="post-content">
-    <header>
-      
+<div class="post-content">
+  <header>
+    
   
     <h1 class="title">Mesos Framework 解析</h1>
   
 
-      
-        <time datetime="2015-11-07T02:00:00.000Z">2015-11-07</time>
-      
-    </header>
-    <div class="entry">
-      
-        <p>Mesos是Apache旗下的开源集群资源计算框架，它能将多台机器（包括物理机和虚拟机）的资源，包括CPU，内存，硬盘等计算资源抽象出来，进行资源隔离和共享，构建高容错性、高可用性的分布式资源管理系统。</p>
+    
+      <time datetime="2015-11-07T02:00:00.000Z">2015-11-07</time>
+    
+  </header>
+<div class="entry">
+  
+    <p>Mesos是Apache旗下的开源集群资源计算框架，它能将多台机器（包括物理机和虚拟机）的资源，包括CPU，内存，硬盘等计算资源抽象出来，进行资源隔离和共享，构建高容错性、高可用性的分布式资源管理系统。</p>
 <a id="more"></a>
 <hr>
 <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="Mesos-Framework"><a href="#Mesos-Framework" class="headerlink" title="Mesos Framework"></a>Mesos Framework</h3><p>Mesos采用两层架构，所有计算框架均在底层，即Mesos Master负责对任务的资源分配给各个框架；在计算框架之上为Mesos Framework，它可用是通用的框架，也可用为特定软件编写的框架，如Framework一个长时间运行的服务（比如JobTracker等），也可以是一个短生命周期的Job或者Application。这样设计的好处是，<strong>作为底层的Mesos不需要知道顶层的应用的细节，只负责根据slave资源状况提供offers，而调度由顶层的Framework进行实现</strong>，这样底层的Mesos对所有应用（分布式or集中式，长时间服务or短暂性任务等）均可适用。</p>
@@ -201,33 +201,58 @@
 <li><a href="http://people.csail.mit.edu/matei/papers/2011/nsdi_mesos.pdf" target="_blank" rel="external">NSDI 2011 - Mesos: A Platform for Fine-Grained Resource Sharing in the Data Center </a></li>
 </ul>
 
-      
-    </div>
-      
-      <footer>
-        
+  
+</div>
+
+  <footer>
+  
   
   <div class="categories">
-    <a href="/categories/nap/">nap</a>
+  类别： <a href="/categories/nap/">nap</a>
   </div>
 
-        
+
+  
   
   <div class="tags">
-    <a href="/tags/mesos/">mesos</a>
+  Tags： <a href="/tags/mesos/">mesos</a>
   </div>
 
+
+  
+  <br />
+  <hr />
+  <br />
+  
+<nav id="article-nav">
+  <div class="article-nav-title">
+  
+    <a style="color:black" href="/2015/11/nap-compose-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">新文章: </strong>
         
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
+          跨主机的docker容器编排 nap-compose （一）
+        
+    </a>
+  
+  
+      <a style="float:right;color:black" href="/2015/11/rest-api-design/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">旧文章: </strong>
+        
+          Restful API浅析 之设计原则与案例修正
+        
+      </a>
+  
+    </div>
+</nav>
+
+
+  
+
+  <div class="clearfix"></div>
+</footer>
+</div>
 </article>
 
-
-<section id="comment">
-  
-</section>
 
 
 </div></div>
@@ -260,11 +285,13 @@
     <div class="clearfix"></div>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
+  <a href=http://blog.nxap.org>NAP - Next Application Platform</a> &nbsp;
   
   &copy; 2017 NAP Group
   
 </div>
-<div class="clearfix"></div></footer>
+<div class="clearfix"></div>
+</footer>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 

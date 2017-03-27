@@ -44,20 +44,20 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
-  <div class="post-content">
-    <header>
-      
+<div class="post-content">
+  <header>
+    
   
     <h1 class="title">ZooKeeper 学习笔记</h1>
   
 
-      
-        <time datetime="2015-12-09T16:00:00.000Z">2015-12-10</time>
-      
-    </header>
-    <div class="entry">
-      
-        <p>ZooKeeper是一个典型的分布式数据一致性的解决方案，分布式应用可以基于它实现诸如数据发布／订阅、负责均衡、命名服务、分布式协调／通知、<br>集群管理等功能。 ZooKeeper可以保证如下分布式一致性特征。</p>
+    
+      <time datetime="2015-12-09T16:00:00.000Z">2015-12-10</time>
+    
+  </header>
+<div class="entry">
+  
+    <p>ZooKeeper是一个典型的分布式数据一致性的解决方案，分布式应用可以基于它实现诸如数据发布／订阅、负责均衡、命名服务、分布式协调／通知、<br>集群管理等功能。 ZooKeeper可以保证如下分布式一致性特征。</p>
 <a id="more"></a>
 <hr>
 <h2 id="ZooKeeper是什么"><a href="#ZooKeeper是什么" class="headerlink" title="ZooKeeper是什么"></a>ZooKeeper是什么</h2><p>ZooKeeper是一个典型的分布式数据一致性的解决方案，分布式应用可以基于它实现诸如数据发布／订阅、负责均衡、命名服务、分布式协调／通知、<br>集群管理等功能。 ZooKeeper可以保证如下分布式一致性特征。</p>
@@ -256,33 +256,58 @@
 <p>参数说明痛getChildren。一个简单的读取数据实例：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException; </div><div class="line"><span class="keyword">import</span> java.util.concurrent.CountDownLatch; </div><div class="line"> </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.CreateMode; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher.Event.KeeperState; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooDefs.Ids; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper; </div><div class="line"> </div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ZKBootSample</span> <span class="keyword">implements</span> <span class="title">Watcher</span> </span>&#123; </div><div class="line"> </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SESSION_TIMEOUT = <span class="number">10000</span>; </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String CONNECTION_STRING = <span class="string">"127.0.0.1:2181"</span>; </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ZK_PATH = <span class="string">"/nileader"</span>; </div><div class="line">    <span class="keyword">private</span> ZooKeeper zk = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> CountDownLatch connectedSemaphore = <span class="keyword">new</span> CountDownLatch( <span class="number">1</span> );  </div><div class="line"> </div><div class="line"> 	<span class="comment">/** </span></div><div class="line">     * 读取指定节点数据内容 </div><div class="line">     * <span class="doctag">@param</span> path 节点path </div><div class="line">     * <span class="doctag">@return</span> </div><div class="line">     */ </div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">readData</span><span class="params">( String path )</span> </span>&#123; </div><div class="line">        <span class="keyword">try</span> &#123; </div><div class="line">            System.out.println( <span class="string">"获取数据成功，path："</span> + path ); </div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> String( <span class="keyword">this</span>.zk.getData( path, <span class="keyword">false</span>, <span class="keyword">null</span> ) ); </div><div class="line">        &#125; <span class="keyword">catch</span> ( KeeperException e ) &#123; </div><div class="line">            System.out.println( <span class="string">"读取数据失败，发生KeeperException，path: "</span> + path  ); </div><div class="line">            e.printStackTrace(); </div><div class="line">            <span class="keyword">return</span> <span class="string">""</span>; </div><div class="line">        &#125; <span class="keyword">catch</span> ( InterruptedException e ) &#123; </div><div class="line">            System.out.println( <span class="string">"读取数据失败，发生 InterruptedException，path: "</span> + path  ); </div><div class="line">            e.printStackTrace(); </div><div class="line">            <span class="keyword">return</span> <span class="string">""</span>; </div><div class="line">        &#125; </div><div class="line">    &#125; </div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span> </span>&#123; </div><div class="line"> </div><div class="line">        ZKBootSample sample = <span class="keyword">new</span> ZKBootSample(); </div><div class="line">        sample.createConnection( CONNECTION_STRING, SESSION_TIMEOUT ); </div><div class="line"></div><div class="line">        <span class="keyword">if</span> ( sample.createPath( ZK_PATH, <span class="string">"我是节点初始内容"</span> ) ) &#123; </div><div class="line">            <span class="comment">//do something</span></div><div class="line">            System.out.println( <span class="string">"数据内容: "</span> + sample.readData( ZK_PATH ) + <span class="string">"\n"</span> ); </div><div class="line">        &#125; </div><div class="line"> </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
-      
-    </div>
-      
-      <footer>
-        
+  
+</div>
+
+  <footer>
+  
   
   <div class="categories">
-    <a href="/categories/TVDCR/">TVDCR</a>
+  类别： <a href="/categories/TVDCR/">TVDCR</a>
   </div>
 
-        
+
+  
   
   <div class="tags">
-    <a href="/tags/spring/">spring</a>, <a href="/tags/transacion/">transacion</a>, <a href="/tags/dynamic-reconfiguration/">dynamic reconfiguration</a>
+  Tags： <a href="/tags/spring/">spring</a>, <a href="/tags/transacion/">transacion</a>, <a href="/tags/dynamic-reconfiguration/">dynamic reconfiguration</a>
   </div>
 
+
+  
+  <br />
+  <hr />
+  <br />
+  
+<nav id="article-nav">
+  <div class="article-nav-title">
+  
+    <a style="color:black" href="/2015/12/hotSwapAgent-not/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">新文章: </strong>
         
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
+          Hotswap Agent 学习笔记
+        
+    </a>
+  
+  
+      <a style="float:right;color:black" href="/2015/12/openstack_neutron/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">旧文章: </strong>
+        
+          OpenStack平台Neutron服务初探
+        
+      </a>
+  
+    </div>
+</nav>
+
+
+  
+
+  <div class="clearfix"></div>
+</footer>
+</div>
 </article>
 
-
-<section id="comment">
-  
-</section>
 
 
 </div></div>
@@ -315,11 +340,13 @@
     <div class="clearfix"></div>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
+  <a href=http://blog.nxap.org>NAP - Next Application Platform</a> &nbsp;
   
   &copy; 2017 NAP Group
   
 </div>
-<div class="clearfix"></div></footer>
+<div class="clearfix"></div>
+</footer>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 

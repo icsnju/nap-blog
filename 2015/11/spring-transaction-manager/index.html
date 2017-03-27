@@ -48,20 +48,20 @@ Spring事务处理模块实现的统一的事务处理过程。包含了处理�
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
-  <div class="post-content">
-    <header>
-      
+<div class="post-content">
+  <header>
+    
   
     <h1 class="title">Spring Transaction Manager学习笔记</h1>
   
 
-      
-        <time datetime="2015-11-09T16:00:00.000Z">2015-11-10</time>
-      
-    </header>
-    <div class="entry">
-      
-        <p>使用Spring声明式事务处理，是通过结合IoC容器和Spring已有的TransactionProxyFactoryBean来对事务管理进行配置。<br>在TransactionProxyFactoryBean中为事务方法配置传播行为、并发事务隔离级别这些事务处理的属性，<br>从而对声明式事务的处理提供指导。<br>声明式事务处理的实现，大致可以分为以下三个部分：</p>
+    
+      <time datetime="2015-11-09T16:00:00.000Z">2015-11-10</time>
+    
+  </header>
+<div class="entry">
+  
+    <p>使用Spring声明式事务处理，是通过结合IoC容器和Spring已有的TransactionProxyFactoryBean来对事务管理进行配置。<br>在TransactionProxyFactoryBean中为事务方法配置传播行为、并发事务隔离级别这些事务处理的属性，<br>从而对声明式事务的处理提供指导。<br>声明式事务处理的实现，大致可以分为以下三个部分：</p>
 <ul>
 <li>读取和处理在IoC容器中配置的事务处理属性， 并转为Spring事务处理需要的内部数据结构。</li>
 <li>Spring事务处理模块实现的统一的事务处理过程。包含了处理事务配置属性，以及与现场绑定完成事务处理。Spring通过TransactionInfo和TransactionStatus两个数据对象，在事务处理过程中记录和传递相关执行场景。</li>
@@ -91,33 +91,58 @@ Spring事务处理模块实现的统一的事务处理过程。包含了处理�
 <p>TransactionSynchronizationManager保存了线程级别的变量，当处于同一个事务的方法调用doGetTransaction时，getResource方法返回的是同一个ConnectionHolder</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">public abstract class TransactionSynchronizationManager &#123;</div><div class="line"></div><div class="line">	private static final Log logger = LogFactory.getLog(TransactionSynchronizationManager.class);</div><div class="line"></div><div class="line">	private static final ThreadLocal&lt;Map&lt;Object, Object&gt;&gt; resources =</div><div class="line">			new NamedThreadLocal&lt;Map&lt;Object, Object&gt;&gt;(&quot;Transactional resources&quot;);</div><div class="line">	/**</div><div class="line">	 * Retrieve a resource for the given key that is bound to the current thread.</div><div class="line">	 * @param key the key to check (usually the resource factory)</div><div class="line">	 * @return a value bound to the current thread (usually the active</div><div class="line">	 * resource object), or &#123;@code null&#125; if none</div><div class="line">	 * @see ResourceTransactionManager#getResourceFactory()</div><div class="line">	 */</div><div class="line">	public static Object getResource(Object key) &#123;</div><div class="line">		Object actualKey = TransactionSynchronizationUtils.unwrapResourceIfNecessary(key);</div><div class="line">		Object value = doGetResource(actualKey);</div><div class="line">		if (value != null &amp;&amp; logger.isTraceEnabled()) &#123;</div><div class="line">			logger.trace(&quot;Retrieved value [&quot; + value + &quot;] for key [&quot; + actualKey + &quot;] bound to thread [&quot; +</div><div class="line">					Thread.currentThread().getName() + &quot;]&quot;);</div><div class="line">		&#125;</div><div class="line">		return value;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * Actually check the value of the resource that is bound for the given key.</div><div class="line">	 */</div><div class="line">	private static Object doGetResource(Object actualKey) &#123;</div><div class="line">		Map&lt;Object, Object&gt; map = resources.get();</div><div class="line">		if (map == null) &#123;</div><div class="line">			return null;</div><div class="line">		&#125;</div><div class="line">		Object value = map.get(actualKey);</div><div class="line">		// Transparently remove ResourceHolder that was marked as void...</div><div class="line">		if (value instanceof ResourceHolder &amp;&amp; ((ResourceHolder) value).isVoid()) &#123;</div><div class="line">			map.remove(actualKey);</div><div class="line">			// Remove entire ThreadLocal if empty...</div><div class="line">			if (map.isEmpty()) &#123;</div><div class="line">				resources.remove();</div><div class="line">			&#125;</div><div class="line">			value = null;</div><div class="line">		&#125;</div><div class="line">		return value;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
-      
-    </div>
-      
-      <footer>
-        
+  
+</div>
+
+  <footer>
+  
   
   <div class="categories">
-    <a href="/categories/TVDCR/">TVDCR</a>
+  类别： <a href="/categories/TVDCR/">TVDCR</a>
   </div>
 
-        
+
+  
   
   <div class="tags">
-    <a href="/tags/spring/">spring</a>, <a href="/tags/transacion/">transacion</a>, <a href="/tags/dynamic-reconfiguration/">dynamic reconfiguration</a>
+  Tags： <a href="/tags/spring/">spring</a>, <a href="/tags/transacion/">transacion</a>, <a href="/tags/dynamic-reconfiguration/">dynamic reconfiguration</a>
   </div>
 
+
+  
+  <br />
+  <hr />
+  <br />
+  
+<nav id="article-nav">
+  <div class="article-nav-title">
+  
+    <a style="color:black" href="/2015/11/fcws-api-doc/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">新文章: </strong>
         
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
+          凤城卫士API文档
+        
+    </a>
+  
+  
+      <a style="float:right;color:black" href="/2015/11/devstack-1/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">旧文章: </strong>
+        
+          OpenStack与DevStack初探
+        
+      </a>
+  
+    </div>
+</nav>
+
+
+  
+
+  <div class="clearfix"></div>
+</footer>
+</div>
 </article>
 
-
-<section id="comment">
-  
-</section>
 
 
 </div></div>
@@ -150,11 +175,13 @@ Spring事务处理模块实现的统一的事务处理过程。包含了处理�
     <div class="clearfix"></div>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
+  <a href=http://blog.nxap.org>NAP - Next Application Platform</a> &nbsp;
   
   &copy; 2017 NAP Group
   
 </div>
-<div class="clearfix"></div></footer>
+<div class="clearfix"></div>
+</footer>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 

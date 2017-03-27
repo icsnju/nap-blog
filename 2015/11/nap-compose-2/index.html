@@ -44,20 +44,20 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
-  <div class="post-content">
-    <header>
-      
+<div class="post-content">
+  <header>
+    
   
     <h1 class="title">跨主机的docker容器编排 nap-compose （二）</h1>
   
 
-      
-        <time datetime="2015-11-07T06:00:00.000Z">2015-11-07</time>
-      
-    </header>
-    <div class="entry">
-      
-        <p>简化的跨主机的多容器应用编排和部署工具的实现。</p>
+    
+      <time datetime="2015-11-07T06:00:00.000Z">2015-11-07</time>
+    
+  </header>
+<div class="entry">
+  
+    <p>简化的跨主机的多容器应用编排和部署工具的实现。</p>
 <a id="more"></a>
 <hr>
 <p>我们已经在<a href="http://nap-group.herokuapp.com/2015-11/nap-compose-1/" target="_blank" rel="external">前一篇文章</a>介绍了背景和思路，现在该写代码了。<br>我们准备用python 3来实现。先了解一下docker api和python ssh的库作为准备工作。主要部分在于梳理docker-compose的源码，然后在其基础上修改docker client相关的函数，改成我们的实现，从而重用compose已经实现的解析<code>docker-compose.yml</code>，生成容器间连接关系和获取容器域名的功能。</p>
@@ -93,33 +93,58 @@
 <li>上面的操作可能会造成若干秒的延迟后才能正常地通过hostname来进行通信，为此，在容器的启动命令之前插入一个sleep命令，防止因为连接超时导致应用启动失败。</li>
 </ul>
 
-      
-    </div>
-      
-      <footer>
-        
+  
+</div>
+
+  <footer>
+  
   
   <div class="categories">
-    <a href="/categories/nap/">nap</a>
+  类别： <a href="/categories/nap/">nap</a>
   </div>
 
-        
+
+  
   
   <div class="tags">
-    <a href="/tags/nap/">nap</a>, <a href="/tags/docker/">docker</a>, <a href="/tags/compose/">compose</a>
+  Tags： <a href="/tags/nap/">nap</a>, <a href="/tags/docker/">docker</a>, <a href="/tags/compose/">compose</a>
   </div>
 
+
+  
+  <br />
+  <hr />
+  <br />
+  
+<nav id="article-nav">
+  <div class="article-nav-title">
+  
+    <a style="color:black" href="/2015/11/east-2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">新文章: </strong>
         
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
+          HBase ORM以及schema设计
+        
+    </a>
+  
+  
+      <a style="float:right;color:black" href="/2015/11/nap-compose-1/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">旧文章: </strong>
+        
+          跨主机的docker容器编排 nap-compose （一）
+        
+      </a>
+  
+    </div>
+</nav>
+
+
+  
+
+  <div class="clearfix"></div>
+</footer>
+</div>
 </article>
 
-
-<section id="comment">
-  
-</section>
 
 
 </div></div>
@@ -152,11 +177,13 @@
     <div class="clearfix"></div>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
+  <a href=http://blog.nxap.org>NAP - Next Application Platform</a> &nbsp;
   
   &copy; 2017 NAP Group
   
 </div>
-<div class="clearfix"></div></footer>
+<div class="clearfix"></div>
+</footer>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
