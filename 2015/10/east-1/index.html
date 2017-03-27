@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>east数据质量合规分析（一） › NAP - Next Application Platform</title>
+  <meta name="author" content="NAP Group">
+  
+  <meta name="description" content="关于第一次讨论east数据质量合规分析的记录">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="east数据质量合规分析（一）"/>
+  <meta property="og:site_name" content="NAP - Next Application Platform"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="NAP - Next Application Platform" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">NAP - Next Application Platform</a></h1>
+  <h2><a href="/"></a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">east数据质量合规分析（一）</h1>
+  
+
+      
+        <time datetime="2015-10-23T11:04:22.000Z">2015-10-23</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>关于第一次讨论east数据质量合规分析的记录</p>
+<a id="more"></a>
+<hr>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>中国银监会会检查各银行的存、贷款数据是否合规，于是银行自己要先检查一遍。银行外包给某K公司，某K公司根据中国银监会监管数据标准化数据结构建立了一个数据库，称为MODEL库，共79张表。某K定时从银行的数据库（称为ODS）抽取、合并、筛选得到MODEL库，在MODEL库的基础上做数据质量合规分析。</p>
+<h2 id="合规校验模型例举"><a href="#合规校验模型例举" class="headerlink" title="合规校验模型例举"></a>合规校验模型例举</h2><p>总共有30多个模型，每个模型是对一类情况的分析，目前就是一条select语句，这里例举四个：</p>
+<h3 id="模型1（简单的）"><a href="#模型1（简单的）" class="headerlink" title="模型1（简单的）"></a>模型1（简单的）</h3><p>模型名称：发生欠息五级分类仍为正常<br>模型简介：对检查期内银行所发放贷款进行筛选，发生欠息的是否采取了相应地五级分类调整。比如检查20120101-20121231时间段内的基本步骤如下：<br>（1）选取对公（或个人）信贷业务借据表，设置过滤条件：表内欠息余额大于0，或表外欠息余额大于0，生成结果集1；<br>（2）对结果集1设置过滤条件：贷款五级分类=正常，生成结果集2；<br>（3）对结果集2设置过滤条件：借款余额大于0或贷款实际发放日期大于等于20120101，且贷款原始到期日期小于等于20121231，生成结果集3。<br>sql语句：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">SELECT *</div><div class="line">  FROM ANALYSIS_00410 DGXDYWJJ</div><div class="line"> WHERE (DGXDYWJJ.BNQXYE &gt; &apos;0&apos; OR DGXDYWJJ.BWQXYE &gt; &apos;0&apos;)</div><div class="line">   AND DGXDYWJJ.DKWJFL = &apos;正常&apos;</div><div class="line">   AND (DGXDYWJJ.JKYE &gt; &apos;0&apos; OR</div><div class="line">       DGXDYWJJ.DKSJFFRQ &gt;= &apos;20120101&apos; AND DGXDYWJJ.DKYSDQRQ &lt;= &apos;20121231&apos;);</div><div class="line"></div><div class="line">SELECT *</div><div class="line">  FROM ANALYSIS_00409 GRXDYWJJ</div><div class="line"> WHERE (GRXDYWJJ.BNQXYE &gt; &apos;0&apos; OR GRXDYWJJ.BWQXYE &gt; &apos;0&apos;)</div><div class="line">   AND GRXDYWJJ.DKWJFL = &apos;正常&apos;</div><div class="line">   AND (GRXDYWJJ.JKYE &gt; &apos;0&apos; OR</div><div class="line">       GRXDYWJJ.DKSJFFRQ &gt;= &apos;20120101&apos; AND GRXDYWJJ.DKYSDQRQ &lt;= &apos;20121231&apos;);</div></pre></td></tr></table></figure></p>
+<h3 id="模型2"><a href="#模型2" class="headerlink" title="模型2"></a>模型2</h3><p>模型名称：贷款资金回流至担保人<br>模型简介：在房地产行业持续调控的背景下，不少房地产企业资金紧张无法获得银行信贷资金，转而为借款人（实践中往往是有关联关系的企业）提供担保，待借款人获得信贷资金后再回流至担保人<br>银监会给出的基本步骤：<br>（1）选取客户基本信息表，设置筛选条件：客户名称包含“房地产”“土地”“置业”，仅选择客户代码和客户名称字段，生成结果集1；<br>（2）将结果集1与担保关系表进行关联，关联条件为：客户代码=保证人客户统一编号，设置过滤条件：担保到期日期大于等于20120101，生成结果集2；<br>（3）将结果集2与对公信贷业务借据表进行关联，关联条件为：被担保合同号=信贷合同号，设置过滤条件：借款余额大于0，保证人客户统一编号不等于客户统一编号，生成结果集3；<br>（4）将结果集3与对公客户表进行关联，关联条件为：客户统一编号（借款人）=客户统一编号，生成结果集4；<br>（5）将结果集4与对公信贷分户账进行关联，关联条件为：信贷借据号相等，找到贷款入账账号，生成结果集5；<br>（6）将结果集5与对公活期存款分户账明细记录进行关联，关联条件：贷款入账账号=活期存款账号，设置过滤条件：贷款发放后三日内流水记录，按照“保证人客户统一编号、核心交易日期、笔次序号”进行升序排序，生成结果集6；<br>（7）对结果集6设置过滤条件：交易金额/贷款金额介于0.2-1.25之间，借贷标志为“借”，生成结果集7；<br>（8）对结果集7设置过滤条件：对方户名=客户名称（保证人），生成结果集8。<br>sql：(设置参数，指定日期)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">SELECT DGHQCKFHZMXJL.*</div><div class="line">  FROM ANALYSIS_00410 DGXDYWJJ, ANALYSIS_00209 DGHQCKFHZMXJL</div><div class="line"> WHERE DGXDYWJJ.JKYE &gt; 0</div><div class="line">   AND DGXDYWJJ.KHTYBH NOT IN</div><div class="line">       (SELECT DBGX.BZRKHTYBH</div><div class="line">          FROM ANALYSIS_00303 DGKH, ANALYSIS_00412 DBGX</div><div class="line">         WHERE DGKH.KHTYBH = DBGX.BZRKHTYBH</div><div class="line">           AND DBGX.DBDQRQ &gt;= ‘指定日期’</div><div class="line">           AND DGKH.KHMC LIKE &apos;%房地产%&apos;</div><div class="line">            or DGKH.KHMC LIKE &apos;%土地%&apos;</div><div class="line">            or DGKH.KHMC LIKE &apos;%置业%&apos;)</div><div class="line">   AND DGXDYWJJ.DKRZZH = DGHQCKFHZMXJL.HQCKZH</div><div class="line">   AND (TO_DATE(DGHQCKFHZMXJL.HXJYRQ, &apos;yyyymmdd&apos;) -</div><div class="line">       TO_DATE(DGXDYWJJ.DKSJFFRQ, &apos;yyyymmdd&apos;) &lt;= 3)</div><div class="line">   AND DGHQCKFHZMXJL.JDBZ = &apos;借&apos;</div><div class="line">   AND DGHQCKFHZMXJL.JYJE / DGXDYWJJ.JKJE &gt; 0.2</div><div class="line">   AND DGHQCKFHZMXJL.JYJE / DGXDYWJJ.JKJE &lt; 1.25</div><div class="line">   AND DGHQCKFHZMXJL.DFHM =</div><div class="line">       (SELECT DGKH.KHMC</div><div class="line">          FROM ANALYSIS_00303 DGKH, ANALYSIS_00412 DBGX</div><div class="line">         WHERE DGKH.KHTYBH = DBGX.BZRKHTYBH</div><div class="line">           AND DBGX.DBDQRQ &gt;= ‘指定日期’</div><div class="line">           AND DGKH.KHMC LIKE &apos;%房地产%&apos;</div><div class="line">            or DGKH.KHMC LIKE &apos;%土地%&apos;</div><div class="line">            or DGKH.KHMC LIKE &apos;%置业%&apos;)</div></pre></td></tr></table></figure></p>
+<h3 id="模型3"><a href="#模型3" class="headerlink" title="模型3"></a>模型3</h3><p>模型名称：突击放贷”冲时点”<br>模型简介：检查银行是否为完成考核任务，在月（季）末突击放贷做大规模<br>算法：<br>1.从对公活期存款分户账明细记录中找出在指定日期内的活期存款账号，形成结果集1<br>2.从对公贷款分户账中过滤出在结果集1中的贷款入账账号，形成结果集2<br>3.将结果集2中的贷款入账账号在对公信贷账和对公活期存款明细记录中查询，选出<br>对公活期存款明细记录.对方账号=对公信贷分户账.还款账号的贷款入账账号<br>4.输入上述账号的对公信贷分户账明细记录，人工判断<br>sql语句：（设置参数：指定日期）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">SELECT *</div><div class="line">  FROM T_KJ_DGXFZMX DGXDFHZMX</div><div class="line"> WHERE DGXDFHZMX.DKZH IN</div><div class="line">       (SELECT DGXDFHZ.DKRZZH</div><div class="line">          FROM T_KJ_DGXFZ DGXDFHZ,</div><div class="line">               T_KJ_DGHCFZMX DGHQCKFHZMXJL,</div><div class="line">               (SELECT DGXDFHZ.DKRZZH</div><div class="line">                  FROM T_KJ_DGXFZ DGXDFHZ</div><div class="line">                 WHERE DGXDFHZ.KHRQ between &apos;&#123;0&#125;&apos; and &apos;&#123;1&#125;&apos;</div><div class="line">                   and DGXDFHZ.DKRZZH IN</div><div class="line">                       (SELECT DGHQCKFHZMXJL.HQCKZH</div><div class="line">                          FROM T_KJ_DGHCFZMX DGHQCKFHZMXJL</div><div class="line">                         WHERE DGHQCKFHZMXJL.HXJYRQ BETWEEN &apos;&#123;0&#125;&apos; and &apos;&#123;1&#125;&apos;</div><div class="line">                         group by DGHQCKFHZMXJL.HQCKZH)) T1</div><div class="line">         WHERE DGXDFHZ.DKRZZH = T1.DKRZZH</div><div class="line">           AND DGHQCKFHZMXJL.HQCKZH = T1.DKRZZH</div><div class="line">           AND DGHQCKFHZMXJL.DFZH = DGXDFHZ.HKZH)</div></pre></td></tr></table></figure>
+<h3 id="模型4"><a href="#模型4" class="headerlink" title="模型4"></a>模型4</h3><p>模型名称：内部员工用本人身份证号开立账户<br>算法：1. 通过工号，身份证号，客户统一编号关联员工表，柜员表，个人基础信息表，个人活期存款分户账明细记录，个人定期存款分户账明细记录。<br>      2.筛选条件工号等于柜员号<br>输出字段：客户统一编号，证件号码，工号，姓名，身份证号，员工状态，柜员号，活期存款账号，交易类型，交易柜员号，定期存款账号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">SELECT GRJCXX.KHTYBH, GRJCXX.ZJHM, YGB.GH, YGB.XM, YGB.SFZH, YGB.YGZT, GYB.GYH, GRHQCKFHZMXJL.HQCKZH, GRHQCKFHZMXJL.JYLX, GRHQCKFHZMXJL.JYGYH, GRDQCKFHZMXJL.DQCKZH</div><div class="line">FROM ANALYSIS_00102 YGB, ANALYSIS_00103 GYB, ANALYSIS_00301 GRJCXX, ANALYSIS_00205 GRHQCKFHZMXJL, ANALYSIS_00207 GRDQCKFHZMXJL</div><div class="line">WHERE YGB.GH= GYB.GH</div><div class="line">AND YGB.SFZH=GRJCXX.ZJHM</div><div class="line">AND GRJCXX.KHTYBH=GRHQCKFHZMXJL.KHTYBH</div><div class="line">AND GRHQCKFHZMXJL.KHTYBH=GRDQCKFHZMXJL.KHTYBH</div><div class="line">AND YGB.GH= GYB.GYH</div></pre></td></tr></table></figure>
+<p>模型说明：这里只是筛选出数据，这个模型本身并不违法，但是可以进一步挖掘，看有没有做洗钱等非法的事情。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>模型理解起来应该不难，基本都是一条select语句，关键是理解业务逻辑和有关银行知识，比如很多都是对资金流向的检查，这就要对相关知识比较熟悉。技术方面，sql可以优化，有的结果集可以用R做进一步的数据挖掘。</p>
+
+      
+    </div>
+      
+      <footer>
+        
+  
+  <div class="categories">
+    <a href="/categories/east/">east</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/east/">east</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+      </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/OpenStack/">OpenStack</a><small>3</small></li>
+  
+    <li><a href="/categories/TVDCR/">TVDCR</a><small>3</small></li>
+  
+    <li><a href="/categories/east/">east</a><small>2</small></li>
+  
+    <li><a href="/categories/nap/">nap</a><small>4</small></li>
+  
+    <li><a href="/categories/web/">web</a><small>4</small></li>
+  
+    <li><a href="/categories/书架/">书架</a><small>1</small></li>
+  
+    <li><a href="/categories/大数据/">大数据</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 NAP Group
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+</body>
+</html>
+

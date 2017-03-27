@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hadoop, Hive, Tez 搭建笔记 › NAP - Next Application Platform</title>
+  <meta name="author" content="NAP Group">
+  
+  <meta name="description" content="详细介绍了一个Hadoop，Hive和Tez集群的搭建过程。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Hadoop, Hive, Tez 搭建笔记"/>
+  <meta property="og:site_name" content="NAP - Next Application Platform"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="NAP - Next Application Platform" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">NAP - Next Application Platform</a></h1>
+  <h2><a href="/"></a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">Hadoop, Hive, Tez 搭建笔记</h1>
+  
+
+      
+        <time datetime="2016-03-14T16:00:00.000Z">2016-03-15</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>详细介绍了一个Hadoop，Hive和Tez集群的搭建过程。</p>
+<a id="more"></a>
+<hr>
+<h1 id="Hadoop-Hive-Tez-搭建"><a href="#Hadoop-Hive-Tez-搭建" class="headerlink" title="Hadoop Hive Tez 搭建"></a>Hadoop Hive Tez 搭建</h1><p>集群192.168.100.[205-220],主节点205,其余为从节点，以用户experiment为例</p>
+<h2 id="Hadoop"><a href="#Hadoop" class="headerlink" title="Hadoop"></a>Hadoop</h2><h3 id="etc-hosts"><a href="#etc-hosts" class="headerlink" title="/etc/hosts"></a>/etc/hosts</h3><p>hadoop是以主机名进行通信的，需要配置所有机器的/etc/hosts</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">192.168.100.205 slave205</div><div class="line">192.168.100.206 slave206</div><div class="line">192.168.100.207 slave207</div><div class="line">192.168.100.208 slave208</div><div class="line">192.168.100.209 slave209</div><div class="line">192.168.100.210 slave210</div><div class="line">192.168.100.211 slave211</div><div class="line">192.168.100.212 slave212</div><div class="line">192.168.100.213 slave213</div><div class="line">192.168.100.214 slave214</div><div class="line">192.168.100.215 slave215</div><div class="line">192.168.100.216 slave216</div><div class="line">192.168.100.217 slave217</div><div class="line">192.168.100.218 slave218</div><div class="line">192.168.100.219 slave219</div><div class="line">192.168.100.220 slave220</div></pre></td></tr></table></figure>
+<h3 id="ssh免密码登陆"><a href="#ssh免密码登陆" class="headerlink" title="ssh免密码登陆"></a>ssh免密码登陆</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ssh-keygen -t rsa</div><div class="line"></div><div class="line">cat id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</div></pre></td></tr></table></figure>
+<h3 id="jdk"><a href="#jdk" class="headerlink" title="jdk"></a>jdk</h3><p>openjdk和oracle-jdk都行</p>
+<h3 id="下载并修改配置文件"><a href="#下载并修改配置文件" class="headerlink" title="下载并修改配置文件"></a>下载并修改配置文件</h3><p>slaves</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">slave206</div><div class="line">slave207</div><div class="line">slave208</div><div class="line">slave209</div><div class="line">slave210</div><div class="line">slave211</div><div class="line">slave212</div><div class="line">slave213</div><div class="line">slave214</div><div class="line">slave215</div><div class="line">slave216</div><div class="line">slave217</div><div class="line">slave218</div><div class="line">slave219</div><div class="line">slave220</div></pre></td></tr></table></figure>
+<p>core-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;fs.defaultFS&lt;/name&gt;</div><div class="line">        &lt;value&gt;hdfs://slave205:9000&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">        &lt;value&gt;file:/home/experiment/hadoop/tmp&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
+<p>hdfs-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;</div><div class="line">        &lt;value&gt;file:/home/experiment/hadoop/name&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;dfs.namenode.data.dir&lt;/name&gt;</div><div class="line">        &lt;value&gt;file:/home/experiment/hadoop/data&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;dfs.replication&lt;/name&gt;</div><div class="line">        &lt;value&gt;3&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;dfs.namenode.secondary.http-address&lt;/name&gt;</div><div class="line">        &lt;value&gt;slave205:50090&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
+<p>yarn-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;yarn.resourcemanager.address&lt;/name&gt;</div><div class="line">        &lt;value&gt;slave205:8032&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;yarn.resourcemanager.scheduler.address&lt;/name&gt;</div><div class="line">        &lt;value&gt;slave205:8030&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;yarn.resourcemanager.resource-tracker.address&lt;/name&gt;</div><div class="line">        &lt;value&gt;slave205:8031&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;yarn.resourcemanager.admin.address&lt;/name&gt;</div><div class="line">        &lt;value&gt;slave205:8033&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;yarn.resourcemanager.webapp.address&lt;/name&gt;</div><div class="line">        &lt;value&gt;slave205:8088&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</div><div class="line">        &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;yarn.nodemanager.aux-services.mapreduce.shuffle.class&lt;/name&gt;</div><div class="line">        &lt;value&gt;org.apache.hadoop.mapred.ShuffleHandler&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;yarn.nodemanager.delete.debug-delay-sec&lt;/name&gt;</div><div class="line">        &lt;value&gt;1200&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;yarn.nodemanager.vmem-check-enabled&lt;/name&gt;</div><div class="line">        &lt;value&gt;false&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
+<p>mapred-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;mapreduce.framework.name&lt;/name&gt;</div><div class="line">        &lt;value&gt;yarn&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;mapreduce.jobhistory.address&lt;/name&gt;</div><div class="line">        &lt;value&gt;slave205:10020&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;mapreduce.jobhistory.webapp.address&lt;/name&gt;</div><div class="line">        &lt;value&gt;slave205:19888&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
+<h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3><p>vim ~/.bashrc</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">HADOOP_HOME=/home/experiment/hadoop-2.6.4</div><div class="line">JAVA_HOME=/usr/java/jdk1.8.0_73</div><div class="line">CLASSPATH=$JAVA_HOME/lib:$JAVA_HOME/jre/lib</div><div class="line">PATH=$PATH:$JAVA_HOME/bin:$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin</div><div class="line"></div><div class="line">export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native</div><div class="line">export HADOOP_OPTS=&quot;-Djava.library.path=$HADOOP_HOME/lib&quot;</div><div class="line"></div><div class="line">export JAVA_HOME CLASSPATH HADOOP_HOME PATH</div></pre></td></tr></table></figure>
+<h3 id="scp-到从节点对应的目录"><a href="#scp-到从节点对应的目录" class="headerlink" title="scp 到从节点对应的目录"></a>scp 到从节点对应的目录</h3><h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hdfs namenode -format</div><div class="line">start-dfs.sh</div><div class="line">start-yarn.sh</div></pre></td></tr></table></figure>
+<h2 id="Hive"><a href="#Hive" class="headerlink" title="Hive"></a>Hive</h2><h3 id="hive下载解压"><a href="#hive下载解压" class="headerlink" title="hive下载解压"></a>hive下载解压</h3><h3 id="环境变量-1"><a href="#环境变量-1" class="headerlink" title="环境变量"></a>环境变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">HIVE_HOME=/home/experiment/apache-hive-1.2.1-bin</div><div class="line">PATH=$PATH:$HIVE_HOME/bin</div><div class="line"></div><div class="line">export HADOOP_USER_CLASSPATH_FIRST=true</div><div class="line">export HIVE_HOME PATH</div></pre></td></tr></table></figure>
+<h3 id="mysql安装"><a href="#mysql安装" class="headerlink" title="mysql安装"></a>mysql安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"># 下载源码解压，然后执行下面的命令以生成Makefile</div><div class="line"></div><div class="line">cmake \</div><div class="line">-DCMAKE_INSTALL_PREFIX=/home/experiment/mysql \</div><div class="line">-DMYSQL_UNIX_ADDR=/home/experiment/mysql/mysql.sock \</div><div class="line">-DDEFAULT_CHARSET=utf8 \</div><div class="line">-DDEFAULT_COLLATION=utf8_general_ci \</div><div class="line">-DWITH_INNOBASE_STORAGE_ENGINE=1 \</div><div class="line">-DWITH_ARCHIVE_STORAGE_ENGINE=1 \</div><div class="line">-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \</div><div class="line">-DMYSQL_home/experimentDIR=/home/experiment/mysql/home/experiment \</div><div class="line">-DMYSQL_TCP_PORT=3306 \</div><div class="line">-DENABLE_DOWNLOADS=1</div><div class="line"></div><div class="line"># 如果报错找不到CMakeCache.txt，则需要安装ncurses-devel，安装后进行编译</div><div class="line"></div><div class="line">make &amp;&amp; make install</div><div class="line"></div><div class="line">sudo ln -s /home/experiment/mysql/lib/libmysqlclient.so.18 /usr/lib/libmysqlclient.so.18</div><div class="line">sudo ln -s /home/experiment/mysql.sock /tmp/mysql.sock</div><div class="line">sudo cp /home/experiment/mysql/support-files/my-default.cnf /etc/my.cnf</div><div class="line">sudo cp /home/experiment/mysql/support-files/mysql.server /etc/init.d/mysqld</div><div class="line">sudo chmod +x /etc/init.d/mysqld</div><div class="line">sudo ln -s /home/experiment/mysql/bin/mysql /usr/bin/</div><div class="line"></div><div class="line">/home/experiment/mysql/scripts/mysql_install_db --user=experiment --defaults-file=/etc/my.cnf --basedir=/home/experiment/mysql --datadir=/home/experiment/mysql/data</div><div class="line"></div><div class="line">service mysqld start</div><div class="line"></div><div class="line">mysql -uroot -h127.0.0.1 -p</div><div class="line"></div><div class="line">mysql&gt; SET PASSWORD = PASSWORD(&apos;123456&apos;);</div><div class="line">CREATE USER &apos;hive&apos; IDENTIFIED BY &apos;hive&apos;;</div><div class="line">GRANT ALL PRIVILEGES ON *.* TO &apos;hive&apos;@&apos;slave205&apos; WITH GRANT OPTION;</div><div class="line"></div><div class="line">flush privileges;</div><div class="line"></div><div class="line">mysql -h hadoop-master -uhive</div><div class="line">mysql&gt;set password = password(&apos;hive&apos;);</div><div class="line">create database hive;</div><div class="line">alter database hive character set latin1</div></pre></td></tr></table></figure>
+<h3 id="修改hive配置文件"><a href="#修改hive配置文件" class="headerlink" title="修改hive配置文件"></a>修改hive配置文件</h3><p>先cp hive-default.xml.template hive-default.xml</p>
+<p>再vim hive-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;</div><div class="line">    &lt;value&gt;jdbc:mysql://slave205:3306/hive?createDatabaseIfNotExist=true&lt;/value&gt;</div><div class="line">    &lt;description&gt;JDBC connect string for a JDBC metastore&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;</div><div class="line">    &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;</div><div class="line">    &lt;description&gt;Driver class name for a JDBC metastore&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;</div><div class="line">    &lt;value&gt;hive&lt;/value&gt;</div><div class="line">    &lt;description&gt;username to use against metastore database&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;</div><div class="line">    &lt;value&gt;hive&lt;/value&gt;</div><div class="line">    &lt;description&gt;password to use against metastore database&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<h3 id="下载jdbc"><a href="#下载jdbc" class="headerlink" title="下载jdbc"></a>下载jdbc</h3><p>cp mysql-connector-java-5.1.33-bin.jar apache-hive-1.2.1-bin/lib/</p>
+<h3 id="让hive支持update"><a href="#让hive支持update" class="headerlink" title="让hive支持update"></a>让hive支持update</h3><p>修改hive-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;hive.support.concurrency&lt;/name&gt;</div><div class="line">    &lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;hive.enforce.bucketing&lt;/name&gt;</div><div class="line">    &lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;hive.exec.dynamic.partition.mode&lt;/name&gt;</div><div class="line">    &lt;value&gt;nonstrict&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;hive.txn.manager&lt;/name&gt;</div><div class="line">    &lt;value&gt;org.apache.hadoop.hive.ql.lockmgr.DbTxnManager&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;hive.compactor.initiator.on&lt;/name&gt;</div><div class="line">    &lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;hive.compactor.worker.threads&lt;/name&gt;</div><div class="line">    &lt;value&gt;2&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<h3 id="启动hive-metastore和hiveserver2"><a href="#启动hive-metastore和hiveserver2" class="headerlink" title="启动hive metastore和hiveserver2"></a>启动hive metastore和hiveserver2</h3><p>hive metastore不启动也可以使用hive，metastore的作用是给hive的客户端使用</p>
+<p>hiveserver2是hive的thrift服务器可以让远程java、python等客户端调用hive的API，需要在hive-site.xml中修改hive.server2.thrift.bind.host为slave205，默认是localhost</p>
+<h2 id="Tez"><a href="#Tez" class="headerlink" title="Tez"></a>Tez</h2><p><a href="http://tez.apache.org/install.html" target="_blank" rel="external">官方安装指南</a></p>
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>下载tez源码解压，修改pom.xml中的hadoop.version为具体的hadoop版本号</p>
+<p>编译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mvn clean package -DskipTests=true -Dmaven.javadoc.skip=true</div></pre></td></tr></table></figure>
+<p>编译需要jdk6+，maven3+和protocol buffers 2.5.0，编译期间可能会遇到下载失败或者ssl超时，多编译几次应该可以解决。其它常见问题参考<a href="https://cwiki.apache.org/confluence/display/TEZ/Build+errors+and+solutions" target="_blank" rel="external">wiki</a></p>
+<h3 id="环境变量-2"><a href="#环境变量-2" class="headerlink" title="环境变量"></a>环境变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">export TEZ_JARS=/home/experiment/tez-0.8.2</div><div class="line">export TEZ_CONF_DIR=/home/experiment/hadoop-2.6.4/etc/hadoop</div><div class="line">export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$&#123;TEZ_CONF_DIR&#125;:$&#123;TEZ_JARS&#125;/*:$&#123;TEZ_JARS&#125;/lib/*</div></pre></td></tr></table></figure>
+<h3 id="放置编译好的tez-x-y-z-tar-gz"><a href="#放置编译好的tez-x-y-z-tar-gz" class="headerlink" title="放置编译好的tez-x.y.z.tar.gz"></a>放置编译好的tez-x.y.z.tar.gz</h3><p>位于tez-dist/target目录下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hadoop dfs -mkdir /apps</div><div class="line">hadoop dfs -copyFromLocal tez-x.y.z.tar.gz /apps/</div></pre></td></tr></table></figure>
+<h3 id="修改tez-site-xml"><a href="#修改tez-site-xml" class="headerlink" title="修改tez-site.xml"></a>修改tez-site.xml</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;tez.lib.uris&lt;/name&gt;</div><div class="line">        &lt;value&gt;$&#123;fs.defaultFS&#125;/apps/tez-0.8.2.tar.gz&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;tez.use.cluster.hadoop-libs&lt;/name&gt;</div><div class="line">        &lt;value&gt;false&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
+<h3 id="在hive中使用tez"><a href="#在hive中使用tez" class="headerlink" title="在hive中使用tez"></a>在hive中使用tez</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">hive</div><div class="line"></div><div class="line">hive &gt; set hive.execution.engine=tez;</div><div class="line">	 &gt;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+      
+      <footer>
+        
+  
+  <div class="categories">
+    <a href="/categories/大数据/">大数据</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/hadoop/">hadoop</a>, <a href="/tags/Hive/">Hive</a>, <a href="/tags/Tez/">Tez</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+      </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/OpenStack/">OpenStack</a><small>3</small></li>
+  
+    <li><a href="/categories/TVDCR/">TVDCR</a><small>3</small></li>
+  
+    <li><a href="/categories/east/">east</a><small>2</small></li>
+  
+    <li><a href="/categories/nap/">nap</a><small>4</small></li>
+  
+    <li><a href="/categories/web/">web</a><small>4</small></li>
+  
+    <li><a href="/categories/书架/">书架</a><small>1</small></li>
+  
+    <li><a href="/categories/大数据/">大数据</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 NAP Group
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+</body>
+</html>
+

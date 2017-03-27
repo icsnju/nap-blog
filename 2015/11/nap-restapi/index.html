@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Restful Api for NAP › NAP - Next Application Platform</title>
+  <meta name="author" content="NAP Group">
+  
+  <meta name="description" content="NAP的restful api是通过JSON来对平台进行管理，包括平台硬件的监控、应用的创建、状态的查询以及文件管理等。restful api是通过Django自身提供的REST framework实现的，详见链接。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Restful Api for NAP"/>
+  <meta property="og:site_name" content="NAP - Next Application Platform"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="NAP - Next Application Platform" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">NAP - Next Application Platform</a></h1>
+  <h2><a href="/"></a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">Restful Api for NAP</h1>
+  
+
+      
+        <time datetime="2015-11-09T07:54:17.000Z">2015-11-09</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>NAP的restful api是通过JSON来对平台进行管理，包括平台硬件的监控、应用的创建、状态的查询以及文件管理等。restful api是通过Django自身提供的<a href="http://www.django-rest-framework.org/" target="_blank" rel="external">REST framework</a>实现的，详见链接。</p>
+<a id="more"></a>
+<h2 id="app-api-应用的状态信息"><a href="#app-api-应用的状态信息" class="headerlink" title="app_api: 应用的状态信息"></a>app_api: 应用的状态信息</h2><p>该部分是对运行在NAP平台上的应用进行管理的接口，包括应用和服务的创建、应用状态的获取以及应用的开启和暂停等。</p>
+<p>所有请求使用token进行认证，既用户进行信息的请求前，需要先认证，即下面5对应的操作，认证成功后，在进行请求时，需要将token置于Http的头部字段Authorizations中，curl和httpie对应的示例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">curl -X GET http://127.0.0.1:8000/app/porjects/ -H &apos;Authorizations:Token d83***3d8&apos;</div><div class="line"></div><div class="line">http http://127.0.0.1:8000/app/projects/ Authorizations:&apos;Token d83***3d8&apos;</div></pre></td></tr></table></figure></p>
+<ol>
+<li><p>projects的请求<br> - 方法: GET<br> - url: /app/projects<br> - 参数: {‘username’:xxx, ‘start’:xxx, ‘limit’:xxx}<br> - 返回值:<br>   参数错误时，返回400<br>   token错误时，返回401 UNAUTHORIZED<br>   参数正确，返回Json格式数据</p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">   &#123;</div><div class="line">    &quot;items&quot;: [</div><div class="line">        [</div><div class="line">               &quot;test&quot;,</div><div class="line">               &quot;git@github.com:monkey-H/rest_app.git&quot;</div><div class="line">        ],</div><div class="line">           [</div><div class="line">               &quot;test2&quot;,</div><div class="line">               &quot;git@github.com:monkey-H/rest_app.git&quot;</div><div class="line">           ],</div><div class="line"></div><div class="line">    ],</div><div class="line">    &quot;total&quot;: 2,</div><div class="line">    &quot;success&quot;: &quot;true&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre></li>
+<li><p>projects创建<br> - 方法: POST<br> - url: /app/projects<br> - 参数: {‘username’:xxx, ‘project’:xxx, ‘url’:xxx}<br> - 返回值:<br>   请求参数错误情况下返回400<br>   token错误时，返回401 UNAUTHORIZED<br>   参数正确，根据提供的参数，返回相应的信息</p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    log: something</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre></li>
+<li><p>project删除<br> - 方法: DELETE<br> - url: /app/projects/exp_poj<br> - 参数: {}<br> - 返回值:<br>   token错误时，返回401 UNAUTHORIZED<br>   认证成功, 返回相应的信息</p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    Delete: success/false</div><div class="line">    log: something</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre></li>
+<li><p>一个project对应的services列表<br> - 方法: GET<br> - url: /app/projects/exp_poj<br> - 参数: {}<br> - 返回值:<br>   请求错误情况下返回400<br>   token认证错误返回401 UNAUTHORIZED<br>   正确时，返回请求的实例，如下:   </p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">   &#123;</div><div class="line">    &quot;items&quot;: [</div><div class="line">        &#123;</div><div class="line">            &quot;ip&quot;: &quot;114.212.189.140&quot;,</div><div class="line">            &quot;name&quot;: &quot;testmpi_1_master&quot;,</div><div class="line">               &quot;port&quot;: XX,</div><div class="line">               &quot;status&quot;: XX,</div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            &quot;ip&quot;: &quot;114.212.189.136&quot;,</div><div class="line">            &quot;name&quot;: &quot;testmpi_1_slaves@1&quot;,</div><div class="line">               &quot;port&quot;: XX,</div><div class="line">               &quot;status&quot;: XX,</div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">       &quot;total&quot;: 2,</div><div class="line">       &quot;success&quot;: &quot;true&quot;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre></li>
+<li><p>用户认证使用的是rest-framework自带的TokenAuthentication.<br> - 方法: Post<br> - url: /auth<br> - 参数: {‘username’:xxx, ‘password’:xxx}<br> - 返回值:<br>   请求正确，并成功认证返回    </p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    token: *******</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre><p>   请求错误时,认证失败时会返回400,并给出相应的提示信息。<br> 使用httpie进行请求示例：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http --form post http://127.0.0.1:8000/app/auth username=&quot;***&quot; password=&quot;***&quot;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="filebrowser-访问主机文件系统"><a href="#filebrowser-访问主机文件系统" class="headerlink" title="filebrowser:访问主机文件系统"></a>filebrowser:访问主机文件系统</h2><p>该部分是从开源项目<a href="https://github.com/revolunet/django-extjs-filebrowser" target="_blank" rel="external">django-extjs-filebrowser</a>的后台Django部分直接迁移出来的，并没有使用Django REST framework。</p>
+<ol>
+<li><p>请求一个文件夹下的目录树<br> - 方法: POST<br> - url: /fs/filebrowser/api/<br> - 参数: {‘cmd’: “get”, ‘path’: “key/path”}<br>  (key 为配置文件中主机提供的文件系统的根目录,目前只有localfolder可选,path为请求的路径)<br> - 返回值: json格式数据，示例如下:   </p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ http --form POST http://114.212.86.206:8000/fs/filebrowser/api/ cmd=&quot;get&quot; path=&quot;localfolder/new/&quot;</div><div class="line">(请求localfolder对应的根目录下new的目录树)</div><div class="line">[</div><div class="line">    &#123;</div><div class="line">        &quot;created_time&quot;: &quot;2015-10-27T13:43:31.150469&quot;,</div><div class="line">        &quot;iconCls&quot;: &quot;icon-file-txt&quot;,</div><div class="line">        &quot;items&quot;: [],</div><div class="line">        &quot;leaf&quot;: true,</div><div class="line">        &quot;modified_time&quot;: &quot;2015-10-27T13:43:31.110469&quot;,</div><div class="line">        &quot;size&quot;: 12,</div><div class="line">        &quot;text&quot;: &quot;hello6.txt&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        &quot;created_time&quot;: &quot;2015-11-09T09:11:14.739974&quot;,</div><div class="line">        &quot;iconCls&quot;: &quot;icon-file-jpg&quot;,</div><div class="line">        &quot;items&quot;: [],</div><div class="line">        &quot;leaf&quot;: true,</div><div class="line">        &quot;modified_time&quot;: &quot;2015-10-27T14:02:38.394490&quot;,</div><div class="line">        &quot;size&quot;: 925306,</div><div class="line">        &quot;text&quot;: &quot;test.jpg&quot;</div><div class="line">    &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
+</li>
+<li><p>新建目录<br> - 方法: POST<br>   - url: fs/filebrowser/api/<br>   - 参数: {‘cmd’: “newdir”, ‘path’: “key/path”}<br>   - 返回值:<br> 参数正确时,返回数据</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;&apos;success&apos;:True&#125;</div></pre></td></tr></table></figure>
+<p> 否则根据情况返回400,404  </p>
+</li>
+<li><p>重命名<br>   - 方法: POST<br>   - url: fs/filebrowser/api/<br>   - 参数: {‘cmd’: “rename”, ‘oldname’: “key/path”, ‘newname’: “key/path”}<br>   - 返回值:<br> 参数正确时,返回{‘success’: True},错误时返回400    </p>
+</li>
+<li><p>删除文件或文件夹<br> - 方法: POST<br> - url: fs/filebrowser/api/<br>   - 参数: {‘cmd’: “delete”,’path’: “key/path”}<br>   - 返回值:<br> 参数正确时,返回{‘success’: True},错误时返回404  </p>
+</li>
+<li><p>查看文件:<br>   - 方法: GET<br> - url: fs/filebrowser/api/<br>   - 参数: {‘cmd’: “view”, ‘file’: “key/path”}<br>   - 返回值:<br> 参数正确时,返回文件的内容,错误时返回404  </p>
+</li>
+<li><p>下载文件:<br>   - 方法: GET<br>   - url: fs/filebrowser/api/<br>   - 参数: {‘cmd’: “download”, ‘file’: “key/path”}<br>   - 返回值:<br> 参数正确时,下载文件,错误时返回404   </p>
+</li>
+<li><p>上传文件:<br> - 方法: POST<br> - url: /fs/upload/<br> - 参数, 请求方式有两种:</p>
+<pre><code>* XMLHttpRequest:  
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">xhr = new XMLHttpRequest()</div><div class="line">xhr.open(&apos;POST&apos;, &apos;http://127.0.0.1:8000/fs/filebrowser/upload/&apos;, true);</div><div class="line">xhr.setRequestHeader(&quot;X-File-Name&quot;,&quot;localfolder/new/&quot; + file.name);</div><div class="line">xhr.setRequestHeader(&quot;X-Requested-With&quot;,&quot;XMLHttpRequest&quot;);</div><div class="line">xhr.send(file);</div></pre></td></tr></table></figure>
+
+* 一般post请求  
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">formdata = new FormData()</div><div class="line">formdata.append(&quot;path&quot;,&quot;localfolder/new&quot;);</div><div class="line">formdata.append(&quot;file1&quot;,file);</div><div class="line">xhr.open(&apos;POST&apos;, &apos;http://127.0.0.1:8000/fs/filebrowser/upload/&apos;, true);</div><div class="line">xhr.send(formdata);</div></pre></td></tr></table></figure>
+</code></pre><p> - 返回值:<br> 参数等正确时，返回  </p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">       &quot;success&quot;:True,</div><div class="line">       files:&#123;&#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p> 请求错误时，返回400或404异常</p>
+</li>
+</ol>
+
+      
+    </div>
+      
+      <footer>
+        
+  
+  <div class="categories">
+    <a href="/categories/web/">web</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/restful/">restful</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+      </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/OpenStack/">OpenStack</a><small>3</small></li>
+  
+    <li><a href="/categories/TVDCR/">TVDCR</a><small>3</small></li>
+  
+    <li><a href="/categories/east/">east</a><small>2</small></li>
+  
+    <li><a href="/categories/nap/">nap</a><small>4</small></li>
+  
+    <li><a href="/categories/web/">web</a><small>4</small></li>
+  
+    <li><a href="/categories/书架/">书架</a><small>1</small></li>
+  
+    <li><a href="/categories/大数据/">大数据</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 NAP Group
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+</body>
+</html>
+

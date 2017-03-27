@@ -1,0 +1,274 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Mesos Framework 解析 › NAP - Next Application Platform</title>
+  <meta name="author" content="NAP Group">
+  
+  <meta name="description" content="Mesos是Apache旗下的开源集群资源计算框架，它能将多台机器（包括物理机和虚拟机）的资源，包括CPU，内存，硬盘等计算资源抽象出来，进行资源隔离和共享，构建高容错性、高可用性的分布式资源管理系统。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Mesos Framework 解析"/>
+  <meta property="og:site_name" content="NAP - Next Application Platform"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="NAP - Next Application Platform" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">NAP - Next Application Platform</a></h1>
+  <h2><a href="/"></a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">Mesos Framework 解析</h1>
+  
+
+      
+        <time datetime="2015-11-07T02:00:00.000Z">2015-11-07</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>Mesos是Apache旗下的开源集群资源计算框架，它能将多台机器（包括物理机和虚拟机）的资源，包括CPU，内存，硬盘等计算资源抽象出来，进行资源隔离和共享，构建高容错性、高可用性的分布式资源管理系统。</p>
+<a id="more"></a>
+<hr>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="Mesos-Framework"><a href="#Mesos-Framework" class="headerlink" title="Mesos Framework"></a>Mesos Framework</h3><p>Mesos采用两层架构，所有计算框架均在底层，即Mesos Master负责对任务的资源分配给各个框架；在计算框架之上为Mesos Framework，它可用是通用的框架，也可用为特定软件编写的框架，如Framework一个长时间运行的服务（比如JobTracker等），也可以是一个短生命周期的Job或者Application。这样设计的好处是，<strong>作为底层的Mesos不需要知道顶层的应用的细节，只负责根据slave资源状况提供offers，而调度由顶层的Framework进行实现</strong>，这样底层的Mesos对所有应用（分布式or集中式，长时间服务or短暂性任务等）均可适用。</p>
+<p>Framework可以根据是否符合任务对资源的约束，选择接受或拒绝资源邀约。一旦资源邀约被接受，Framework将与Master协作调度任务，并在数据中心的相应Slave节点上运行任务。</p>
+<p>Framework包含两大部分：</p>
+<ul>
+<li><strong>Scheduler</strong><br>  Scheduler负责管理框架所获得的资源，按照作业的输入量，将其分解成若干任务，并未这些任务申请资源，监控这些任务的运行状态，一旦发现某个任务运行失败则重新为其申请资源。</li>
+<li><strong>Executor</strong><br>  Executor负责执行调度器所分配的任务。</li>
+</ul>
+<p>Framework结构如图：<br><img src="/images/mesos-arch.jpg" alt="Framework Structure"><br><!-- http://cdn1.infoqstatic.com/statics_s2_20151020-0055-2/resource/articles/analyse-mesos-part-04/zh/resources/0604001.jpg --></p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="Framework任务分配过程"><a href="#Framework任务分配过程" class="headerlink" title="Framework任务分配过程"></a>Framework任务分配过程</h3><p>Framework任务分配流程图如下：<br><img src="http://s2.51cto.com/wyfs02/M01/09/F3/wKiom1LKbc-DCmXcAACKJCK6gs4287.jpg" alt="Framework Task"></p>
+<p>Mesos的资源分配行为发生在：<strong>新框架注册</strong>，<strong>框架注销</strong>，<strong>增加节点</strong>，<strong>出现空闲资源</strong>等情况，对Mesos Framework进行资源分配的流程如下：</p>
+<ol>
+<li>Mesos Master中的<code>Allocator</code>模块将要为某个Framework分配资源，则将资源封装到<code>ResourceOffersMessage</code>中，通过网络传输发送给<code>SchedulerProcess</code>；</li>
+<li><code>SchedulerProcess</code>调用用户在Scheduler中编写的<code>resourceOffers</code>函数，告知有新资源可用；</li>
+<li>Framework的Scheduler调用<code>MesosSchedulerDriver</code>中的<code>launchTasks()</code>函数，告知将要启动的任务；</li>
+<li>Mesos Master将待启动的任务分装成<code>RunTaskMessage</code>发送给各个Mesos Slave；</li>
+<li>Mesos Slave收到<code>RunTaskMessage</code>消息后，将其发送给对应的<code>ExecutorProcess</code>；</li>
+<li><code>ExecutorProcess</code>收到消息后，进行资源本地化，并准备任务环境，最终调度用户编写的Exector中的<code>launchTask</code>任务启动任务。</li>
+</ol>
+<h3 id="Framework开放接口及作用"><a href="#Framework开放接口及作用" class="headerlink" title="Framework开放接口及作用"></a>Framework开放接口及作用</h3><p>Mesos向开发者开放了API，API隐藏了Mesos底层和分布式交互的具体的细节，使得开发者可方便地用根据相应使用环境编写对应的Framework，提供的接口支持<code>C++</code>，<code>Go</code>，<code>Haskell</code>，<code>Java</code>，<code>Python</code>，和<code>Scala</code>语言。</p>
+<p><strong>Scheduler API</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>registered()</code></td>
+<td>当Scheduler成功向Master注册时被调用</td>
+</tr>
+<tr>
+<td><code>reregistered()</code></td>
+<td>当Scheduler再次注册成功时被调用</td>
+</tr>
+<tr>
+<td><code>disconnected()</code></td>
+<td>当Scheduler和Master失去连接时被调用</td>
+</tr>
+<tr>
+<td><strong><code>resourcesOffers()</code></strong></td>
+<td>当Framework收到Mesos提供的资源时被调用</td>
+</tr>
+<tr>
+<td><code>offerRescinded()</code></td>
+<td>当某个offer不再适用时调用(Slave丢失或者其他Framework正在适用这个offer),master撤销发送给Framework的资源</td>
+</tr>
+<tr>
+<td><code>statusUpdate()</code></td>
+<td>当Mesos向框架发送消息时被调用</td>
+</tr>
+<tr>
+<td><code>frameworkMessage()</code></td>
+<td>用来向Scheduler传递Executor发送的消息</td>
+</tr>
+<tr>
+<td><code>slaveLost()</code></td>
+<td>通知Mesos无法和指定ID的slave通信</td>
+</tr>
+<tr>
+<td><code>executorLost()</code></td>
+<td>通知Scheduler指定的Executor已经以某个状态结束了</td>
+</tr>
+<tr>
+<td><code>error()</code></td>
+<td>当Scheduler出现可恢复的错误时被调用</td>
+</tr>
+</tbody>
+</table>
+<p>其中最重要的为<br><code>resourceOffers(SchedulerDriver,  List&lt;Offer&gt;)</code>方法。Master向Framework提供资源offer，每一份资源offer包含从某个slave上获取的资源列表（包括CPU，内存，硬盘等）。开发者重写该方法，可用根据特定的情况接受资源offer，并利用offersId交给Executor启动任务，或者拒绝该offer。<strong>一个offer会提供给多个Framework，但是第一个使用offer启动任务的Framework会获胜，其他的Framework将受到<code>offerRescinded()</code>发出的消息。</strong></p>
+<p><strong>Scheduler API</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>registered()</code></td>
+<td>当Executor驱动成功和Mesos连接上时调用</td>
+</tr>
+<tr>
+<td><code>reregistered()</code></td>
+<td>当Executor再次向某个重启的slave注册时调用</td>
+</tr>
+<tr>
+<td><code>disconnected()</code></td>
+<td>当Executor和slave失去连接时调用</td>
+</tr>
+<tr>
+<td><strong><code>launchTask()</code></strong></td>
+<td>当Executor启动某个任务时调用</td>
+</tr>
+<tr>
+<td><code>killTask()</code></td>
+<td>当Executor杀死某个task时被调用</td>
+</tr>
+<tr>
+<td><code>frameworkMessage()</code></td>
+<td>当Framework的信息到达Executor时被调用</td>
+</tr>
+<tr>
+<td><code>shutdown()</code></td>
+<td>当Executor需要终止所有task时被调用</td>
+</tr>
+<tr>
+<td><code>error()</code></td>
+<td>当Scheduler出现不可恢复的错误时被调用</td>
+</tr>
+</tbody>
+</table>
+<p>同样，Executor中最核心的方法是<code>launchTask(ExecutorDriver, TaskInfo)</code>。可重写该方法实现执行任务，任务将在offer来源的slave上执行。<strong>执行任务在方法调用时会被阻塞，在回调完成前，该Executor无法执行其他的任务。</strong> 因此如果要执行一个长时间的任务（如Web应用)，可用把任务放在线程里，通过线程的方式启动。</p>
+<h2 id="Framework实例分析"><a href="#Framework实例分析" class="headerlink" title="Framework实例分析"></a>Framework实例分析</h2><p>Mesos上已有许多Framework，包括支持MPI，Hadoop，Spark，Storm等应用的。这里主要利用简单的Framework分析如何实现一个Framework。</p>
+<ul>
+<li><p><a href="https://github.com/mesosphere/mesos-hydra" target="_blank" rel="external">mesos-hydra</a>，MPI Framework，该Framework是利用python进行的实现。</p>
+</li>
+<li><p><a href="https://github.com/mesosphere/RENDLER" target="_blank" rel="external">RENDLER</a>,一个利用Mesos框架实现的分布式爬虫</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">挖坑，待看完全部代码后补上源码分析</div></pre></td></tr></table></figure>
+<h2 id="Framework设计模式"><a href="#Framework设计模式" class="headerlink" title="Framework设计模式"></a>Framework设计模式</h2><p>从现有的Mesos Framework分配调度使用资源的方式中，可用总结出以下几种模式。</p>
+<ul>
+<li>用于协调资源：设计的Framework作为其他Framework的资源协调者，作为服务运行，如<code>Mesos-DNS</code>。</li>
+<li>基于负载状况：设计的Framework根据负载来调节资源使用，如<code>Marathon</code>和<code>Aurora</code>，会根据约定自动进行扩容和缩容。</li>
+<li>基于预留的框架：这里主要指，某些分布式应用，在设计时已经预留了资源调度的接口，如<code>Hadoop</code>，<code>Spark</code>，<code>Storm</code>，因此只要实现接口，就可以将应用从原有的调度框架（如Hadoop原有框架为<code>YARN</code>)移植到Mesos上来。</li>
+</ul>
+<hr>
+<h2 id="相关资源"><a href="#相关资源" class="headerlink" title="相关资源"></a>相关资源</h2><ul>
+<li><a href="http://mesos.apache.org/" target="_blank" rel="external">Mesos项目官网</a></li>
+<li><a href="http://www.mesoscn.cn/" target="_blank" rel="external">数人云翻译的Mesos文档</a></li>
+<li><a href="https://mesosphere.com/" target="_blank" rel="external">Mesosphere</a></li>
+<li><a href="https://mesosphere.github.io/marathon/" target="_blank" rel="external">Marathon</a></li>
+<li><a href="http://aurora.apache.org/" target="_blank" rel="external">Aurora</a></li>
+<li><a href="https://mesos.github.io/chronos/" target="_blank" rel="external">Chronos</a></li>
+<li><a href="http://www.infoq.com/cn/minibooks/analyse-mesos" target="_blank" rel="external">InfoQ的Mesos迷你书</a></li>
+<li><a href="http://people.csail.mit.edu/matei/papers/2011/nsdi_mesos.pdf" target="_blank" rel="external">NSDI 2011 - Mesos: A Platform for Fine-Grained Resource Sharing in the Data Center </a></li>
+</ul>
+
+      
+    </div>
+      
+      <footer>
+        
+  
+  <div class="categories">
+    <a href="/categories/nap/">nap</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/mesos/">mesos</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+      </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/OpenStack/">OpenStack</a><small>3</small></li>
+  
+    <li><a href="/categories/TVDCR/">TVDCR</a><small>3</small></li>
+  
+    <li><a href="/categories/east/">east</a><small>2</small></li>
+  
+    <li><a href="/categories/nap/">nap</a><small>4</small></li>
+  
+    <li><a href="/categories/web/">web</a><small>4</small></li>
+  
+    <li><a href="/categories/书架/">书架</a><small>1</small></li>
+  
+    <li><a href="/categories/大数据/">大数据</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 NAP Group
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+</body>
+</html>
+

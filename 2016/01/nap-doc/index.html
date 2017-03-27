@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>NAP使用手册 › NAP - Next Application Platform</title>
+  <meta name="author" content="NAP Group">
+  
+  <meta name="description" content="本篇为NAP平台的使用手册，详细介绍了NAP的使用细节及操作截图。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="NAP使用手册"/>
+  <meta property="og:site_name" content="NAP - Next Application Platform"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="NAP - Next Application Platform" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">NAP - Next Application Platform</a></h1>
+  <h2><a href="/"></a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">NAP使用手册</h1>
+  
+
+      
+        <time datetime="2016-01-10T14:00:03.000Z">2016-01-10</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>本篇为NAP平台的使用手册，详细介绍了NAP的使用细节及操作截图。</p>
+<a id="more"></a>
+<h2 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h2><p>使用浏览器打开<strong>NAP平台</strong>(<a href="http://nap.artemisprojects.org/" target="_blank" rel="external">http://nap.artemisprojects.org/</a>) ,显示登录界面。<br><img src="/images/nap-doc/login.png" alt=""><br>NAP平台暂时还不支持开放注册，需要注册使用可联系开发人员，之后用给定的用户名密码登录即可。<br>登录界面中勾选<code>Remember me</code>,下次打开NAP平台可以直接进入控制界面，无需重复登录。</p>
+<p>登录成功即进入桌面形式的控制界面。<br><img src="/images/nap-doc/desktop.png" alt=""></p>
+<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h2><p>打开桌面上<code>Create Project</code>图标，弹出窗口提示用户输入项目名称和项目url。<br><img src="/images/nap-doc/create.png" alt=""><br>输入项目名称和url后，点击<code>create</code>创建该项目，创建需要一小段时间，创建成功会弹出消息提示项目创建成功。需要注意项目名称不能包含 <strong>‘-‘</strong>。</p>
+<p>项目具体配置方法可见桌面上<code>Readme</code>中的教程，其中包含了详细的示例。<br><img src="/images/nap-doc/readme.png" alt=""></p>
+<h2 id="项目管理"><a href="#项目管理" class="headerlink" title="项目管理"></a>项目管理</h2><p>创建成功的项目可以通过项目列表进行查看和管理，双击条目或点击最前面的 <strong>‘+’</strong> 可以查看该项目的服务节点。通过列表中的按钮可以对项目进行管理。<br><img src="/images/nap-doc/list.png" alt=""></p>
+<h3 id="1-查看服务节点日志"><a href="#1-查看服务节点日志" class="headerlink" title="1. 查看服务节点日志"></a>1. 查看服务节点日志</h3><p>点击列表中相应服务节点的<code>logs</code>按钮，就会弹出该服务节点的日志信息。</p>
+<h3 id="2-命令行工具"><a href="#2-命令行工具" class="headerlink" title="2. 命令行工具"></a>2. 命令行工具</h3><p>对每个节点都有一个命令行工具，点击<code>shell</code>按钮即可弹出，用户名和密码都是admin。<br><img src="/images/nap-doc/shell.png" alt=""></p>
+<h3 id="3-删除项目"><a href="#3-删除项目" class="headerlink" title="3. 删除项目"></a>3. 删除项目</h3><p>如果想删除某个项目，可以点击该项目对应的<code>destroy</code>按钮，系统会提示是否确认删除，如果确认删除就可删除当前项目，否则将取消该操作。<br><img src="/images/nap-doc/destroy.png" alt=""></p>
+<h2 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h2><p>NAP平台包含一个文件管理系统<code>File Browser</code>，每个项目在创建时自动生成一个文件夹，项目的<code>git</code>文件会<code>clone</code>到这个文件夹中，当该项目被删除时会同时删除该文件夹。<br>这个文件夹是一个分布式文件系统上的共享目录，比直接在<code>docker</code>内存储文件的可靠性高。每个容器启动后会自动挂载到<code>/nap</code>目录下。<br>文件管理系统分成两部分，左边是文件的目录树，右边的窗口既可以用来现实当前路径下的文件，也可以现实具体的文件内容，下面对其进行详细的介绍。</p>
+<h3 id="1-文件操作"><a href="#1-文件操作" class="headerlink" title="1. 文件操作"></a>1. 文件操作</h3><p>文件管理系统可以完成对文件的新建、重命名、复制、粘贴、移动、删除操作。通过在左边的目录树中右键相应的节点，弹出菜单选择相应的操作，注意新建等操作只能在文件夹上进行，新建出的文件在该文件夹下，文件的移动操作是通过对文件夹或文件的托拽实现的。<br><img src="/images/nap-doc/folder.png" alt=""></p>
+<h3 id="2-文件编辑"><a href="#2-文件编辑" class="headerlink" title="2. 文件编辑"></a>2. 文件编辑</h3><p>在目录树中点击一个文件或在右边文件窗口中双击可以打开一个文件，文件会显示在右边的窗口中。</p>
+<ul>
+<li>系统会自动识别代码的类型，对其进行高亮处理，如果无法识别，则可以通过窗口左上角的选择框选择相应的代码类型。</li>
+<li>一旦修改文件框中的文件，右上角的保存按钮会由灰色不可点击变成可以点，点击保存按钮修改后的文件将被保存到服务器。</li>
+<li>当你切换文件或关闭文件时，如果文件被修改过，系统会提示你是否保存修改的内容。</li>
+</ul>
+<p><img src="/images/nap-doc/file.png" alt=""></p>
+<h2 id="注销登录"><a href="#注销登录" class="headerlink" title="注销登录"></a>注销登录</h2><p>点击左下角<code>Start</code>按钮，弹出的开始菜单中点击<code>Logout</code>按钮即完成注销操作。</p>
+
+      
+    </div>
+      
+      <footer>
+        
+  
+  <div class="categories">
+    <a href="/categories/nap/">nap</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/nap/">nap</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+      </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/OpenStack/">OpenStack</a><small>3</small></li>
+  
+    <li><a href="/categories/TVDCR/">TVDCR</a><small>3</small></li>
+  
+    <li><a href="/categories/east/">east</a><small>2</small></li>
+  
+    <li><a href="/categories/nap/">nap</a><small>4</small></li>
+  
+    <li><a href="/categories/web/">web</a><small>4</small></li>
+  
+    <li><a href="/categories/书架/">书架</a><small>1</small></li>
+  
+    <li><a href="/categories/大数据/">大数据</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 NAP Group
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+</body>
+</html>
+

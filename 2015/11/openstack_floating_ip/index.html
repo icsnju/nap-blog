@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>OpenStack平台手动搭建以及floating-ip的使用 › NAP - Next Application Platform</title>
+  <meta name="author" content="NAP Group">
+  
+  <meta name="description" content="最近尝试着根据OpenStack官方网站的教程搭建一个简单的OpenStack集群，并且使用floating-ip机制。下面简单对这些工作进行介绍。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="OpenStack平台手动搭建以及floating-ip的使用"/>
+  <meta property="og:site_name" content="NAP - Next Application Platform"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="NAP - Next Application Platform" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">NAP - Next Application Platform</a></h1>
+  <h2><a href="/"></a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">OpenStack平台手动搭建以及floating-ip的使用</h1>
+  
+
+      
+        <time datetime="2015-11-19T16:00:00.000Z">2015-11-20</time>
+      
+    </header>
+    <div class="entry">
+      
+        <blockquote>
+<p>最近尝试着根据OpenStack官方网站的教程搭建一个简单的OpenStack集群，并且使用floating-ip机制。下面简单对这些工作进行介绍。</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h2 id="搭建OpenStack平台"><a href="#搭建OpenStack平台" class="headerlink" title="搭建OpenStack平台"></a>搭建OpenStack平台</h2><h3 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h3><p>在上一篇中，对OpenStack平台做了简单的介绍。这一次，我们根据OpenStack官网上面的<a href="http://docs.openstack.org/liberty/install-guide-ubuntu/" target="_blank" rel="external">文档</a>，手动部署OpenStack中的服务组件。并在搭建好的平台上运行实例。平台的设计布局如下图所示：</p>
+<p><img src="/images/openstack-layout.png" alt=""></p>
+<p>在上图中，主要包括一个Controller节点和Compute节点，以及一些Storage节点。在本例中我们仅仅关注Controller节点和Compute节点。从图中可以看出Controller和Compute节点均包括两个子网，分别为management network和public network。</p>
+<p>我们使用<a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>工具初始化两个节点。Vagrantfile具体为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">Vagrant.configure(2) do |config|</div><div class="line">	config.vm.box = &quot;ubuntu/trusty64&quot;</div><div class="line"> 	config.vm.hostname = &quot;controller&quot;</div><div class="line">	config.ssh.username = &quot;vagrant&quot;</div><div class="line">	config.ssh.password = &quot;vagrant&quot;</div><div class="line">   </div><div class="line">	config.vm.network &quot;private_network&quot;, ip: &quot;10.0.0.11&quot;</div><div class="line">	config.vm.network &quot;public_network&quot;</div><div class="line">	</div><div class="line">	config.vm.provider &quot;virtualbox&quot; do |vb|</div><div class="line">		vb.gui = false</div><div class="line">		vb.memory = &quot;6144&quot;</div><div class="line">		vb.cpus = 2</div><div class="line">	end</div><div class="line">end</div></pre></td></tr></table></figure>
+<p>我们建立的虚拟机是Ubuntu14.04 64位，还有一些关于主机名，用户密码，内存，CPU的简单设置。我们设置了两个网络，分别对应于management work和public network。</p>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>在安装OpenStack的各个服务组件之前，需要预先安装一些软件。</p>
+<ul>
+<li><a href="http://docs.openstack.org/liberty/install-guide-ubuntu/environment-ntp.html" target="_blank" rel="external">NTP协议</a>，用于同步不同节点之间的状态及服务。</li>
+<li><a href="http://docs.openstack.org/liberty/install-guide-ubuntu/environment-packages.html" target="_blank" rel="external">OpenStack包</a>，安装最新的OpenStack包，这里我们选取的是最新版Liberty。</li>
+<li><a href="http://docs.openstack.org/liberty/install-guide-ubuntu/environment-sql-database.html" target="_blank" rel="external">SQL数据库</a>，在Controller节点上安装SQL数据库，大多数OpenStack服务使用SQL数据库用来存储信息。</li>
+<li><a href="http://docs.openstack.org/liberty/install-guide-ubuntu/environment-nosql-database.html" target="_blank" rel="external">NoSQL数据库</a>，在Controller节点上安装，Telemetry服务使用NoSQL数据库(一般为MongoDB)来存储消息。</li>
+<li><a href="http://docs.openstack.org/liberty/install-guide-ubuntu/environment-messaging.html" target="_blank" rel="external">消息队列</a>，在Controller节点上安装，OpenStack平台使用消息队列来协调各个服务之间的操作和状态信息。</li>
+</ul>
+<h3 id="安装Keystone组件"><a href="#安装Keystone组件" class="headerlink" title="安装Keystone组件"></a>安装Keystone组件</h3><p>OpenStack平台中的Keystone服务主要用于身份管理，Keystone的作用类似与一个服务总线，其他服务都通过Keystone来注册器服务的Endpoint，针对这些服务的任何调用都需要经过Keystone的身份认证才可以。安装的步骤按照<a href="http://docs.openstack.org/liberty/install-guide-ubuntu/common/get_started_identity.html" target="_blank" rel="external">文档</a>中进行即可。</p>
+<h3 id="安装Glance组件"><a href="#安装Glance组件" class="headerlink" title="安装Glance组件"></a>安装Glance组件</h3><p>OpenStack平台中的Glance服务主要管理镜像。这点跟Docker中的image类似。即我们可以上传当前的镜像以便日后使用。安装的步骤按照<a href="http://docs.openstack.org/liberty/install-guide-ubuntu/glance.html" target="_blank" rel="external">文档</a>中进行即可。</p>
+<h3 id="安装Nova组件"><a href="#安装Nova组件" class="headerlink" title="安装Nova组件"></a>安装Nova组件</h3><p>OpenStack平台中的Nova服务是OpenStack平台的核心服务，它用于抽象虚拟机实例，并控制着虚拟机的状态便签，管理着它们的资源分配。安装的步骤按照<a href="http://docs.openstack.org/liberty/install-guide-ubuntu/nova.html" target="_blank" rel="external">文档</a>中进行，其中有一个地方文档写错了，我们会在后面详细说一下。</p>
+<h3 id="安装Neutron组件"><a href="#安装Neutron组件" class="headerlink" title="安装Neutron组件"></a>安装Neutron组件</h3><p>OpenStack平台中的Neutron服务将OpenStack平台所在的物理网络泛化为网络资源池，通过对物理网络资源的灵活划分与管理，Neutron组件能为同一物理网络上的每个tenant提供独立的虚拟网络环境。安装的步骤按照<a href="http://docs.openstack.org/liberty/install-guide-ubuntu/neutron.html" target="_blank" rel="external">文档</a>中进行即可。安装后的网络模块大致如下：</p>
+<p><img src="/images/openstack-network-overview.png" alt=""></p>
+<p>其中Controller中有网桥代理，Metadata代理，DHCP代理和L3代理，而Compute节点中只有网桥代理。</p>
+<h3 id="安装Horizon组件"><a href="#安装Horizon组件" class="headerlink" title="安装Horizon组件"></a>安装Horizon组件</h3><p>OpenStack平台中的Horizon提供了Dashboard，即一个简洁方便用户友好的控制界面，让开发者和使用者更好的浏览并操作属于自己的计算资源，安装步骤按照<a href="http://docs.openstack.org/liberty/install-guide-ubuntu/horizon.html" target="_blank" rel="external">文档</a>中进行即可。</p>
+<h3 id="运行一个例子"><a href="#运行一个例子" class="headerlink" title="运行一个例子"></a>运行一个例子</h3><p>在此之前，我们按照文档已经安装好了OpenStack平台最基本的一些服务，下面我们就可以运行一个<a href="http://docs.openstack.org/liberty/install-guide-ubuntu/launch-instance.html" target="_blank" rel="external">例子</a>。在安装Neutron服务后，集群的网络拓扑为下图。</p>
+<p><img src="/images/openstack-network-connect.png" alt=""></p>
+<p>其中public provider network和public physical network应该在同一个网段内，management physical network是启动虚拟机的Vagrantfile中已经预先定义好了。Private project network需要自己手动创建，在文档中有例子，这个网段应该可以是任意指定的。 我们一共运行了两个实例，一个为公共实例，一个为私有实例，公共实例可以通过ip地址直接ssh访问(因为在同一子网内)，但是私有实例则需要指定floating-ip，才能访问。把floating-ip的介绍的<a href="https://www.rdoproject.org/networking/difference-between-floating-ip-and-private-ip/" target="_blank" rel="external">链接1</a> <a href="http://docs.openstack.org/user-guide/cli_manage_ip_addresses.html" target="_blank" rel="external">链接2</a>放出来，供大家参考。</p>
+<p><img src="/images/openstack-network-instance.png" alt=""></p>
+<p>如果想要访问私有实例private-instance，由于分配了floating-ip，所以它的访问过程如下图所示：</p>
+<p><img src="/images/openstack-floating-ip.png" alt=""></p>
+<h2 id="安装过程遇到的问题总结"><a href="#安装过程遇到的问题总结" class="headerlink" title="安装过程遇到的问题总结"></a>安装过程遇到的问题总结</h2><ul>
+<li>首先在安装完Compute服务后，发现在Controller节点上并没有显示出Compute节点上面的nova-compute服务，在网上找了一下原因。有的大神提出来在配置文件/etc/nova/nova.conf中，关于消息队列的三个配置项不应该在<code>[oslo_messaging_rabbit]</code>这个section中，应该在<code>[DEFAULT]</code>中，修改后重启nova-compute服务即可。在重启后，在Controller节点上发现nova-compute服务，状态为up，但是过了一会儿状态变为down了。不知道为什么，在网上找了很久也没有解决。于是把Compute节点删掉，重新装了一遍，就好了。好了。了。</li>
+<li>安装完DashBoard组件后，可以正常登陆，但是在打开<code>Instance</code>列表时，右上角会出现<strong>Unable to Connect to Neutron</strong>的提示，而且不能通过在DashBoard页面创建实例等。这是因为我在刚开始装Neutron组件的时候选择了<a href="http://docs.openstack.org/liberty/install-guide-ubuntu/neutron-controller-install-option1.html" target="_blank" rel="external">Provider networks</a>这个选项，在配置文件/etc/neutron/neutron.conf文件中，它禁用了service_plugins这个选项，即把它赋值为空。但是在第二个选项<a href="http://docs.openstack.org/liberty/install-guide-ubuntu/neutron-controller-install-option2.html" target="_blank" rel="external">Self-service networks</a>中，这一项赋值为router。由于后来要使用floating-ip机制，所以需要选择第二个网络拓扑，就把这一项填充好了。然后之前页面上的问题也成功解决了。</li>
+<li>在运行的例子中，由于我们最后选择的是第二项网络拓扑，所以运行的实例不论是共有(public instance)的还是私有(private instance)的，都应该可以正常运行。但是我们只能成功运行私有实例，并可以使用floating-ip机制访问进新建的private虚拟机实例。而公共实例却不能正常访问，这是因为虚拟机在启动的时候DHCP没有分配好IP地址，所以尽管我们在DashBoard中发现这个实例已经有了IP地址，但是通过console进入虚拟机之后发现并没有分配正确的ip地址。通过实例的log分析，应该是DHCP的配置出了一些问题，也在网上找了很久，都没有找到解决办法。</li>
+</ul>
+
+      
+    </div>
+      
+      <footer>
+        
+  
+  <div class="categories">
+    <a href="/categories/OpenStack/">OpenStack</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/OpenStack/">OpenStack</a>, <a href="/tags/floating-ip/">floating-ip</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+      </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/OpenStack/">OpenStack</a><small>3</small></li>
+  
+    <li><a href="/categories/TVDCR/">TVDCR</a><small>3</small></li>
+  
+    <li><a href="/categories/east/">east</a><small>2</small></li>
+  
+    <li><a href="/categories/nap/">nap</a><small>4</small></li>
+  
+    <li><a href="/categories/web/">web</a><small>4</small></li>
+  
+    <li><a href="/categories/书架/">书架</a><small>1</small></li>
+  
+    <li><a href="/categories/大数据/">大数据</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 NAP Group
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+</body>
+</html>
+

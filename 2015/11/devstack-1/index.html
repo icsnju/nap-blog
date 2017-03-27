@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>OpenStack与DevStack初探 › NAP - Next Application Platform</title>
+  <meta name="author" content="NAP Group">
+  
+  <meta name="description" content="本文会简单介绍一下OpenStack平台，它的手动部署方法，以及使用devstack脚本自动化部署的方法。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="OpenStack与DevStack初探"/>
+  <meta property="og:site_name" content="NAP - Next Application Platform"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="NAP - Next Application Platform" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">NAP - Next Application Platform</a></h1>
+  <h2><a href="/"></a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">OpenStack与DevStack初探</h1>
+  
+
+      
+        <time datetime="2015-11-09T09:00:00.000Z">2015-11-09</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>本文会简单介绍一下OpenStack平台，它的手动部署方法，以及使用devstack脚本自动化部署的方法。</p>
+<a id="more"></a>
+<hr>
+<h2 id="OpenStack简介"><a href="#OpenStack简介" class="headerlink" title="OpenStack简介"></a>OpenStack简介</h2><p>OpenStack是一个开元的云计算管理平台项目，由几个主要的组件组合起来完成具体任务。OpenStack支持几乎所有类型的云环境，它的目标是提供实施简单、可大规模扩展、丰富、标准统一的云计算管理平台。它的主要组件及相应的功能如下图所示：</p>
+<p><img src="/images/openstack-service.png" alt=""></p>
+<h3 id="手动搭建OpenStack平台"><a href="#手动搭建OpenStack平台" class="headerlink" title="手动搭建OpenStack平台"></a>手动搭建OpenStack平台</h3><p>我们选择的平台是Ubuntu14.04。根据<a href="http://docs.openstack.org/liberty/install-guide-ubuntu/" target="_blank" rel="external">官方文档</a>，我们可以手动部署OpenStack的各个服务组件。在部署服务之前，需要首先安装NTP，以及数据库和消息队列组件。其中NTP是为了保证集群中的所有结点有一个全局时钟。而数据库存放每个服务的数据等信息，OpenStack支持MySQL和MongoDB。消息队列被用来协调各个服务之间的操作和状态，一般用<a href="http://www.rabbitmq.com/" target="_blank" rel="external">RabbitMQ</a>实现。</p>
+<p>每个服务的安装部署过程都比较类似。首先会建立一个数据库，然后建立一个用户，接着安装依赖的包等等。最后手动修改配置文件(主要为/etc/service_name/service_name.conf)。</p>
+<h2 id="DevStack简介"><a href="#DevStack简介" class="headerlink" title="DevStack简介"></a>DevStack简介</h2><p>DevStack实际上是一个shell脚本，可以用来快速搭建OpenStack的运行和开发环境，但是devstack并不适合用在生产环境中，它比较适合OpenStack开发者下载最新的OpenStack代码迅速在自己的笔记本上搭建一个开发环境出来。</p>
+<h3 id="使用DevStack脚本进行一键部署"><a href="#使用DevStack脚本进行一键部署" class="headerlink" title="使用DevStack脚本进行一键部署"></a>使用DevStack脚本进行一键部署</h3><p>使用devstack脚本很简单，安装git，然后下载devstack代码到本地，运行stack.sh脚本一次设定MySQL, RabbitMQ, OpenStack Dashboard和Keystone的密码，密码输入后stack.sh脚本会自动开始安装必要的软件包和库并下载最新的OpenStack及其组件代码，整个过程无需干预。devstack的下载方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://git.openstack.org/openstack-dev/devstack</div></pre></td></tr></table></figure>
+<p>Devstack的默认配置文件都保存在stackrc文件中，我们也可以创建一个localrc文件来修改他的默认设置。它的使用比较简单，但是它的脚本代码一点都不简单，因为它要维护支持多Linux发行版。通过阅读脚本，并且与stack.sh源码对照。将整个过程自动分为以下若干步骤：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">清楚上次devstack脚本运行的缓存。</div><div class="line">根据stackrc/localrc等配置文件加载一些系统变量及其他配置选项</div><div class="line">载入本地变量，根据不同的Linux版本进行不同的操作。（详细的操作步骤目前还不是特别熟悉，需要的时候再看）</div><div class="line">配置安装及log目录等信息。</div><div class="line">预先设定错误处理过程，即如果在脚本运行过程中发生错误，需要在退出前进行哪些操作。</div><div class="line">导入每个OpenStack服务所需要的plugins或是安装服务所用到的libraries及functions。</div><div class="line">交互配置，及提供MySQL,RabbitMQ,Dashboard以及Keystone的密码。</div><div class="line">安装database及队列queue。</div><div class="line">安装配置本地的python环境。</div><div class="line">安装service client。</div><div class="line">安装service middleware（即每个需要安装的具体服务）。</div><div class="line">初始化并启动这些服务。</div><div class="line">保存安装过程退出后，在运行时可能用到的信息，如相关的系统变量等等。</div><div class="line">打印安装完成的信息。</div></pre></td></tr></table></figure>
+<h3 id="对比devstack部署以及手动部署的过程，以nova服务为例。"><a href="#对比devstack部署以及手动部署的过程，以nova服务为例。" class="headerlink" title="对比devstack部署以及手动部署的过程，以nova服务为例。"></a>对比devstack部署以及手动部署的过程，以nova服务为例。</h3><h4 id="手动部署"><a href="#手动部署" class="headerlink" title="手动部署"></a>手动部署</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">CREATE nova DATABASE;</div><div class="line">CREATE nova Users;</div><div class="line">CREATE compute service API endpoint;</div><div class="line">apt-get install $(packages);</div><div class="line">vim /etc/nova/nova.conf;</div><div class="line">service $(*) restart;</div></pre></td></tr></table></figure>
+<h4 id="自动部署-stack-sh"><a href="#自动部署-stack-sh" class="headerlink" title="自动部署(stack.sh)"></a>自动部署(stack.sh)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Line756, install_nova_client.</div><div class="line">Line811, stack_install_nova, 这两个函数主要进行的就是git clone和pip install, 即下载安装所需依赖包。</div><div class="line">Line815, configure_nova，主要对/etc/nova/nova.conf进行配置。</div><div class="line">Line1131, init_nova, 主要进行初始化数据库等。</div><div class="line">Line1252, start_nova，启动nova服务。</div></pre></td></tr></table></figure>
+
+      
+    </div>
+      
+      <footer>
+        
+  
+  <div class="categories">
+    <a href="/categories/OpenStack/">OpenStack</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/openstack/">openstack</a>, <a href="/tags/devstack/">devstack</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+      </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/OpenStack/">OpenStack</a><small>3</small></li>
+  
+    <li><a href="/categories/TVDCR/">TVDCR</a><small>3</small></li>
+  
+    <li><a href="/categories/east/">east</a><small>2</small></li>
+  
+    <li><a href="/categories/nap/">nap</a><small>4</small></li>
+  
+    <li><a href="/categories/web/">web</a><small>4</small></li>
+  
+    <li><a href="/categories/书架/">书架</a><small>1</small></li>
+  
+    <li><a href="/categories/大数据/">大数据</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 NAP Group
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+</body>
+</html>
+

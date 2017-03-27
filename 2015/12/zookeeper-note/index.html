@@ -1,0 +1,329 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ZooKeeper 学习笔记 › NAP - Next Application Platform</title>
+  <meta name="author" content="NAP Group">
+  
+  <meta name="description" content="ZooKeeper是一个典型的分布式数据一致性的解决方案，分布式应用可以基于它实现诸如数据发布／订阅、负责均衡、命名服务、分布式协调／通知、集群管理等功能。 ZooKeeper可以保证如下分布式一致性特征。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="ZooKeeper 学习笔记"/>
+  <meta property="og:site_name" content="NAP - Next Application Platform"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="NAP - Next Application Platform" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">NAP - Next Application Platform</a></h1>
+  <h2><a href="/"></a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">ZooKeeper 学习笔记</h1>
+  
+
+      
+        <time datetime="2015-12-09T16:00:00.000Z">2015-12-10</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>ZooKeeper是一个典型的分布式数据一致性的解决方案，分布式应用可以基于它实现诸如数据发布／订阅、负责均衡、命名服务、分布式协调／通知、<br>集群管理等功能。 ZooKeeper可以保证如下分布式一致性特征。</p>
+<a id="more"></a>
+<hr>
+<h2 id="ZooKeeper是什么"><a href="#ZooKeeper是什么" class="headerlink" title="ZooKeeper是什么"></a>ZooKeeper是什么</h2><p>ZooKeeper是一个典型的分布式数据一致性的解决方案，分布式应用可以基于它实现诸如数据发布／订阅、负责均衡、命名服务、分布式协调／通知、<br>集群管理等功能。 ZooKeeper可以保证如下分布式一致性特征。</p>
+<h3 id="顺序一致性"><a href="#顺序一致性" class="headerlink" title="顺序一致性"></a>顺序一致性</h3><p>从同一个客户端发起的事务请求，最终将会严格地按照其发起顺序被应用到ZooKeeper中去</p>
+<h3 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h3><p>所有事务请求的处理结果在整个集群中所有机器上的应用情况是一致的，要么整个集群所有机器都成功应用了某一个事务，要么都没有应用</p>
+<h3 id="单一视图"><a href="#单一视图" class="headerlink" title="单一视图"></a>单一视图</h3><p>无论客户端连接的是哪个ZooKeeper服务器，其看到的服务端数据模型都是一致的。</p>
+<h3 id="可靠性"><a href="#可靠性" class="headerlink" title="可靠性"></a>可靠性</h3><p>一旦服务端成功地应用了一个事务，并完成对客户端的响应，那么该事务所引起的服务端状态变更将会被一直保留下来，除非有另一个事务又对其进行了变更。</p>
+<h3 id="实时性"><a href="#实时性" class="headerlink" title="实时性"></a>实时性</h3><p>ZooKeeper仅仅保证在一定的时间内，客户端最终一定能够从服务器端上读取到最新的数据状态。</p>
+<h2 id="ZooKeeper提供了什么"><a href="#ZooKeeper提供了什么" class="headerlink" title="ZooKeeper提供了什么"></a>ZooKeeper提供了什么</h2><p>简单的说，ZooKeeper=文件系统+通知机制。</p>
+<h3 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h3><p>ZooKeeper维护一个类似文件系统的数据结构</p>
+<p><img src="/images/zookeeper-file-structure.png" alt=""></p>
+<p>每个子目录项如 NameService 都被称作为znode，和文件系统一样，我们能够自由的增加、删除znode，在一个znode下增加、删除子znode，唯一的不同在于znode是可以存储数据的。有四种类型的znode：</p>
+<ul>
+<li>PERSISTENT-持久化目录节点<br>客户端与zookeeper断开连接后，该节点依旧存在</li>
+<li>PERSISTENT_SEQUENTIAL-持久化顺序编号目录节点<br>客户端与zookeeper断开连接后，该节点依旧存在，只是Zookeeper给该节点名称进行顺序编号</li>
+<li>EPHEMERAL-临时目录节。客户端与zookeeper断开连接后，该节点被删除<br>4、EPHEMERAL_SEQUENTIAL-临时顺序编号目录节点。客户端与zookeeper断开连接后，该节点被删除，只是Zookeeper给该节点名称进行顺序编号</li>
+</ul>
+<h3 id="通知机制"><a href="#通知机制" class="headerlink" title="通知机制"></a>通知机制</h3><p>客户端注册监听它关心的目录节点，当目录节点发生变化（数据改变、被删除、子目录节点增加删除）时，ZooKeeper会通知客户端。</p>
+<h2 id="保证分布式数据原子性操作"><a href="#保证分布式数据原子性操作" class="headerlink" title="保证分布式数据原子性操作"></a>保证分布式数据原子性操作</h2><p>ZooKeeper中为数据节点（znode）引入了版本的概念，每个数据节点都具有三种类型的版本信息，说明如下表。</p>
+<table>
+<thead>
+<tr>
+<th>版本类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>version</td>
+<td>当前数据节点数据内容的版本号 </td>
+</tr>
+<tr>
+<td>cversion</td>
+<td>当前数据节点子节点的版本号</td>
+</tr>
+<tr>
+<td>aversion</td>
+<td>当前数据节点ACL变更版本号</td>
+</tr>
+</tbody>
+</table>
+<p>下文以其中的version版本类型为例说明。在一个数据节点<code>/zk</code>被创建完毕之后，节点的version值是0，表示的含义是“当前节点自创建以后，被更新过0次”。如果现在对该节点的数据内容进行更新操作，则version的值变为1。需要注意的是，即使前后两次变更并没有似的数据内容的值发生变化，version的值依然会变更。</p>
+<p>ZooKeeper引入version的作用，主要是实现乐观锁，保证数据原子性操作。乐观锁把控制的事务分成三个阶段：数据读取、写入校验、数据写入，其中写入校验阶段是整个乐观锁控制的关键所在。如何进行写入校验呢？ZooKeeper采用的是JDK中最典型的乐观锁实现——<a href="https://en.wikipedia.org/wiki/Compare-and-swap" target="_blank" rel="external">CAS(Compare and Swap)</a>。简单的讲就是：对于值V，每次更新前都会比对其值是否是预期值A，只有符合预期，才会将V原子化地更新到新值B，其中是否符合预期便是乐观锁中的“写入校验”阶段。</p>
+<p>下面以一个更新数据实例，演示如何用version保证一致性。假如一个客户端试图进行更新操作，它会携带上次获取到的version值进行更新。而如果在这段时间内，ZooKeeper服务器上该节点的数据已经被其他客户端更新了，那么数据版本一定已发生了变化，因此肯定与客户端携带的version无法匹配，于是便无法更新成功。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.concurrent.CountDownLatch;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.CreateMode;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher.Event.EventType;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher.Event.KeeperState;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooDefs.Ids;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.data.Stat;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ZKVersionSample</span> <span class="keyword">implements</span> <span class="title">Watcher</span></span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> CountDownLatch connectedSemaphore = <span class="keyword">new</span> CountDownLatch(<span class="number">1</span>);</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ZooKeeper zk;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        String path = <span class="string">"/zk"</span>;</div><div class="line">        zk = <span class="keyword">new</span> ZooKeeper(<span class="string">"127.0.0.1:2181"</span>, <span class="number">5000</span>, <span class="keyword">new</span> ZKVersionSample());</div><div class="line"></div><div class="line">        connectedSemaphore.await();</div><div class="line">        zk.create(path, <span class="string">"123"</span>.getBytes(), Ids.OPEN_ACL_UNSAFE,</div><div class="line">                CreateMode.EPHEMERAL);</div><div class="line">        zk.getData(path, <span class="keyword">true</span>, <span class="keyword">null</span>);</div><div class="line">        Stat stat = zk.setData(path, <span class="string">"456"</span>.getBytes(), -<span class="number">1</span>);</div><div class="line">        System.out.println(stat.getCzxid() + <span class="string">","</span> + stat.getMzxid() + <span class="string">","</span></div><div class="line">                + stat.getVersion());</div><div class="line"></div><div class="line">        Stat stat2 = zk.setData(path, <span class="string">"456"</span>.getBytes(), stat.getVersion());</div><div class="line">        System.out.println(stat2.getCzxid() + <span class="string">","</span> + stat2.getMzxid() + <span class="string">","</span></div><div class="line">                + stat2.getVersion());</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            zk.setData(path, <span class="string">"456"</span>.getBytes(), stat.getVersion());</div><div class="line">        &#125; <span class="keyword">catch</span> (KeeperException e) &#123;</div><div class="line">            System.out.println(<span class="string">"Error: "</span> + e.code() + <span class="string">","</span> + e.getMessage());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (KeeperState.SyncConnected == event.getState()) &#123;</div><div class="line">            <span class="keyword">if</span> (EventType.None == event.getType() &amp;&amp; <span class="keyword">null</span> == event.getPath())&#123;</div><div class="line">                connectedSemaphore.countDown();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">&gt;&gt;&gt;output</div><div class="line"><span class="number">17</span>,<span class="number">18</span>,<span class="number">1</span></div><div class="line"><span class="number">17</span>,<span class="number">19</span>,<span class="number">2</span></div><div class="line">Error: BADVERSION,KeeperErrorCode = BadVersion <span class="keyword">for</span> /zk</div></pre></td></tr></table></figure>
+<p>上面的示例程序中，进行了三次更新操作，分别使用了不同的version。在第一次更新操作中，使用的版本是“－1”，并且更新成功。在ZooKeeper中，数据版本都是从0开始计数。如果客户端传入的版本参数是“－1”，就是告诉ZooKeeper服务端，客户端需要基于数据的最新版本进行更新操作。</p>
+<p>在第一次更新操作成功后，ZooKeeper服务端回返回给客户端一个数据节点的节点状态信息对象：stat。在第二次更新操作中，我们在接口中传入了这个版本号，此时的数据版本变更为“2”。</p>
+<p>在第三次操作的时候，程序依然使用了之前的版本“1”进行更新操作，于是更新失败了。</p>
+<h2 id="Java客户端API使用"><a href="#Java客户端API使用" class="headerlink" title="Java客户端API使用"></a>Java客户端API使用</h2><p>ZooKeeper作为一个分布式服务框架，主要用来解决分布式数据一致性问题，它提供了简单的分布式原语，并且对多种变种语言提供了API。下面只介绍ZooKeeper的Java客户端API使用方式</p>
+<h3 id="创建会话"><a href="#创建会话" class="headerlink" title="创建会话"></a>创建会话</h3><p>客户端可以通过创建一个ZooKeeper实例来连接ZooKeeper服务器。ZooKeeper的四种构造方法如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ZooKeeper(String connectString, <span class="keyword">int</span> sessionTimeout, Watcher watcher);</div><div class="line">ZooKeeper(String connectString, <span class="keyword">int</span> sessionTimeout, Watcher watcher, <span class="keyword">boolean</span> canBeReadOnly);</div><div class="line">ZooKeeper(String connectString, <span class="keyword">int</span> sessionTimeout, Watcher watcher, <span class="keyword">long</span> sessionId, <span class="keyword">byte</span>[] sessionPasswd);</div><div class="line">ZooKeeper(String connectString, <span class="keyword">int</span> sessionTimeout, Watcher watcher, <span class="keyword">long</span> sessionId, <span class="keyword">byte</span>[] sessionPasswd, <span class="keyword">boolean</span> canBeReadOnly);</div></pre></td></tr></table></figure>
+<p>以下是ZooKeeper构造方法参数说明</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>connectString</td>
+<td>指ZooKeeper服务器列表，由host:port字符串组成。也可以在connectString中设置客户端连接上ZooKeeper后的根目录。</td>
+</tr>
+<tr>
+<td>sessionTimeout</td>
+<td>指会话的超时时间，单位毫秒</td>
+</tr>
+<tr>
+<td>watcher</td>
+<td>事件通知器，可以为null</td>
+</tr>
+<tr>
+<td>canBeReadOnly</td>
+<td>用于标示当前会话是否支持”read－only”模式</td>
+</tr>
+<tr>
+<td>sessionId</td>
+<td>和sessionPasswd分别代表会话ID和会话秘钥。客户端使用这两个参数可以实现客户端会话复用</td>
+</tr>
+</tbody>
+</table>
+<p>ZooKeeper客户端和服务器会话的建立是一个异步的过程。当会话真正创建完毕之后，ZooKeeper服务端会想会话对应的客户端发送一个事件通知。</p>
+<p>创建一个最基本的ZooKeeper会话实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException; </div><div class="line"><span class="keyword">import</span> java.util.concurrent.CountDownLatch; </div><div class="line"> </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.CreateMode; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher.Event.KeeperState; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooDefs.Ids; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper; </div><div class="line"> </div><div class="line"> </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ZKBootSample</span></span>&#123; </div><div class="line"> </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SESSION_TIMEOUT = <span class="number">10000</span>; </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String CONNECTION_STRING = <span class="string">"127.0.0.1:2181"</span>; </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ZK_PATH = <span class="string">"/nileader"</span>; </div><div class="line">    <span class="keyword">private</span> ZooKeeper zk = <span class="keyword">null</span>; </div><div class="line">     </div><div class="line"> 	<span class="keyword">private</span> CountDownLatch connectedSemaphore = <span class="keyword">new</span> CountDownLatch( <span class="number">1</span> ); </div><div class="line"> </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * 创建ZK连接 </div><div class="line">     * <span class="doctag">@param</span> connectString  ZK服务器地址列表 </div><div class="line">     * <span class="doctag">@param</span> sessionTimeout   Session超时时间 </div><div class="line">     */ </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">createConnection</span><span class="params">( String connectString, <span class="keyword">int</span> sessionTimeout )</span> </span>&#123; </div><div class="line">        <span class="keyword">try</span> &#123; </div><div class="line">            zk = <span class="keyword">new</span> ZooKeeper( connectString, sessionTimeout, <span class="keyword">this</span> ); </div><div class="line">            connectedSemaphore.await(); </div><div class="line">        &#125; <span class="keyword">catch</span> ( InterruptedException e ) &#123; </div><div class="line">            System.out.println( <span class="string">"连接创建失败，发生 InterruptedException"</span> ); </div><div class="line">            e.printStackTrace(); </div><div class="line">        &#125; <span class="keyword">catch</span> ( IOException e ) &#123; </div><div class="line">            System.out.println( <span class="string">"连接创建失败，发生 IOException"</span> ); </div><div class="line">            e.printStackTrace(); </div><div class="line">        &#125; </div><div class="line">    &#125; </div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span> </span>&#123; </div><div class="line"> </div><div class="line">        ZKBootSample sample = <span class="keyword">new</span> ZKBootSample(); </div><div class="line">        sample.createConnection( CONNECTION_STRING, SESSION_TIMEOUT ); </div><div class="line">    &#125; </div><div class="line"> </div><div class="line"> </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="创建节点"><a href="#创建节点" class="headerlink" title="创建节点"></a>创建节点</h3><p>客户端可以通过ZooKeeper的API来创建一个数据节点，有如下两个接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function">String <span class="title">create</span><span class="params">(<span class="keyword">final</span> String path, <span class="keyword">byte</span> data[], List&lt;ACL&gt; acl, CreateMode createMode)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">create</span><span class="params">(<span class="keyword">final</span> String path, <span class="keyword">byte</span> data[], List&lt;ACL&gt; acl, CreateMode createMode, StringCallback cb, Object ctx)</span></span>;</div></pre></td></tr></table></figure>
+<p>这两个接口分别以同步和异步方式创建节点，参数说明如下表。</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>path</td>
+<td>需要创建的数据节点的节点路径，例如／zk/foo</td>
+</tr>
+<tr>
+<td>data[]</td>
+<td>一个字节数组，是创建节点后的初始内容</td>
+</tr>
+<tr>
+<td>acl</td>
+<td>节点的ACL策略</td>
+</tr>
+<tr>
+<td>createMode</td>
+<td>节点类型，有持久、持久顺序、临时、临时顺序</td>
+</tr>
+<tr>
+<td>cb</td>
+<td>异步回调函数</td>
+</tr>
+<tr>
+<td>ctx</td>
+<td>用于传递一个对象，在回调方法执行的时候使用</td>
+</tr>
+</tbody>
+</table>
+<p>无论是同步还是异步接口，ZooKeeper都不支持递归创建，即无法在父节点不存在的情况下创建一个子节点。如果一个节点已经存在，那么创建同名节点的时候，会抛出NodeExistsException异常。</p>
+<p>ZooKeeper的节点内容只支持字节数组（byte[]）类型，不负责为节点内容进行序列化。对于字符串，可以简单的使用”string”.getBytes()来生成一个字节数组，对于其他复杂对象，可以使用Hessian或是Kryo等序列化工具进行序列化。</p>
+<p>使用同步API创建一个节点</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException; </div><div class="line"><span class="keyword">import</span> java.util.concurrent.CountDownLatch; </div><div class="line"> </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.CreateMode; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher.Event.KeeperState; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooDefs.Ids; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper; </div><div class="line"> </div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ZKBootSample</span> <span class="keyword">implements</span> <span class="title">Watcher</span> </span>&#123; </div><div class="line"> </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SESSION_TIMEOUT = <span class="number">10000</span>; </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String CONNECTION_STRING = <span class="string">"127.0.0.1:2181"</span>; </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ZK_PATH = <span class="string">"/nileader"</span>; </div><div class="line">    <span class="keyword">private</span> ZooKeeper zk = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> CountDownLatch connectedSemaphore = <span class="keyword">new</span> CountDownLatch( <span class="number">1</span> );  </div><div class="line">     </div><div class="line">    <span class="comment">/** </span></div><div class="line">     *  创建节点 </div><div class="line">     * <span class="doctag">@param</span> path 节点path </div><div class="line">     * <span class="doctag">@param</span> data 初始数据内容 </div><div class="line">     * <span class="doctag">@return</span> </div><div class="line">     */ </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">createPath</span><span class="params">( String path, String data )</span> </span>&#123; </div><div class="line">        <span class="keyword">try</span> &#123; </div><div class="line">            System.out.println( <span class="string">"节点创建成功, Path: "</span> </div><div class="line">                    + <span class="keyword">this</span>.zk.create( path, <span class="comment">// </span></div><div class="line">                                              data.getBytes(), <span class="comment">// </span></div><div class="line">                                              Ids.OPEN_ACL_UNSAFE, <span class="comment">// </span></div><div class="line">                                              CreateMode.EPHEMERAL ) </div><div class="line">                    + <span class="string">", content: "</span> + data ); </div><div class="line">        &#125; <span class="keyword">catch</span> ( KeeperException e ) &#123; </div><div class="line">            System.out.println( <span class="string">"节点创建失败，发生KeeperException"</span> ); </div><div class="line">            e.printStackTrace(); </div><div class="line">        &#125; <span class="keyword">catch</span> ( InterruptedException e ) &#123; </div><div class="line">            System.out.println( <span class="string">"节点创建失败，发生 InterruptedException"</span> ); </div><div class="line">            e.printStackTrace(); </div><div class="line">        &#125; </div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>; </div><div class="line">    &#125; </div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span> </span>&#123; </div><div class="line"> </div><div class="line">        ZKBootSample sample = <span class="keyword">new</span> ZKBootSample(); </div><div class="line">        sample.createConnection( CONNECTION_STRING, SESSION_TIMEOUT ); </div><div class="line"></div><div class="line">        <span class="keyword">if</span> ( sample.createPath( ZK_PATH, <span class="string">"我是节点初始内容"</span> ) ) &#123; </div><div class="line">            <span class="comment">//do something</span></div><div class="line">        &#125; </div><div class="line"> </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="删除节点"><a href="#删除节点" class="headerlink" title="删除节点"></a>删除节点</h3><p>客户端可以通过ZooKeeper的API来删除一个节点，有如下两个接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(<span class="keyword">final</span> String path, <span class="keyword">int</span> version)</span></span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(<span class="keyword">final</span> String path, <span class="keyword">int</span> version, VoidCallBack cb, Object ctx)</span></div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>path</td>
+<td>需要删除的数据节点的节点路径，例如／zk/foo</td>
+</tr>
+<tr>
+<td>version</td>
+<td>指定节点的数据版本，即表明本次删除操作是针对该数据版本进行的</td>
+</tr>
+<tr>
+<td>cb</td>
+<td>异步回调函数</td>
+</tr>
+<tr>
+<td>ctx</td>
+<td>用于传递一个对象，在回调方法执行的时候使用</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException; </div><div class="line"><span class="keyword">import</span> java.util.concurrent.CountDownLatch; </div><div class="line"> </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.CreateMode; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher.Event.KeeperState; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooDefs.Ids; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper; </div><div class="line"> </div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ZKBootSample</span> <span class="keyword">implements</span> <span class="title">Watcher</span> </span>&#123; </div><div class="line"> </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SESSION_TIMEOUT = <span class="number">10000</span>; </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String CONNECTION_STRING = <span class="string">"127.0.0.1:2181"</span>; </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ZK_PATH = <span class="string">"/nileader"</span>; </div><div class="line">    <span class="keyword">private</span> ZooKeeper zk = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> CountDownLatch connectedSemaphore = <span class="keyword">new</span> CountDownLatch( <span class="number">1</span> );  </div><div class="line"></div><div class="line">    <span class="comment">/** </span></div><div class="line">     * 删除指定节点 </div><div class="line">     * <span class="doctag">@param</span> path 节点path </div><div class="line">     */ </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteNode</span><span class="params">( String path )</span> </span>&#123; </div><div class="line">        <span class="keyword">try</span> &#123; </div><div class="line">            <span class="keyword">this</span>.zk.delete( path, -<span class="number">1</span> ); </div><div class="line">            System.out.println( <span class="string">"删除节点成功，path："</span> + path ); </div><div class="line">        &#125; <span class="keyword">catch</span> ( KeeperException e ) &#123; </div><div class="line">            System.out.println( <span class="string">"删除节点失败，发生KeeperException，path: "</span> + path  ); </div><div class="line">            e.printStackTrace(); </div><div class="line">        &#125; <span class="keyword">catch</span> ( InterruptedException e ) &#123; </div><div class="line">            System.out.println( <span class="string">"删除节点失败，发生 InterruptedException，path: "</span> + path  ); </div><div class="line">            e.printStackTrace(); </div><div class="line">        &#125; </div><div class="line">    &#125;  </div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span> </span>&#123; </div><div class="line"> </div><div class="line">        ZKBootSample sample = <span class="keyword">new</span> ZKBootSample(); </div><div class="line">        sample.createConnection( CONNECTION_STRING, SESSION_TIMEOUT ); </div><div class="line"></div><div class="line">        <span class="keyword">if</span> ( sample.createPath( ZK_PATH, <span class="string">"我是节点初始内容"</span> ) ) &#123; </div><div class="line">            <span class="comment">//do something</span></div><div class="line">            sample.deleteNode( ZK_PATH ); </div><div class="line">        &#125; </div><div class="line"> </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="读取数据"><a href="#读取数据" class="headerlink" title="读取数据"></a>读取数据</h3><p>读取数据， 包括自节点列表的获取和节点数据的获取。ZooKeeper分别提供了不同的API来获取数据。</p>
+<h4 id="getChildren"><a href="#getChildren" class="headerlink" title="getChildren"></a>getChildren</h4><p>客户端可以通过ZooKeeper的API来获取一个节点的所有子节点，有如下4个接口可以使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function">List&lt;String&gt; <span class="title">getChildren</span><span class="params">(<span class="keyword">final</span> String path, Watcher watcher)</span></span>;</div><div class="line"><span class="function">List&lt;String&gt; <span class="title">getChildren</span><span class="params">(<span class="keyword">final</span> String path, <span class="keyword">boolean</span> watch)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">getChildren</span><span class="params">(<span class="keyword">final</span> String path, Watcher watcher, ChildrenCallback cb, Object ctx)</span></span>;</div><div class="line"><span class="function">List&lt;String&gt; <span class="title">getChildren</span><span class="params">(<span class="keyword">final</span> String path, Watcher watcher, Stat stat)</span></span>;</div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>path</td>
+<td>指定数据节点的节点路径，例如／zk/foo</td>
+</tr>
+<tr>
+<td>watcher</td>
+<td>注册的Watcher。一旦本次子节点获取之后，当子节点列表发生变更，那么就会向客户端发送通知。该参数允许传入null</td>
+</tr>
+<tr>
+<td>watch</td>
+<td>表明是否需要一个Watcher。如果这个参数是true，那么ZooKeeper客户端会自动使用程序上文中提到的那个默认Watcher</td>
+</tr>
+<tr>
+<td>cb</td>
+<td>异步回调函数</td>
+</tr>
+<tr>
+<td>ctx</td>
+<td>用于传递一个对象，在回调方法执行的时候使用</td>
+</tr>
+<tr>
+<td>stat</td>
+<td>指定数据节点的节点状态。用法是在接口中传入一个旧的stat变量，该stat变量会在方法执行过程中，被来自服务端响应的新stat对象替换</td>
+</tr>
+</tbody>
+</table>
+<p>stat用于描述节点状态信息，该对象纪录了一个节点的基本属性信息，例如节点创建时的事务ID、最后一次修改的事务ID和节点数据内容的长度等。</p>
+<h4 id="getData"><a href="#getData" class="headerlink" title="getData"></a>getData</h4><p>客户端可以通过ZooKeeper的API来获取一个节点的所有子节点，有如下4个接口可以使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">byte</span>[] getData(<span class="keyword">final</span> String path, Watcher watcher, Stat stat);</div><div class="line"><span class="keyword">byte</span>[] getData(<span class="keyword">final</span> String path, <span class="keyword">boolean</span> watch, Stat stat);</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">getData</span><span class="params">(<span class="keyword">final</span> String path, Watcher watcher, DataCallback cb, Object ctx)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">getData</span><span class="params">(<span class="keyword">final</span> String path, <span class="keyword">boolean</span> watch, DataCallback cb, Object ctx)</span></span>;</div></pre></td></tr></table></figure>
+<p>参数说明痛getChildren。一个简单的读取数据实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException; </div><div class="line"><span class="keyword">import</span> java.util.concurrent.CountDownLatch; </div><div class="line"> </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.CreateMode; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher.Event.KeeperState; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooDefs.Ids; </div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper; </div><div class="line"> </div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ZKBootSample</span> <span class="keyword">implements</span> <span class="title">Watcher</span> </span>&#123; </div><div class="line"> </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SESSION_TIMEOUT = <span class="number">10000</span>; </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String CONNECTION_STRING = <span class="string">"127.0.0.1:2181"</span>; </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ZK_PATH = <span class="string">"/nileader"</span>; </div><div class="line">    <span class="keyword">private</span> ZooKeeper zk = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> CountDownLatch connectedSemaphore = <span class="keyword">new</span> CountDownLatch( <span class="number">1</span> );  </div><div class="line"> </div><div class="line"> 	<span class="comment">/** </span></div><div class="line">     * 读取指定节点数据内容 </div><div class="line">     * <span class="doctag">@param</span> path 节点path </div><div class="line">     * <span class="doctag">@return</span> </div><div class="line">     */ </div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">readData</span><span class="params">( String path )</span> </span>&#123; </div><div class="line">        <span class="keyword">try</span> &#123; </div><div class="line">            System.out.println( <span class="string">"获取数据成功，path："</span> + path ); </div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> String( <span class="keyword">this</span>.zk.getData( path, <span class="keyword">false</span>, <span class="keyword">null</span> ) ); </div><div class="line">        &#125; <span class="keyword">catch</span> ( KeeperException e ) &#123; </div><div class="line">            System.out.println( <span class="string">"读取数据失败，发生KeeperException，path: "</span> + path  ); </div><div class="line">            e.printStackTrace(); </div><div class="line">            <span class="keyword">return</span> <span class="string">""</span>; </div><div class="line">        &#125; <span class="keyword">catch</span> ( InterruptedException e ) &#123; </div><div class="line">            System.out.println( <span class="string">"读取数据失败，发生 InterruptedException，path: "</span> + path  ); </div><div class="line">            e.printStackTrace(); </div><div class="line">            <span class="keyword">return</span> <span class="string">""</span>; </div><div class="line">        &#125; </div><div class="line">    &#125; </div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span> </span>&#123; </div><div class="line"> </div><div class="line">        ZKBootSample sample = <span class="keyword">new</span> ZKBootSample(); </div><div class="line">        sample.createConnection( CONNECTION_STRING, SESSION_TIMEOUT ); </div><div class="line"></div><div class="line">        <span class="keyword">if</span> ( sample.createPath( ZK_PATH, <span class="string">"我是节点初始内容"</span> ) ) &#123; </div><div class="line">            <span class="comment">//do something</span></div><div class="line">            System.out.println( <span class="string">"数据内容: "</span> + sample.readData( ZK_PATH ) + <span class="string">"\n"</span> ); </div><div class="line">        &#125; </div><div class="line"> </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+      
+      <footer>
+        
+  
+  <div class="categories">
+    <a href="/categories/TVDCR/">TVDCR</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/spring/">spring</a>, <a href="/tags/transacion/">transacion</a>, <a href="/tags/dynamic-reconfiguration/">dynamic reconfiguration</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+      </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/OpenStack/">OpenStack</a><small>3</small></li>
+  
+    <li><a href="/categories/TVDCR/">TVDCR</a><small>3</small></li>
+  
+    <li><a href="/categories/east/">east</a><small>2</small></li>
+  
+    <li><a href="/categories/nap/">nap</a><small>4</small></li>
+  
+    <li><a href="/categories/web/">web</a><small>4</small></li>
+  
+    <li><a href="/categories/书架/">书架</a><small>1</small></li>
+  
+    <li><a href="/categories/大数据/">大数据</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 NAP Group
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+</body>
+</html>
+

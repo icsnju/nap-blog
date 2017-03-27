@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>跨主机的docker容器编排 nap-compose （一） › NAP - Next Application Platform</title>
+  <meta name="author" content="NAP Group">
+  
+  <meta name="description" content="docker三件套（compose + swarm + engine）可以实现跨主机的多容器应用编排和部署。我们要实现一个功能类似的，简化一些的工具，这里介绍一下实现的思路。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="跨主机的docker容器编排 nap-compose （一）"/>
+  <meta property="og:site_name" content="NAP - Next Application Platform"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="NAP - Next Application Platform" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">NAP - Next Application Platform</a></h1>
+  <h2><a href="/"></a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">跨主机的docker容器编排 nap-compose （一）</h1>
+  
+
+      
+        <time datetime="2015-11-07T03:00:00.000Z">2015-11-07</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>docker三件套（compose + swarm + engine）可以实现跨主机的多容器应用编排和部署。我们要实现一个功能类似的，简化一些的工具，这里介绍一下实现的思路。</p>
+<a id="more"></a>
+<hr>
+<h2 id="容器编排和docker-compose"><a href="#容器编排和docker-compose" class="headerlink" title="容器编排和docker-compose"></a>容器编排和docker-compose</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>要想在<strong>单个</strong>主机上部署多个容器相关联的应用，</p>
+<ul>
+<li>一种方法是依次执行docker命令，依次启动各容器。要特别注意容器的启动顺序：如果容器B依赖A，但容器B比A先启动，B会可能因为无法访问A而异常停止。</li>
+<li>另一种是方法使用<a href="https://docs.docker.com/compose/" target="_blank" rel="external">docker-compose</a>工具，它的前身是fig。compose是python实现的，被打包成可执行文件发布。</li>
+</ul>
+<p>docker-compose是简化多容器应用编排（orchestration）和部署的工具，它允许开发者把一个应用中多个容器及它们之间的依赖关系都写到一个 <code>docker-compose.yml</code> 配置文件中，将其解析后自动按顺序执行docker（通过docker API），启动整个应用。</p>
+<h3 id="guestbook示例"><a href="#guestbook示例" class="headerlink" title="guestbook示例"></a>guestbook示例</h3><p>下面是一个 <code>docker-compose.yml</code> 的<a href="http://yingz.info/2015-10/compose-guestbook/" target="_blank" rel="external">例子</a>，来自<a href="http://k8s.io/" target="_blank" rel="external">kubernetes(k8s)</a>中的<a href="https://github.com/kubernetes/kubernetes/tree/master/examples/guestbook" target="_blank" rel="external">guestbook示例</a>。它是一个简单的web留言板，共有3个组件，分别是</p>
+<ul>
+<li>php前端，运行在apache服务器；</li>
+<li>redis master，作为写入数据库；</li>
+<li>redis-slave，作为读取数据库。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">web:  </div><div class="line">  image: guestbook</div><div class="line">  ports:</div><div class="line">  - 80:80</div><div class="line">  links:</div><div class="line">  - redis-master:redis-master</div><div class="line">  - redis-slave:redis-slave</div><div class="line"></div><div class="line">redis-master:  </div><div class="line">  image: redis</div><div class="line">  ports:</div><div class="line">  - 6379</div><div class="line"></div><div class="line">redis-slave:  </div><div class="line">  image: redis-slave</div><div class="line">  ports:</div><div class="line">  - 6379</div><div class="line">  links:</div><div class="line">  - redis-master:redis-master</div></pre></td></tr></table></figure>
+<h3 id="service-和-links"><a href="#service-和-links" class="headerlink" title="service 和 links"></a>service 和 links</h3><p>compose中有下面2个概念</p>
+<ul>
+<li>project：一个<code>docker-compose.yml</code>描述的就是一个project，也就是开发者的一个应用；一个project由若干service组成。</li>
+<li>service：是yml中的顶层节点，上面的例子里是web， redis-master，redis-slave 。看起来每个service的子节点都是通过<code>docker run</code>运行一个容器的参数，不过service是比容器高一层的抽象，一个service对应于多个容器（container）。比如运行<code>docker-compose scale web=3</code>命令可以横向扩展web这个service，让它有3个容器。<blockquote>
+<p>service这样简单地横向扩展在实际中显然是不够的，如果是web应用，应该有一个负载均衡节点作为入口。此外，横向扩展的容器的hostname应该有一个约定格式，这样才能与它们通信。</p>
+</blockquote>
+</li>
+</ul>
+<p>compose除了在一个yml文件里描述多容器以外，还要把它们连接起来，这是通过yml中的<code>links</code>来描述的。compose能够让各容器之间通过域名来互相访问。</p>
+<p>使用默认的docker0网桥时，开发者只能在docker启动之后才能获取容器的ip，而且这个ip不是固定的，在容器重启后可能会变化，这给跨容器的通信造成了不便。在考虑横向扩展和失败转移时，会动态增减容器，它们的ip也是不能事先知道的。<br>另外，硬编码ip地址不是好的做法，最好是通过域名来屏蔽ip的变化。</p>
+<p>我们不需要配置DNS来实现域名解析，docker的<code>link</code>参数可以实现在单主机上容器间的静态域名解析。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run --link=容器A:A的别名 镜像B</div></pre></td></tr></table></figure></p>
+<p>这个命令<strong>将要</strong>运行的容器B与一个<strong>已经</strong>运行的容器A（通过<code>--name</code>来指定容器名）连接起来：修改容器B的环境变量及<code>/etc/hosts</code>，在<code>hosts</code>中添加类似下面项。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;A的IP&gt; A的别名</div></pre></td></tr></table></figure></p>
+<p>这样容器B中就可以通过<code>A的别名</code>这个域名来访问容器A了。<br>必须要求容器B先于容器A启动，这样docker才能知道容器A的IP。</p>
+<p>此外，关于volumns的内容以后再写文章讨论。</p>
+<h2 id="跨主机编排"><a href="#跨主机编排" class="headerlink" title="跨主机编排"></a>跨主机编排</h2><h3 id="docker三件套"><a href="#docker三件套" class="headerlink" title="docker三件套"></a>docker三件套</h3><p>如果要将有多个容器的应用部署到多个主机上，直接使用docker-compose就困难了。</p>
+<p>一种解决方案是使用docker三件套：compose，<a href="https://docs.docker.com/swarm/" target="_blank" rel="external">swarm</a>和docker engine（也就是docker daemon），此外还需要新增的<a href="http://docs.docker.com/engine/userguide/networking/" target="_blank" rel="external">networking</a>。</p>
+<p>swarm是集群管理工具，目标是把多个主机上的docker服务整合为集群，提供<strong>单一</strong>的入口。主要解决2个问题：</p>
+<ul>
+<li>组成集群：之前我们的实验都是基于CoreOS的fleet来管理集群的。<a href="https://coreos.com/using-coreos/clustering/" target="_blank" rel="external">fleet</a>使用<a href="https://coreos.com/etcd/" target="_blank" rel="external">etcd</a>作为集群信息的存储，<a href="https://zh.wikipedia.org/wiki/Systemd" target="_blank" rel="external">systemd</a>作为主机上的执行代理。swarm与fleet比较相似。swarm在主机上的执行代理自然是docker engine（也就是docker daemon，通过docker API），集群信息存储除了使用etcd，还支持zookeeper和consul。</li>
+<li>分发调度：既然swarm把多个主机上的docker抽象为单一的入口，那就要解决任务如何分配到各个主机上的问题，也就是所谓的调度问题。目前swarm支持的有随机和binpack（装箱，根据CPU和内存）调度。调度是集群管理都需要解决的问题。mesos是进行调度管理的项目，swarm也有与<strong>mesos的整合</strong>。</li>
+</ul>
+<p>networking是解决跨主机容器联网问题的库，与flannel类似，也是采用的覆盖（overlay）网络，docker 1.9版增加了<code>docker network</code>命令，用来管理跨主机的网络。</p>
+<p>另外，docker machine是在虚拟机，IaaS云平台上从零开始部署docker的，有点像chef，puppet这类自动化工具或vagrant这种虚拟机开发环境构建工具。它还可以ssh到各主机执行命令。不过如果已经安装好了docker，machine就不太必要了。</p>
+<h3 id="跨主机的覆盖网络"><a href="#跨主机的覆盖网络" class="headerlink" title="跨主机的覆盖网络"></a>跨主机的覆盖网络</h3><p>覆盖网络是跨主机的docker容器间联网问题的一种解决方案。<br>跨主机的docker容器间联网，关键是实现容器间的<strong>路由</strong>，也就是说让各主机都知道每个主机上运行了哪些容器，或者说每个容器都运行在哪个主机上。知道了这些信息，容器间跨主机通信时，容器发出的数据包先发给本主机，然后发给目标容器所在的主机，目标主机再转发给目标容器。<br>要想获取容器分布信息，</p>
+<ul>
+<li>一种方案是将其都放到各主机都能访问的集中存储上去，然后各主机上安装代理来同步这些信息，并负责转发数据包；</li>
+<li>另一种是主机上安装一个虚拟路由器，通过路由协议来交换信息；或者通过<code>iptables</code>来实现类似的功能；</li>
+</ul>
+<blockquote>
+<p>传统的虚拟机支持桥接网络，此桥接非彼docker的桥接，docker的桥接在虚拟机技术中对应的叫NAT网络（本来在docker中也是NAT，但不叫NAT，却被称为桥接。。。）。虚拟机的桥接，是将VM的虚拟网卡与物理网卡绑定，基于物理网卡的<a href="https://zh.wikipedia.org/wiki/%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F" target="_blank" rel="external">混杂模式</a>或支持虚拟化的网卡的<a href="https://msdn.microsoft.com/en-us/library/windows/hardware/hh440235%28v=vs.85%29.aspx" target="_blank" rel="external">SR-IOV</a>，从外部网络看来，虚拟网卡与物理网卡没有什么区别，从而虚拟机与物理主机在网络上的地位也是对等的，已有的网络管理系统像管理物理主机一样管理虚拟机，也就不存在跨主机的VM通信问题了。</p>
+<p>docker也是可以通过<a href="http://blog.oddbit.com/2014/08/11/four-ways-to-connect-a-docker/" target="_blank" rel="external">自定义网桥</a>来使用虚拟机的桥接网络模式的。</p>
+</blockquote>
+<p>CoreOS的<a href="https://github.com/coreos/flannel" target="_blank" rel="external">flannel</a>采用的是第一种方案，它使用etcd做为集中存储，以ip in ip的形式来转发数据包。docker networking与flannel类似。</p>
+<h3 id="设置flannel"><a href="#设置flannel" class="headerlink" title="设置flannel"></a>设置flannel</h3><p>先获取<a href="https://github.com/coreos/etcd/releases/download/v2.0.12/etcd-v2.0.12-linux-amd64.tar.gz" target="_blank" rel="external">etcd(v2.0.12)</a>和<a href="https://github.com/coreos/flannel/releases/download/v0.5.3/flannel-0.5.3-linux-amd64.tar.gz" target="_blank" rel="external">flannel(v0.5.3)</a>的二进制文件，并解压到<strong>相关</strong>主机的 <code>/usr/bin</code>（或<code>$PATH</code>中的其它路径）。</p>
+<blockquote>
+<p>注意，flannel安装在需要组成覆盖网络的主机上，etcd可以单独设置主机，不必在flannel主机里。下面的示例etcd安装在ip为<code>10.1.1.12</code>的主机上。<br>可以将etcd安装在多台主机上<a href="https://coreos.com/etcd/docs/latest/clustering.html" target="_blank" rel="external">组成集群</a>，以提高可用性。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"># 在10.1.1.12主机上，启动etcd，监听本机所有ip的4001端口</div><div class="line">etcd -listen-client-urls http://0.0.0.0:4001 -advertise-client-urls http://127.0.0.1:4001  &amp;&gt;/dev/null &amp;</div><div class="line"></div><div class="line"># 设置flannel的配置key（设置一次即可），使用 10.4.0.0/16 网段</div><div class="line">etcdctl rm /coreos.com/network --recursive  &amp;&gt;/dev/null</div><div class="line">etcdctl mk /coreos.com/network/config &apos;&#123;&quot;Network&quot;:&quot;10.4.0.0/16&quot;&#125;&apos;</div><div class="line"></div><div class="line"># 在任意主机上，检查etcd是否可用</div><div class="line">curl http://10.1.1.12:4001/version</div><div class="line"></div><div class="line"># 在需要组成覆盖网络的主机上，启动flannel，并设置docker0网桥</div><div class="line">flanneld -iface=&quot;eth1&quot; -etcd-endpoints=&quot;http://10.1.1.12:4001&quot; &amp;&gt;/dev/null  &amp;</div><div class="line">sleep 1</div><div class="line"></div><div class="line">service docker stop              # 对ubuntu 14.04，停止docker daemon</div><div class="line"></div><div class="line">. &quot;/run/flannel/subnet.env&quot;      # 获取下面用到的$&#123;FLANNEL_*&#125;相关环境变量</div><div class="line"></div><div class="line">ifconfig docker0 $&#123;FLANNEL_SUBNET&#125;</div><div class="line">docker daemon --bip=$&#123;FLANNEL_SUBNET&#125; --mtu=$&#123;FLANNEL_MTU&#125;  &amp;  # 启动docker daemon</div></pre></td></tr></table></figure>
+<p>设置完成后，flannel在主机上添加了一个flannel0网桥，它与docker0网桥不同：bridge utils的<code>brctl show</code>会显示docker0网桥，但不会显示flannel0网桥。上面的命令将docker0网桥的ip设置在flannel0的ip段内，启动的容器也在这个ip段，这样就可以通过flannel0来转发跨主机的数据包了。</p>
+<h3 id="不同主机容器的-etc-hosts"><a href="#不同主机容器的-etc-hosts" class="headerlink" title="不同主机容器的 /etc/hosts"></a>不同主机容器的 <code>/etc/hosts</code></h3><p>虽然设置了flannel覆盖网络，可以让跨主机的容器间通过IP地址来通信，但是还不能直接使用域名。<br>我们可以增加一个容器来专门提供DNS服务，也可以用类似<code>docker --link</code>的做法，分别修改各容器的hosts。docker三件套再加上networking可以实现这样的功能，不过我们希望能自己实现一下这样的功能。</p>
+<blockquote>
+<p>注意，由于compose只能与一个docker daemon交互，不能与多个主机上的docker daemon交互，无法实现跨主机的容器间由域名通信。</p>
+</blockquote>
+<p>我们先不考虑解析<code>compose.yml</code>，生成容器间连接关系和如何获取容器域名。假设已经知道了要启动哪些容器及这些容器应该是什么域名，容器可以运行在不同的主机上，这些主机间已经有flannel的覆盖网络允许容器间的通信。启动容器后我们可以得到各主机上运行的容器 id 和 ip，然后要把域名和ip这一对信息分别写道所有相关容器内的<code>/etc/hosts</code>文件里，这样容器间就可以使用域名通信了。</p>
+<p>用docker API编程地访问多个主机的docker daemon，可以创建、启动容器，获取容器的信息，包括ip地址和hosts在对应主机的路径<code>/var/lib/docker/containers/{容器id}/hosts</code>，将域名信息用 ssh 写入到各主机的相应<code>hosts</code>文件即可。</p>
+<blockquote>
+<p>docker 三件套是最终通过 engine来写入 <code>hosts</code> 的，但并没有提供该功能的API。</p>
+</blockquote>
+<p>我们在下一篇介绍具体的做法。</p>
+
+      
+    </div>
+      
+      <footer>
+        
+  
+  <div class="categories">
+    <a href="/categories/nap/">nap</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/nap/">nap</a>, <a href="/tags/docker/">docker</a>, <a href="/tags/compose/">compose</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+      </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/OpenStack/">OpenStack</a><small>3</small></li>
+  
+    <li><a href="/categories/TVDCR/">TVDCR</a><small>3</small></li>
+  
+    <li><a href="/categories/east/">east</a><small>2</small></li>
+  
+    <li><a href="/categories/nap/">nap</a><small>4</small></li>
+  
+    <li><a href="/categories/web/">web</a><small>4</small></li>
+  
+    <li><a href="/categories/书架/">书架</a><small>1</small></li>
+  
+    <li><a href="/categories/大数据/">大数据</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 NAP Group
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+</body>
+</html>
+

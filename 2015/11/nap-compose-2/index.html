@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>跨主机的docker容器编排 nap-compose （二） › NAP - Next Application Platform</title>
+  <meta name="author" content="NAP Group">
+  
+  <meta name="description" content="简化的跨主机的多容器应用编排和部署工具的实现。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="跨主机的docker容器编排 nap-compose （二）"/>
+  <meta property="og:site_name" content="NAP - Next Application Platform"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="NAP - Next Application Platform" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">NAP - Next Application Platform</a></h1>
+  <h2><a href="/"></a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">跨主机的docker容器编排 nap-compose （二）</h1>
+  
+
+      
+        <time datetime="2015-11-07T06:00:00.000Z">2015-11-07</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>简化的跨主机的多容器应用编排和部署工具的实现。</p>
+<a id="more"></a>
+<hr>
+<p>我们已经在<a href="http://nap-group.herokuapp.com/2015-11/nap-compose-1/" target="_blank" rel="external">前一篇文章</a>介绍了背景和思路，现在该写代码了。<br>我们准备用python 3来实现。先了解一下docker api和python ssh的库作为准备工作。主要部分在于梳理docker-compose的源码，然后在其基础上修改docker client相关的函数，改成我们的实现，从而重用compose已经实现的解析<code>docker-compose.yml</code>，生成容器间连接关系和获取容器域名的功能。</p>
+<h2 id="Docker-Remote-API"><a href="#Docker-Remote-API" class="headerlink" title="Docker Remote API"></a><a href="http://docs.docker.com/engine/reference/api/docker_remote_api_v1.21/" target="_blank" rel="external">Docker Remote API</a></h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>之前我们是通过定义fleet的service unit来管理多个主机上的docker daemon的。在service unit中可以直接写docker命令，fleet会把service分派给各主机的systemd来执行。<br>现在我们要通过docker提供的restful api来编程直接与docker daemon交互。restful api返回的是json格式的数据。有很多官方或非官方的repo把restful api包装成各种<a href="http://docs.docker.com/engine/reference/api/remote_api_client_libraries/" target="_blank" rel="external">主流编程语言的docker client库</a>，这样我们就不用自己写解析json的那部分代码了。</p>
+<h3 id="开启api访问的tcp端口"><a href="#开启api访问的tcp端口" class="headerlink" title="开启api访问的tcp端口"></a>开启api访问的tcp端口</h3><p>要远程访问docker api，首先要开启tcp端口。<br>对ubuntu 14.04系统，在<code>/etc/default/docker</code>中增加一行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DOCKER_OPTS=&quot;-H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock&quot;</div></pre></td></tr></table></figure></p>
+<p>CoreOS和RHEL/CentOS使用systemd来管理系统服务，Ubuntu 15.04及以后的版本也改为systemd，设置方法有所不同，具体可以参考<a href="https://coreos.com/os/docs/latest/customizing-docker.html" target="_blank" rel="external">CoreOS的文档</a>和<a href="http://www.dockone.io/question/616" target="_blank" rel="external">dockone上的相关问题</a></p>
+<p>设置后重新启动docker daemon，即可从通过2375访问docker api。另外后面的<code>unix:///var/run/docker.sock</code>是给本机的docker client命令行使用的。我们实验的主机（VM）是ubuntu 15.10，IP是<code>10.1.1.5</code>，安装了docker 1.9.0，测试一下api：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl http://10.1.1.5:2375/version</div></pre></td></tr></table></figure></p>
+<p>也可以用chrome访问这个地址。推荐安装json formatter这个chrome插件，它可以格式化显示json数据。</p>
+<p>返回的结果如图：<br><img src="/images/remote-api.png" height="240" alt=""></p>
+<blockquote>
+<p>直接暴露tcp端口是有安全问题的。docker api支持登录验证，不过这里为了简便没有使用。</p>
+</blockquote>
+<h3 id="docker-py简单示例"><a href="#docker-py简单示例" class="headerlink" title="docker-py简单示例"></a>docker-py简单示例</h3><p>我们使用的<a href="https://github.com/docker/docker-py" target="_blank" rel="external">docker-py</a>是docker官方实现的。在开发机器上通过pip安装这个库。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">apt-get install python3-pip  <span class="comment"># 对ubuntu; windows在安装python时会同时安装pip</span></div><div class="line">pip3 install docker-py</div></pre></td></tr></table></figure></p>
+<p>下面是启动容器、获取运行容器列表和容器ip的示例代码<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> docker</div><div class="line"></div><div class="line">client = docker.Client(base_url= <span class="string">'http://10.1.1.5:2375'</span>)</div><div class="line"></div><div class="line">container = client.create_container(image=<span class="string">'ubuntu:latest'</span>,command=<span class="string">'echo hello'</span>)</div><div class="line"></div><div class="line">print(container[<span class="string">'Id'</span>])</div><div class="line">client.start(container)</div><div class="line"></div><div class="line">containers = client.containers()           <span class="comment"># /containers/json</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> item <span class="keyword">in</span> containers:</div><div class="line">    info = client.inspect_container(item)  <span class="comment"># /containers/&#123;id&#125;/json</span></div><div class="line">    print(<span class="string">"[&#123;0&#125;] &#123;1&#125; &#123;2&#125;"</span>.format(item[<span class="string">'Id'</span>][<span class="number">0</span>:<span class="number">9</span>],</div><div class="line">                                 info[<span class="string">'NetworkSettings'</span>][<span class="string">'IPAddress'</span>],</div><div class="line">                                 info[<span class="string">'Name'</span>]))</div><div class="line">    <span class="comment"># print(info['HostsPath'])</span></div></pre></td></tr></table></figure></p>
+<p>运行的结果示例如下：<br><figure class="highlight cmd"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function">C:\<span class="title">Python3</span>\<span class="title">python.exe</span> <span class="title">D</span>:/<span class="title">Code</span>/<span class="title">Py</span>/<span class="title">main.py</span></span></div><div class="line">[<span class="title">f4c28710d</span>] 172.17.0.4 /<span class="title">shipyard</span>-<span class="title">controller</span></div><div class="line">[7<span class="title">edce4fce</span>] 172.17.0.6 /<span class="title">shipyard</span>-<span class="title">swarm</span>-<span class="title">agent</span></div><div class="line">[3<span class="title">c71749ce</span>] 172.17.0.7 /<span class="title">shipyard</span>-<span class="title">swarm</span>-<span class="title">manager</span></div><div class="line">[<span class="title">ea3527753</span>] 172.17.0.5 /<span class="title">shipyard</span>-<span class="title">proxy</span></div><div class="line">[3<span class="title">e44ea102</span>] 172.17.0.2 /<span class="title">shipyard</span>-<span class="title">certs</span></div><div class="line">[184391<span class="title">e5d</span>] 172.17.0.3 /<span class="title">shipyard</span>-<span class="title">discovery</span></div><div class="line">[<span class="title">b9d60b44e</span>] 172.17.0.8 /<span class="title">shipyard</span>-<span class="title">rethinkdb</span></div><div class="line"></div><div class="line"><span class="title">Process</span> <span class="title">finished</span> <span class="title">with</span> <span class="title">exit</span> <span class="title">code</span> 0</div></pre></td></tr></table></figure></p>
+<p>这个库的函数与docker remote api文档有很直接的对应关系。函数的返回值也是与文档对应的json对象，可以通过字典的方式非常方便的获取相关字段的值。</p>
+<h2 id="python-ssh"><a href="#python-ssh" class="headerlink" title="python ssh"></a>python ssh</h2><p>通过ssh操作远程主机是不太规范的做法。原则上说，我们也可以不必使用remote api，而是直接ssh到各主机，然后执行docker命令，甚至做任何系统操作。不过我们不想集齐docker三件套，用docker engine来修改hosts，而又没有相关的api，所以只能用ssh了。</p>
+<p>这里我们参考《Python自动化运维》，使用<a href="https://github.com/paramiko/paramiko" target="_blank" rel="external">paramiko</a>这个库。安装过程费了点周折。</p>
+<p>先说Windows上的安装，直接用<code>pip install paramiko</code>是装不上的，会卡在依赖项<code>pycrypto</code>上。安装<code>pycrypto</code>过程中需要MSVC来编译，不过我没有安装MSVC，Google到的一个预编译的二进制文件不支持python 3.5，好在找到另一个预编译的，安装方法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">pip install --use-wheel --no-index --find-links=https://github.com/sfbahr/PyCrypto-Wheels/raw/master/pycrypto-2.6.1-cp35-none-win_amd64.whl pycrypto</div><div class="line">pip install paramiko</div></pre></td></tr></table></figure></p>
+<p>在Ubuntu上还要麻烦些。在Ubuntu 15.10上，默认有python 2.7 和 python 3.4，在安装 <code>python3-pip</code> 时，会自动安装gcc，g++等开发工具，还有python3.5，不过没有安装python3.5-dev，导致无法编译<code>pycrypto</code>。</p>
+<blockquote>
+<p>PS, pip3默认使用python3.5，而不是系统自带的python3.4，所以最好把<code>/usr/bin/python3</code>这个符号链接从python3.4改成python3.5。<br>按照下面的步骤安装：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">apt-get install python3.5-dev</div><div class="line">pip3 install pycrypto</div><div class="line">pip3 install paramiko</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>下面是Windows上的一个示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">import paramiko</div><div class="line">import os</div><div class="line"></div><div class="line">hostname=&apos;10.1.1.5&apos;</div><div class="line">username=&apos;root&apos;</div><div class="line">paramiko.util.log_to_file(&apos;D:\ssh.log&apos;)</div><div class="line"></div><div class="line">ssh = paramiko.SSHClient()</div><div class="line">ssh.load_system_host_keys()</div><div class="line"></div><div class="line">key=paramiko.RSAKey.from_private_key_file(os.path.expanduser(&apos;D:\VM\ssh\id_rsa&apos;))</div><div class="line">ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())</div><div class="line"></div><div class="line">ssh.connect(hostname=hostname, username=username, pkey=key)</div><div class="line"></div><div class="line">stdin,stdout,stderr=ssh.exec_command(&apos;uname -a&apos;)</div><div class="line">print(stdout.read())</div><div class="line"></div><div class="line">ssh.close()</div></pre></td></tr></table></figure></p>
+<p>这个例子是通过ssh key登录到VM上，然后执行<code>uname -a</code>命令。返回的结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">b&apos;Linux x 4.2.0-16-generic #19-Ubuntu SMP Thu Oct 8 15:35:06 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux\n&apos;</div></pre></td></tr></table></figure></p>
+<h2 id="梳理docker-compose的源码"><a href="#梳理docker-compose的源码" class="headerlink" title="梳理docker-compose的源码"></a>梳理docker-compose的源码</h2><p>OK，准备工作基本就绪。下面梳理一下<code>docker-compose up</code>命令来创建、启动和连接多个容器涉及的代码，主要是参考<a href="https://github.com/docker/compose" target="_blank" rel="external">github上的源码</a>和《Docker容器与容器云》的6.1.2，下面的图参考了这本书的图6.1。<br><img src="/images/compose.png" alt=""></p>
+<ul>
+<li>project对象从compose.yml获取service列表，并根据link计算出各service的依赖关系，以此为顺序来创建各service。</li>
+<li>docker-compose是针对单个docker engine的，project对象只关联了一个docker-client对象，首先我们要把它改成一个列表；</li>
+<li>service对象也是只关联了一个docker-client对象，它是从project传递过来的，最终传给container对象来创建和启动容器；</li>
+<li>从client列表中指派一个client给container对象，就是所谓的调度了。因为一个service会对应多个container，这些container应该可以跨Host，所以调度应该发生在service→container这个阶段；</li>
+<li>我们需要记录下来哪个docker-client创建了哪个service下面的container，容器的id，以及容器启动后的ip地址，这样我们再ssh到那个Host上去，修改对应容器id目录下的hosts文件；</li>
+<li>上面的操作可能会造成若干秒的延迟后才能正常地通过hostname来进行通信，为此，在容器的启动命令之前插入一个sleep命令，防止因为连接超时导致应用启动失败。</li>
+</ul>
+
+      
+    </div>
+      
+      <footer>
+        
+  
+  <div class="categories">
+    <a href="/categories/nap/">nap</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/nap/">nap</a>, <a href="/tags/docker/">docker</a>, <a href="/tags/compose/">compose</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+      </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/OpenStack/">OpenStack</a><small>3</small></li>
+  
+    <li><a href="/categories/TVDCR/">TVDCR</a><small>3</small></li>
+  
+    <li><a href="/categories/east/">east</a><small>2</small></li>
+  
+    <li><a href="/categories/nap/">nap</a><small>4</small></li>
+  
+    <li><a href="/categories/web/">web</a><small>4</small></li>
+  
+    <li><a href="/categories/书架/">书架</a><small>1</small></li>
+  
+    <li><a href="/categories/大数据/">大数据</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 NAP Group
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+</body>
+</html>
+

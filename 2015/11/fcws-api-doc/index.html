@@ -1,0 +1,212 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>凤城卫士API文档 › NAP - Next Application Platform</title>
+  <meta name="author" content="NAP Group">
+  
+  <meta name="description" content="本篇为凤城卫士的API文档，包括其url,接受的参数，示例url以及返回值示例。对于REST API的 设计感兴趣的可以移步这篇文章
+
+注: 本篇中的url均具有前缀 /api/v1 ,这里为简便起见，进行了省略.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="凤城卫士API文档"/>
+  <meta property="og:site_name" content="NAP - Next Application Platform"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="NAP - Next Application Platform" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">NAP - Next Application Platform</a></h1>
+  <h2><a href="/"></a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">凤城卫士API文档</h1>
+  
+
+      
+        <time datetime="2015-11-18T16:40:58.000Z">2015-11-19</time>
+      
+    </header>
+    <div class="entry">
+      
+        <blockquote>
+<p>本篇为凤城卫士的API文档，包括其url,接受的参数，示例url以及返回值示例。对于REST API的 设计感兴趣的可以移步<a href="http://mclspace.com/2015/11/03/restful-note/" target="_blank" rel="external">这篇文章</a></p>
+</blockquote>
+<p>注: 本篇中的url均具有前缀 <em>/api/v1</em> ,这里为简便起见，进行了省略.</p>
+<a id="more"></a>
+<p>#用户信息</p>
+<h2 id="授权验证"><a href="#授权验证" class="headerlink" title="授权验证 "></a>授权验证 <!--这边应该POST,因为重新生成了token --></h2><p><code>/auth/local</code> GET 验证用户名密码，并重新生成token，返回基本的用户信息<br>接受参数:</p>
+<ul>
+<li>id     String 用户id</li>
+<li>password         String 用户密码</li>
+</ul>
+<p>示例 : <code>GET localhost:3000/api/v1/auth/local?id=44220&amp;password=44220</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;id&quot;: &quot;44220&quot;,</div><div class="line">  &quot;role&quot;: &quot;high-level&quot;,</div><div class="line">  &quot;description&quot;: &quot;干事1&quot;,</div><div class="line">  &quot;name&quot;: &quot;&quot;,</div><div class="line">  &quot;accessToken&quot;: &quot;d827b0ef-4e21-4cb7-b89f-c0b601fbe4b1&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="重置密码"><a href="#重置密码" class="headerlink" title="重置密码 "></a>重置密码 <!--这边应该用PUT ,因为用户更新了密码 --></h2><p> <code>/users/changePassword</code> POST 重置用户密码，重新生成盐值和hash存储到数据库中，返回修改后的用户基本信息<br>接受参数:</p>
+<ul>
+<li>id     String 用户id</li>
+<li>password         String 用户密码</li>
+<li>new_password         String 新的用户密码</li>
+</ul>
+<p>示例 : <code>POST localhost:3000/api/v1/users/changePassword</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;id&quot;: &quot;44220&quot;,</div><div class="line">  &quot;role&quot;: &quot;high-level&quot;,</div><div class="line">  &quot;description&quot;: &quot;干事1&quot;,</div><div class="line">  &quot;name&quot;: &quot;&quot;,</div><div class="line">  &quot;accessToken&quot;: &quot;d827b0ef-4e21-4cb7-b89f-c0b601fbe4b1&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="获得用户信息-这边应该用-users-id"><a href="#获得用户信息-这边应该用-users-id" class="headerlink" title="获得用户信息 //这边应该用/users/:id"></a>获得用户信息 //这边应该用/users/:id</h2><p><code>/users/details</code> GET 获取用户详细信息,如最近的主题以及最近的回复</p>
+<p>接受参数:</p>
+<ul>
+<li>access_token         String 用户的token</li>
+</ul>
+<p>示例 :  <code>GET localhost:3000/api/v1/users/details?access_token=e25be7a2-0553-4104-a210-bde3873bfdb6</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;id&quot;: &quot;13852862738&quot;,</div><div class="line">  &quot;role&quot;: &quot;low-level&quot;,</div><div class="line">  &quot;description&quot;: &quot;海陵区城西街道情报员&quot;,</div><div class="line">  &quot;name&quot;: &quot;高月&quot;,</div><div class="line">  &quot;recent_posts&quot;: [</div><div class="line">    &#123;</div><div class="line">      &quot;_id&quot;: &quot;564aef7bd443b5243c7e826b&quot;,</div><div class="line">      &quot;author_id&quot;: &quot;13852862738&quot;,</div><div class="line">      &quot;content&quot;: &quot;测试情报&quot;,</div><div class="line">      &quot;important&quot;: false,</div><div class="line">      &quot;create_at&quot;: &quot;2015-11-17T09:12:27.217Z&quot;</div><div class="line">    &#125;</div><div class="line">  ],</div><div class="line">  &quot;recent_replies&quot;: [</div><div class="line">    &#123;</div><div class="line">      &quot;_id&quot;: &quot;564aef8fd443b5243c7e826d&quot;,</div><div class="line">      &quot;author_id&quot;: &quot;13852862738&quot;,</div><div class="line">      &quot;content&quot;: &quot;呵呵&quot;,</div><div class="line">      &quot;create_at&quot;: &quot;2015-11-17T09:12:47.664Z&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      &quot;_id&quot;: &quot;564aef85d443b5243c7e826c&quot;,</div><div class="line">      &quot;author_id&quot;: &quot;13852862738&quot;,</div><div class="line">      &quot;content&quot;: &quot;评论一个&quot;,</div><div class="line">      &quot;create_at&quot;: &quot;2015-11-17T09:12:37.741Z&quot;</div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="情报信息"><a href="#情报信息" class="headerlink" title="情报信息"></a>情报信息</h1><h2 id="获取情报列表"><a href="#获取情报列表" class="headerlink" title="获取情报列表"></a>获取情报列表</h2><p><code>/posts</code> GET 获取帖子列表</p>
+<p>接受参数:</p>
+<ul>
+<li>limit     Number 每页的情报数量</li>
+<li>page         Number 页数</li>
+<li>access_token         String 用户的token</li>
+</ul>
+<p>示例: <code>GET localhost:3000/api/v1/posts?access_token=e25be7a2-0553-4104-a210-bde3873bfdb6&amp;limit=5&amp;page=1</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">  &#123;</div><div class="line">    &quot;_id&quot;: &quot;564aef7bd443b5243c7e826b&quot;,</div><div class="line">    &quot;author_id&quot;: &quot;13852862738&quot;,</div><div class="line">    &quot;content&quot;: &quot;测试情报&quot;,</div><div class="line">    &quot;important&quot;: false,</div><div class="line">    &quot;create_at&quot;: &quot;2015-11-17T09:12:27.217Z&quot;,</div><div class="line">    &quot;author&quot;: &#123;</div><div class="line">      &quot;name&quot;: &quot;高月&quot;</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    &quot;_id&quot;: &quot;564ae2c08bb772bf39386e2b&quot;,</div><div class="line">    &quot;author_id&quot;: &quot;44121&quot;,</div><div class="line">    &quot;content&quot;: &quot;hello&quot;,</div><div class="line">    &quot;important&quot;: true,</div><div class="line">    &quot;create_at&quot;: &quot;2015-11-17T08:18:08.800Z&quot;,</div><div class="line">    &quot;author&quot;: &#123;</div><div class="line">      &quot;name&quot;: &quot;&quot;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
+<h2 id="获取某个帖子的具体内容"><a href="#获取某个帖子的具体内容" class="headerlink" title="获取某个帖子的具体内容"></a>获取某个帖子的具体内容</h2><p><code>/posts/:id</code> GET 获取某个帖子的具体内容</p>
+<p>接受参数:</p>
+<ul>
+<li>id    String 帖子的id</li>
+<li>access_token         String 用户的token</li>
+</ul>
+<p>示例: <code>GET localhost:3000/api/v1/posts/564aef7bd443b5243c7e826b?access_token=e25be7a2-0553-4104-a210-bde3873bfdb6</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;_id&quot;: &quot;564aef7bd443b5243c7e826b&quot;,</div><div class="line">  &quot;author_id&quot;: &quot;13852862738&quot;,</div><div class="line">  &quot;content&quot;: &quot;测试情报&quot;,</div><div class="line">  &quot;important&quot;: false,</div><div class="line">  &quot;photos&quot;: [],</div><div class="line">  &quot;create_at&quot;: &quot;2015-11-17T09:12:27.217Z&quot;,</div><div class="line">  &quot;author&quot;: &#123;</div><div class="line">    &quot;name&quot;: &quot;高月&quot;</div><div class="line">  &#125;,</div><div class="line">  &quot;replies&quot;: [</div><div class="line">    &#123;</div><div class="line">      &quot;_id&quot;: &quot;564aef85d443b5243c7e826c&quot;,</div><div class="line">      &quot;author_id&quot;: &quot;13852862738&quot;,</div><div class="line">      &quot;post_id&quot;: &quot;564aef7bd443b5243c7e826b&quot;,</div><div class="line">      &quot;content&quot;: &quot;评论一个&quot;,</div><div class="line">      &quot;create_at&quot;: &quot;2015-11-17T09:12:37.741Z&quot;,</div><div class="line">      &quot;author&quot;: &#123;</div><div class="line">        &quot;name&quot;: &quot;高月&quot;</div><div class="line">      &#125;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      &quot;_id&quot;: &quot;564aef8fd443b5243c7e826d&quot;,</div><div class="line">      &quot;author_id&quot;: &quot;13852862738&quot;,</div><div class="line">      &quot;post_id&quot;: &quot;564aef7bd443b5243c7e826b&quot;,</div><div class="line">      &quot;content&quot;: &quot;呵呵&quot;,</div><div class="line">      &quot;create_at&quot;: &quot;2015-11-17T09:12:47.664Z&quot;,</div><div class="line">      &quot;author&quot;: &#123;</div><div class="line">        &quot;name&quot;: &quot;高月&quot;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="创建情报"><a href="#创建情报" class="headerlink" title="创建情报"></a>创建情报</h2><p><code>/posts</code> POST 创建情报，返回情报基本内容</p>
+<p>参数: </p>
+<ul>
+<li>content    String 帖子的内容,不能为空</li>
+<li>important     Boolean 是否为紧急情报，默认为false</li>
+<li>photos     [String] 情报的配图，目前默认只能上传一张</li>
+<li>access_token        String 用户的token</li>
+</ul>
+<p>示例: <code>POST localhost:3000/api/v1/posts?access_token=e25be7a2-0553-4104-a210-bde3873bfdb6</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;_id&quot;: &quot;564c34da38cad35f288846c9&quot;,</div><div class="line">  &quot;author_id&quot;: &quot;13852862738&quot;,</div><div class="line">  &quot;content&quot;: &quot;测试消息 from postman&quot;,</div><div class="line">  &quot;important&quot;: true,</div><div class="line">  &quot;create_at&quot;: &quot;2015-11-18T08:20:42.379Z&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="删除情报"><a href="#删除情报" class="headerlink" title="删除情报"></a>删除情报</h2><p><code>/posts/:id</code> DELETE 删除情报，返回空文档。</p>
+<p>接受参数:</p>
+<ul>
+<li>id     String 待删除的情报的id</li>
+<li>access_token         String 用户的token</li>
+</ul>
+<p>示例: <code>DELETE localhost:3000/api/v1/posts/564c34da38cad35f288846c9?access_token=e25be7a2-0553-4104-a210-bde3873bfdb6</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;&#125;</div></pre></td></tr></table></figure>
+<h1 id="回复"><a href="#回复" class="headerlink" title="回复"></a>回复</h1><h2 id="创建回复"><a href="#创建回复" class="headerlink" title="创建回复"></a>创建回复</h2><p><code>replys</code> POST 创建一个回复，返回该回复</p>
+<p>接受参数:</p>
+<ul>
+<li>post_id         String  回复的情报的id</li>
+<li>content         String  回复内容</li>
+<li>access_token     String  用户的token</li>
+</ul>
+<p>示例: <code>POST localhost:3000/api/v1/replys?access_token=e25be7a2-0553-4104-a210-bde3873bfdb6</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;_id&quot;: &quot;564c7234d1739e4f0b056796&quot;,</div><div class="line">  &quot;post_id&quot;: &quot; 564c65c34086d9a105d78243&quot;,</div><div class="line">  &quot;content&quot;: &quot;添加一条回复&quot;,</div><div class="line">  &quot;author_id&quot;: &quot;13852862738&quot;,</div><div class="line">  &quot;create_at&quot;: &quot;2015-11-18T12:42:28.692Z&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="删除回复"><a href="#删除回复" class="headerlink" title="删除回复"></a>删除回复</h2><p><code>replys/:id</code> DELETE 删除某个回复,返回空文档</p>
+<p>接受参数:</p>
+<ul>
+<li>id String 该回复的id</li>
+<li>access_token String 用户的token</li>
+</ul>
+<p>示例: <code>DELETE localhost:3000/api/v1/replys/564c7234d1739e4f0b056796?access_token=e25be7a2-0553-4104-a210-bde3873bfdb6</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;&#125;</div></pre></td></tr></table></figure>
+      
+    </div>
+      
+      <footer>
+        
+  
+  <div class="categories">
+    <a href="/categories/web/">web</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/web/">web</a>, <a href="/tags/api/">api</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+      </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/OpenStack/">OpenStack</a><small>3</small></li>
+  
+    <li><a href="/categories/TVDCR/">TVDCR</a><small>3</small></li>
+  
+    <li><a href="/categories/east/">east</a><small>2</small></li>
+  
+    <li><a href="/categories/nap/">nap</a><small>4</small></li>
+  
+    <li><a href="/categories/web/">web</a><small>4</small></li>
+  
+    <li><a href="/categories/书架/">书架</a><small>1</small></li>
+  
+    <li><a href="/categories/大数据/">大数据</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 NAP Group
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+</body>
+</html>
+
