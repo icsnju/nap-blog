@@ -1,0 +1,26 @@
+<% if (item.prev || item.next){ %>
+<nav id="article-nav">
+  <div class="article-nav-title">
+  <% if (item.prev){ %>
+    <a style="color:black" href="<%- url_for(item.prev.path) %>" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">新文章: </strong>
+        <% if (item.prev.title){ %>
+          <%= item.prev.title %>
+        <% } else { %>
+          (untitled)
+        <% } %>
+    </a>
+  <% } %>
+  <% if (item.next){ %>
+      <a style="float:right;color:black" href="<%- url_for(item.next.path) %>" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">旧文章: </strong>
+        <% if (item.next.title){ %>
+          <%= item.next.title %>
+        <% } else { %>
+          (untitled)
+        <% } %>
+      </a>
+  <% } %>
+    </div>
+</nav>
+<% } %>
