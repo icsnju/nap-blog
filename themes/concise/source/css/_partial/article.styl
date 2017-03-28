@@ -91,9 +91,9 @@ article
         display none
       &:before
         position absolute
-        font 32px font-icon    
+        font 32px font-icon
         top 0
-        left 0 
+        left 0
         width 32px
         text-align center
 
@@ -116,16 +116,27 @@ article
     text-align justify
     line-height 1.6
     p, blockquote, ul, ol, dl, table, iframe, h3, h4, h5, h6, .video-container
-      margin-top 15px
+      margin 5px
+
+    table
+      border-collapse collapse
+      border-spacing 0
+    th
+      border-top 2px solid #ddd
+      border-bottom 2px solid #ddd
+    td
+      border-bottom 1px solid #ddd
+      padding 5px
+    tr:nth-child(even)
+      background-color #ccddff
 
     blockquote
       border-top 1px solid color-border
       border-bottom 1px solid color-border
-      font-style italic
-      font-family font-serif
-      font-size 1.2em
-      padding 0 30px 15px
-      text-align center
+      border-left 4px solid rgba(38, 139, 210, 1)
+      background-color #f7f7f7
+      font-size 0.9em
+      padding 5px
       footer
         border-top none
         font-size 0.8em
