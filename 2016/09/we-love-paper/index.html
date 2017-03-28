@@ -1,0 +1,432 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何收集和整理论文（面向CS专业） › NAP - Next Application Platform</title>
+  <meta name="author" content="NAP Group">
+  
+  <meta name="description" content="论文（Paper）是每个研究生读研路上挥之不去的“阴云”。无论是否已经有了一个好的课题或想法，都首先要收集某个研究方向一定数量的论文，来了解相关的工作和最新进展(State of the art &amp;amp; practice）。本文介绍了如何检索、收集计算机科学（CS）专业的论文，还介绍了与相关的机构，学术会议和论文数据库。文末有 Bonus 哦;-)本文原发在 https://ying-zhang.github.io/misc/2016-09-we-love-paper/">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="如何收集和整理论文（面向CS专业）"/>
+  <meta property="og:site_name" content="NAP - Next Application Platform"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="NAP - Next Application Platform" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">NAP - Next Application Platform</a></h1>
+  <h2><a href="/"></a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/archives">Archives</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+<div class="post-content">
+  <header>
+    
+  
+    <h1 class="title">如何收集和整理论文（面向CS专业）</h1>
+  
+
+    
+      <time datetime="2016-09-27T16:00:00.000Z">2016-09-28</time>
+    
+  </header>
+<div class="entry">
+  
+    <p>论文（Paper）是每个研究生读研路上挥之不去的“阴云”。<br>无论是否已经有了一个好的课题或想法，都首先要收集某个研究方向一定数量的论文，来了解相关的工作和最新进展(State of the art &amp; practice）。<br>本文介绍了如何检索、收集计算机科学（CS）专业的论文，还介绍了与相关的机构，学术会议和论文数据库。<br>文末有 <a href="#hosts"><strong>Bonus</strong></a> 哦;-)<br>本文原发在 <a href="https://ying-zhang.github.io/misc/2016-09-we-love-paper/" target="_blank" rel="external">https://ying-zhang.github.io/misc/2016-09-we-love-paper/</a></p>
+<a id="more"></a>
+<hr>
+<h1 id="tl-dr"><a href="#tl-dr" class="headerlink" title="tl;dr"></a>tl;dr</h1><ul>
+<li>从<a href="/misc/2017-02-ccf-all-in-one/">CCF推荐目录</a>中自己感兴趣的方向的 <strong>A类会议及期刊</strong> 中找论文即可。</li>
+<li>我关注的云计算，程序分析方向的<a href="#tldr">会议和期刊列表</a></li>
+<li><a href="#hosts"><strong>Bonus</strong></a> 修改Hosts</li>
+</ul>
+<h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>按理说，开篇应该先要强调一下Paper对于科研的重要性的，直接把前辈的经验拿来吧：</p>
+<ul>
+<li>周志华老师的一篇关于<a href="/doc/research_and_paper_zhou_zhihua_2007_ppt.pdf">做研究与写论文的ppt</a></li>
+<li>凌晓峰和杨强的<a href="http://item.jd.com/11127141.html" target="_blank" rel="external">《学术研究 - 你的成功之道》</a>，这本书的英文原版是<a href="http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=6813064" target="_blank" rel="external">Crafting Your Research Future - A Guide to Successful Master’s and Ph.D. Degrees in Science &amp; Engineering</a></li>
+</ul>
+<p>首先要从前辈的经验中端正对Paper的态度：Paper不是科研的原因，而是结果(的一部分)，结果是必要的，自然也就少不了Paper或者总结报告；<br>再者要借鉴前辈的学习方法和技巧，所谓“工欲善其事，必先利其器”，除了科研课题本身，养成一套高效的科研方法和习惯也是重要的。<br>重要的是要 <em>有意识地探索和总结适合自己的科研方法</em>，既要低头苦干，又要抬头看路，还要回头总结。</p>
+<h2 id="论文发表的过程"><a href="#论文发表的过程" class="headerlink" title="论文发表的过程"></a>论文发表的过程</h2><pre>
+                                  / 期刊，特辑/专刊 → 多轮审稿 → 上线 \
+Idea -> 编程、实验、写Paper、投稿 <                                    ->出版，检索
+                                  \ 会议           → 审稿 → 赴会报告 /
+</pre>
+
+<p>简单介绍一下发表论文的过程：</p>
+<ul>
+<li>首先投稿的Paper作者，一般是高校的的研究生，也有教师，比如<a href="https://amplab.cs.berkeley.edu/" target="_blank" rel="external">UC Berkeley 的AMPLab</a>；还有一些公司的研究院，比如<a href="https://www.microsoft.com/en-us/research/" target="_blank" rel="external">微软</a>，<a href="https://research.google.com/pubs/papers.html" target="_blank" rel="external">谷歌</a>。显然，论文的出身对质量有很大影响。</li>
+<li>期刊是传统的研究成果发表方式，一般期刊是季度，少有月度出版的，每期称为一个Issue，一年的各期集结为一个Volume。一般可以随时投稿给期刊，没有截稿日期(deadline)的压力。投稿后一般要经过同行评审(Peer Review)，针对审稿人的建议做大修，小修(Major，Minor Revision)等两三轮修改才能被接收，期间跨度一年多是常有的情况。不过如果有的期刊安排了专刊(Special Issue)计划，会公布一个截稿日期，审稿的进度会稍快些。<br>期刊分为 <strong>Transaction, Journal 和 Magazine</strong> 。这三者的学术严肃性依次降低，这可以从它们的封面上直观地看出来。严格来说Magazine不算是学术期刊了，上面很少发表新的原创性的内容，而是对当前进展的简介和综述，也会转发一些已经发表过的重要的Paper。 <em>不过对于新手来说，先浏览一下Magazine，建立一个基本的概念还是很有必要的，特别是</em> <a href="http://dl.acm.org/citation.cfm?id=J79" target="_blank" rel="external">Communications of the ACM, CACM, ACM通讯</a> <em>值得关注</em>。</li>
+<li>对快速发展的CS专业来说，期刊的节奏有点慢了，而且期刊版面有限，每期只能发布几篇到十几篇不等，所以上面发表的一般是一些理论性比较强的论文，或者综述性的论文；很多新成果转而发表在学术会议上来，这跟传统学科不太一样。<br>很多会议每年举行一次，时间上也是比较固定的，会提前在会议网站上发布下一年的call for paper（cfp，征稿启事）和deadline（截稿日期）。投稿后，一般经过两三个月的审稿就会通知作者是否录用（Notifications）。被接收的Paper会要求按格式和Reviewers的意见稍修改后提交正式的最终版，称为Camera Ready。最后需要作者赴会做Presentation。<br>会议录用的所有Paper会结集出版，称为 <em>Proceedings</em> 。有的会议还会推荐一些优秀的Paper到合作的期刊，扩展后作为期刊论文出版。<br>会议分为 <em>Symposium , Conference 和 Workshop</em>。这三者的学术严肃性依次降低，大部分会议都称为 <em>Conference</em>。一般来说 <em>Workshop</em> 是随某个 <em>Conference</em> 一同举办，可能没有固定的主题，Paper质量与主会议有所差别。</li>
+</ul>
+<p>通过这个过程，我们还可以知道如何<strong>尽快</strong>找到一篇感兴趣的文章：</p>
+<ul>
+<li>对于期刊，一般投稿是很多的，编辑部会把已经接收但还没有排到出版期号的文章先放到网上在线出版，称为Early Access；</li>
+<li>对于会议，在确定了接收的文章后，会在会议网站的Program/Accepted Papers/Schedule等类似链接下给出列表，同时会Email通知作者准备提交Camera Ready版。这时有的作者就会把Camera Ready版放到自己的主页上。之后会议组委会将论文集结提供给所有作者，还会将论文集发布到ACM或IEEE(这两个机构直接参与了很多会议的组织)的论文数据库中。不同的会议组委效率不同，有的在开会前就上线出版了，有的在会议结束后后还要等一段时间。</li>
+</ul>
+<h1 id="CS论文数据库"><a href="#CS论文数据库" class="headerlink" title="CS论文数据库"></a>CS论文数据库</h1><h2 id="ACM-IEEE-Computer等"><a href="#ACM-IEEE-Computer等" class="headerlink" title="ACM, IEEE Computer等"></a>ACM, IEEE Computer等</h2><p>一般会议和期刊都有自己的网站，但很少能在上面获取到论文全文。又因为来源分散，直接从它们那里检索Paper很不方便。有几个大型的论文数据库，它们与期刊或者会议主办方合作，或者自己组织会议或编辑出版期刊，比如下面的表格及<a href="#lib">图书馆页面截图</a>。</p>
+<blockquote>
+<p>注意， DL和机构的网站有很多介绍性的内容是重复的，下载论文全文要去DL的页面。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>机构</th>
+<th>Digital Library （DL）</th>
+<th>机构首页</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Association for Computing Machinery, ACM</td>
+<td>ACM Digital Library  <a href="https://dl.acm.org/" target="_blank" rel="external">https://dl.acm.org/</a></td>
+<td><a href="https://www.acm.org/" target="_blank" rel="external">https://www.acm.org/</a></td>
+</tr>
+<tr>
+<td>IEEE Computer Society</td>
+<td>IEEE Xplore DL <a href="http://ieeexplore.ieee.org/" target="_blank" rel="external">http://ieeexplore.ieee.org/</a></td>
+<td><a href="https://www.computer.org/" target="_blank" rel="external">https://www.computer.org/</a></td>
+</tr>
+<tr>
+<td>Elsevier ScienceDirect</td>
+<td><a href="http://www.sciencedirect.com/" target="_blank" rel="external">http://www.sciencedirect.com/</a></td>
+<td><a href="https://www.elsevier.com/" target="_blank" rel="external">https://www.elsevier.com/</a></td>
+</tr>
+<tr>
+<td>Springer</td>
+<td>Springer Link <a href="http://link.springer.com/" target="_blank" rel="external">http://link.springer.com/</a></td>
+<td><a href="http://www.springer.com/" target="_blank" rel="external">http://www.springer.com/</a></td>
+</tr>
+<tr>
+<td>Wiley</td>
+<td>Wiley Online Lib <a href="http://onlinelibrary.wiley.com/" target="_blank" rel="external">http://onlinelibrary.wiley.com/</a></td>
+<td><a href="http://www.wiley.com/" target="_blank" rel="external">http://www.wiley.com/</a></td>
+</tr>
+</tbody>
+</table>
+<p>ACM 和 IEEE Computer Society（计算机学会，IEEE还有电气、电子、通信等其它多个学会） 的网址后缀是 <em>.org</em>，这两个是CS领域最重要的学术组织，很多的CS学术会议都是由它们组织的。<br>Elsevier，Springer，Wiley的网址后缀则是 <em>.com</em> ，这些是学术出版商，内容以期刊为主，涵盖了CS及其它多个学科。<br>上面这几个数据库是 <strong>主要的论文全文来源</strong>。它们各自收录的会议和期刊基本没有重叠，从它们的数据库下载的Paper也都有各自的排版样式。</p>
+<blockquote>
+<p>ACM作为最“正统”的计算机学术组织，它的DL除了收录ACM组织的会议和期刊全文之外，还会索引其它几家数据库的 <strong>元数据</strong>，但没有全文，不过可以通过DOI链接跳转到这几家数据库的全文页面。<br>IEEE出版的一些论文在 computer.org （实际是<a href="https://www.computer.org/csdl/" target="_blank" rel="external">CSDL</a>）和 Xplore DL 都可能搜到，但这两个数据库是 <em>分别</em> 收费的，能在Xplore DL下载的不一定能在Computer.org下载。</p>
+</blockquote>
+<h3 id="ACM-SIGs"><a href="#ACM-SIGs" class="headerlink" title="ACM SIGs"></a>ACM SIGs</h3><p>ACM之下针对CS多个子方向的“分舵”，称为Special Interest Group，SIG，目前有三十多个<a href="http://www.acm.org/sigs/" target="_blank" rel="external">ACM SIGs</a>（或参考DL的这个链接<a href="http://dl.acm.org/sigs.cfm" target="_blank" rel="external">SIGs ACM DL</a>），比如</p>
+<ul>
+<li>体系结构方向的<a href="http://www.sigarch.org/" target="_blank" rel="external">SIGARCH</a>、<a href="http://www.sighpc.org/" target="_blank" rel="external">SIGHPC</a>、<a href="http://www.sigmetrics.org/" target="_blank" rel="external">SIGMETRICS</a>、<a href="http://www.sigmicro.org/" target="_blank" rel="external">SIGMICRO</a>、<a href="http://www.sigmobile.org/" target="_blank" rel="external">SIGMOBILE</a>，</li>
+<li>网络方向的<a href="http://www.sigcomm.org/" target="_blank" rel="external">SIGCOMM</a>，</li>
+<li>数据库方向的<a href="http://www.sigmod.org/" target="_blank" rel="external">SIGMOD</a>，</li>
+<li>系统方向的<a href="http://www.sigops.org/" target="_blank" rel="external">SIGOPS</a>，</li>
+<li>软件工程方向的<a href="http://www.sigplan.org/" target="_blank" rel="external">SIGPLAN</a>、<a href="http://www.sigsoft.org/" target="_blank" rel="external">SIGSOFT</a></li>
+</ul>
+<p>这些SIGs除了组织一系列的学术会议，还会评选本方向的一些奖项，包括 <strong>最佳论文</strong>，<strong>优秀博士论文</strong> 等(在DL中一般没有哪篇是Best Paper的信息)。此外，</p>
+<ul>
+<li>有网站维护了一个<a href="http://jeffhuang.com/best_paper_awards.html" target="_blank" rel="external">部分会议的最佳论文列表</a>，</li>
+<li>还有下面要介绍的USENIX的<a href="https://www.usenix.org/conferences/best-papers" target="_blank" rel="external">各会议最佳论文</a>。</li>
+</ul>
+<p>除此之外，有的SIG会选择一些高质量的文章，以Review，Newsletter 或Notes的形式重新发表。</p>
+<h2 id="USENIX"><a href="#USENIX" class="headerlink" title="USENIX"></a><a href="https://www.usenix.org/" target="_blank" rel="external">USENIX</a></h2><p>要是学校的图书馆不差钱，把所有有价值的论文数据库都买买买来，那么下面截图中的电子资源列表应该很全了吧？然而还是少了一个重要的数据库：USENIX —— 它是免费的。<br>话说<strong><a href="https://www.usenix.org/" target="_blank" rel="external">USENIX</a></strong> 实在是个良心组织。USENIX最初称为Unix User Group。它组织了OSDI 、ATC、FAST、NSDI、LISA等会议，不但学术水平很高，贴近工业界，而且免费提供全文下载，还提供一些论文作者在会议上的slices及演讲视频。slices是对文章的提炼，读论文时可以参考。拿slices和视频来学习做Presentation，练习英语听力和口语也不错。</p>
+<h2 id="arXiv"><a href="#arXiv" class="headerlink" title="arXiv"></a><a href="http://arxiv.org/" target="_blank" rel="external">arXiv</a></h2><p><a href="http://arxiv.org/" target="_blank" rel="external">arXiv</a>， 是archive(归档)的意思，是一个由康乃尔大学维护的免费的多学科论文<strong>预</strong>出版(preprint)数据库。所谓<strong>预</strong>出版，就是说论文还没有经过同行评审，文责自负，文章质量参差不齐，所以一般不会作为正式的学术成果。不过有的学科习惯上先把文章公开到arXiv上，然后再提交到会议上。</p>
+<p><a name="lib"><img src="/images/paper-lib.png" alt="图书馆电子资源"></a></p>
+<h2 id="EI和SCI"><a href="#EI和SCI" class="headerlink" title="EI和SCI"></a>EI和SCI</h2><p>分别搜索上面的数据库还是有点麻烦，于是就有了一些聚合数据库，又称为索引。想必很多同学在读研之前早就听说EI和SCI，</p>
+<ul>
+<li>EI <em>Engineering Index</em> <a href="https://www.engineeringvillage.com/" target="_blank" rel="external">https://www.engineeringvillage.com/</a></li>
+<li>SCI <em>Science Citation Index</em> <a href="http://apps.webofknowledge.com/" target="_blank" rel="external">http://apps.webofknowledge.com/</a></li>
+</ul>
+<p>只看 <em>URL</em> 还以为是 <em>山寨网站</em>，它们的Web界面体验也不太友好，而且它们不止有CS一个学科，直接通过关键词搜索经常会给出不相关的内容。其实这两个数据库通常是在 <strong>已知文章标题的情况下</strong> 检索是不是被它们收录了，而 <strong>不是</strong> 用来收集文章的。</p>
+<p>要确定某个会议论文集或者期刊<a href="http://www.philippe-fournier-viger.com/links.php" target="_blank" rel="external">是否被EI或SCI收录</a>，</p>
+<ul>
+<li>在<a href="https://www.elsevier.com/solutions/engineering-village/content" target="_blank" rel="external">EI收录列表</a> 页内搜索Compendex Source List，会找到一个Excel表格的链接，下载下来会发现这个表格是受保护的，但可以筛选标题（而且最后一个WorkSheet有中文翻译哦，满满的土洋结合，中国特色）。嘘~~ 也许你可以参考<a href="/doc/crack_xls_vb.txt">这个脚本解除保护</a>，还要建议把title列中每个单元格开头的<code>=</code>替换掉。这个Excel的title是排好序的，方便顺序浏览，比如有个杂志名叫<code>Computing</code>，真是起的好名字，如果直接搜索是肯定搜出一堆结果，所以，即便找到名字一样的期刊，最好也要再确认一下ISSN号。<strong>但是！</strong>，这个Excel表格并不完整，如果没有在表中搜索到，还是需要在EI的网站上搜索文章标题才能最终确认。对了，EI的数据库叫 <strong>Compendex</strong>。</li>
+<li>在<code>webofknowledge</code>的网站查询之前，<strong>一定</strong> 要选择数据库为<code>检索 Web of Science 核心合集</code>，等自动刷新候，还要在页面下部展开“更多设置”，只选中<code>Science Citation Index Expanded (SCIEXPANDED) 1900年至今</code>这一项，然后才能查询出根正苗红的<code>SCI（E）</code>。请<strong>务必</strong>参考<a href="/doc/SCI_E_Web_of_Science.pdf">这个截图</a>。可以在<a href="http://ip-science.thomsonreuters.com/cgi-bin/jrnlst/jlsearch.cgi?PC=K" target="_blank" rel="external">SCI收录列表</a>直接输入期刊的名称来查询该期刊是否被SCI收录，但感觉这个查的也不全。还是要充分利用SCI的中国特色了，因为还有一个国内整理的SCI期刊列表：<a href="http://scit.nju.edu.cn/Item/1162.aspx" target="_blank" rel="external">中国科学技术信息研究所SCI（E）论文期刊分区列表(2016年)</a>，这是一个有13.8k多行的Excel表格，简洁粗暴。</li>
+</ul>
+<hr>
+<p>上面的这些数据库可以免费检索标题和摘要，购买全文则价格不菲。如果学校的图书馆购买了这些数据库，一般会识别用户的IP地址，在学校网络范围内可以直接下载PDF全文。<br>校外就没有这么方便了，好在很多作者在Paper被录用后会在自己的主页上挂出PDF全文，从Google Scholar上可以搜索到这些PDF全文的链接，非常方便。<br>话说只要是能花钱买到的东西，去万能的 <strong>淘宝</strong> 肯定能找到，就看是买 <em>VPN/代理</em>，<em>单篇文章</em>，还是 <em>整个数据库</em> 了。</p>
+<h2 id="dblp"><a href="#dblp" class="headerlink" title="dblp"></a>dblp</h2><p>dblp [<a href="http://dblp.org" target="_blank" rel="external">http://dblp.org</a>] ，或[<a href="http://dblp.uni-trier.de]，" target="_blank" rel="external">http://dblp.uni-trier.de]，</a> 是专注于CS学科的文献 <strong>元数据索引</strong> 数据库，优势是收集得相当完整，链接也很有规律，比如特定会议的 FSE 2016 <a href="http://dblp.org/db/conf/sigsoft/fse2016.html" target="_blank" rel="external">http://dblp.org/db/conf/sigsoft/fse2016.html</a> 或者某个作者的全部论文列表(dblp对重名作者处理得很好)，但只能搜索标题或作者等元数据，用来初步筛选论文非常方便，需要获取全文时还是要跳转到上面的几个数据库，数据更新也稍微滞后一点。<br>2015版CCF目录中的会议和期刊都是dblp的链接。</p>
+<p>dblp 列出了关于CS论文的一些统计数据，比如（2016年10月查询）</p>
+<ul>
+<li><a href="http://dblp.dagstuhl.de/statistics/recordsindblp.html" target="_blank" rel="external">累计论文记录数量</a>，</li>
+<li><a href="http://dblp.dagstuhl.de/statistics/publicationsperyear.html" target="_blank" rel="external">每年发表的论文数量</a>，</li>
+<li><a href="http://dblp.dagstuhl.de/statistics/distributionofpublicationtype.html" target="_blank" rel="external">论文发表的类型</a>，其中会议论文占53%，</li>
+<li>论文总数 3,587,354 ， 作者人数 1,825,286，会议数4,912，期刊数 1,491。</li>
+</ul>
+<p>另外，ACM DL也有一个<a href="http://dl.acm.org/contents_guide.cfm" target="_blank" rel="external">类似的统计</a>。<br><img src="/images/paper-pubs.png" alt="每年发表的CS论文数量"></p>
+<p>而且dblp整站的数据都可以下载为一个<a href="http://dblp.dagstuhl.de/xml/" target="_blank" rel="external">xml文件</a>，以供进一步挖掘。</p>
+<h2 id="DOI"><a href="#DOI" class="headerlink" title="DOI"></a>DOI</h2><p>在查找或引用论文时经常会遇到DOI(Digital Object Identifier)，<a href="https://zh.wikipedia.org/wiki/DOI" target="_blank" rel="external">wikipedia介绍DOI</a>“是一套识别数字资源的机制，涵括的对象有视频、报告或书籍等等。它既有一套为资源命名的机制，也有一套将识别号解析为具体地址的协议”。</p>
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p>从Google Scholar搜索全文时可能会跳转到下面这几个网站，因为它们会保存一些别人分享的全文。</p>
+<ul>
+<li>Semantic Scholar [<a href="https://www.semanticscholar.org" target="_blank" rel="external">https://www.semanticscholar.org</a>]</li>
+<li>CiteSeerX [<a href="http://citeseerx.ist.psu.edu/" target="_blank" rel="external">http://citeseerx.ist.psu.edu/</a>]</li>
+<li>ResearchGate [<a href="https://www.researchgate.net/" target="_blank" rel="external">https://www.researchgate.net/</a>] ，这是一个学术社交网络</li>
+</ul>
+<h1 id="CCF目录"><a href="#CCF目录" class="headerlink" title="CCF目录"></a>CCF目录</h1><p>EI和SCI只是两个论文数据库，但能够发表被EI和SCI收录的文章变成了能够毕业，能否获得奖学金，能否获得基金的指标。由于时代的限制，EI和SCI被赋予了不相称的地位和意义，而且短期看还是如此。<br>更 “<em>不幸</em>” 的是，对于CS的学生，还有一个<a href="http://history.ccf.org.cn/sites/ccf/paiming.jsp" target="_blank" rel="external">CCF目录</a>（<a href="http://history.ccf.org.cn/sites/paiming/2015ccfmulu.pdf" target="_blank" rel="external">2015版的PDF</a>）摆在面前。其实并非是不幸，而是十分幸运，因为CCF目录不像是一个紧箍咒，而更像是一个入门指南。</p>
+<p>首先说<a href="http://www.ccf.org.cn/" target="_blank" rel="external">中国计算机学会 CCF</a>是国内的类似于ACM的计算机学术组织。也许某位同学的导师就是CCF会员。相比EI和SCI收录的成百上千的会议和期刊，CCF维护的目录显然<a href="/misc/2017-02-ccf-all-in-one/">精简得多</a>。<br>考虑到对EI和SCI指标要求的实际情况，目录选取的 <strong>大多</strong> 是被EI或SCI收录的，具体划分为10个子方向，并区分出A，B，C三个等级。<br>A，B类的会议和期刊的文章学术质量较高，但这个质量不是简单通过所谓影响因子等机械的数据来评价的，而是综合了多种因素。如果翻一下本科的操作系统等骨干专业课教程，会发现其中引用的有不少A类的文章，比如SOSP，OSDI等。所以建议从A类文章开始研究会。</p>
+<blockquote>
+<p>如果只看标题和摘要，有的期刊/会议文章看起来非常值得一读，比如 <a href="http://dblp.org/db/journals/fgcs/" target="_blank" rel="external">FGCS    Future Generation Computer Systems</a>上的文章。但如果仔细读一下文章全文，经常是大失所望。好在CCF只给了FGCS C类的评级。</p>
+</blockquote>
+<p>上面提到ACM有三十多个SIGs，而CCF则只划分了10个子方向，不同的视角有不同的划分结果，这里有ACM的更详细的<a href="http://dl.acm.org/ccs/ccs.cfm" target="_blank" rel="external">分类系统CCS</a>，以及有重叠的<a href="https://www.acm.org/special-interest-groups/sigs-by-knowledge-area" target="_blank" rel="external">SIGs大类划分</a>，还有<a href="https://en.wikipedia.org/wiki/Outline_of_computer_science" target="_blank" rel="external">wikipedia上的一个划分</a>。</p>
+<h1 id="Google-Scholar（谷歌学术）"><a href="#Google-Scholar（谷歌学术）" class="headerlink" title="Google Scholar（谷歌学术）"></a>Google Scholar（谷歌学术）</h1><p><a href="https://scholar.google.com/" target="_blank" rel="external">Google Scholar</a>非常强大又简单易用。虽然它不只收录CS专业的文献，但很容易搜索到准确的结果。我习惯先在谷歌学术上搜索，如果搜不到就改用 <strong>高级搜索</strong>，实在不行再去ACM DL、IEEE Xplore。<br><img src="/images/paper-scholar_adv.png" alt="谷歌学术高级搜索"></p>
+<h2 id="创建快讯"><a href="#创建快讯" class="headerlink" title="创建快讯"></a>创建快讯</h2><p>与Google网页搜索一样，可以在Google Scholar创建某个关键词或某篇文章的快讯（发送邮件通知最新的搜索结果）；<br>此外，注意搜索到的论文的作者是否有链接，打开即是Google Scholar创建的作者个人资料页，上面一般有作者的单位、联系方式，文章列表等，在 <strong>作者的个人资料页</strong> 可以创建关于他的新文章或新引用的快讯，及时获取动态。</p>
+<blockquote>
+<p>话说体验一下<a href="http://www.bing.com/academic" target="_blank" rel="external">必应学术</a>、<a href="http://xueshu.baidu.com/" target="_blank" rel="external">百度学术</a>和<a href="http://scholar.sogou.com/" target="_blank" rel="external">搜狗学术</a>也未尝不可。</p>
+</blockquote>
+<p><a name="tldr"></a></p>
+<h1 id="tl-dr：链接列表"><a href="#tl-dr：链接列表" class="headerlink" title="tl,dr：链接列表"></a>tl,dr：链接列表</h1><h2 id="体系结构，系统，存储，分布式"><a href="#体系结构，系统，存储，分布式" class="headerlink" title="体系结构，系统，存储，分布式"></a>体系结构，系统，存储，分布式</h2><ul>
+<li>ASPLOS@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE178&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/asplos/" target="_blank" rel="external">DBLP</a> Architectural Support for Programming Languages and Operating Systems</li>
+<li>FAST@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE425&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/fast/" target="_blank" rel="external">DBLP</a> Conf. on File and Storage Technologies</li>
+<li>HPCA@<strong>A</strong>   <a href="http://ieeexplore.ieee.org/servlet/opac?punumber=1000335" target="_blank" rel="external">IEEE</a> , <a href="http://dblp.org/db/conf/hpca/" target="_blank" rel="external">DBLP</a> High-Performance Computer Architecture</li>
+<li>ISCA@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE239&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/isca/" target="_blank" rel="external">DBLP</a> Int. Symposium on Computer Architecture</li>
+<li>MICRO@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE203&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/micro/" target="_blank" rel="external">DBLP</a> Microarchitecture</li>
+<li>PPoPP@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE241&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/ppopp/" target="_blank" rel="external">DBLP</a> Principles and Practice of Parallel Programming</li>
+<li>SC@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE207&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/sc/" target="_blank" rel="external">DBLP</a> Int. Conf. for High Performance Computing, Networking, Storage, and Analysis</li>
+<li>ATC@<strong>A</strong>   <a href="https://www.usenix.org/conferences/byname/131" target="_blank" rel="external">USENIX</a> , <a href="http://dblp.org/db/conf/usenix/" target="_blank" rel="external">DBLP</a> USENIX Annul Technical Conf.</li>
+<li>CGO@<strong>B</strong>   <a href="http://dl.acm.org/event.cfm?id=RE256&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/cgo/" target="_blank" rel="external">DBLP</a> Code Generation and Optimization</li>
+<li>EuroSys@<strong>B</strong>   <a href="http://dl.acm.org/event.cfm?id=RE101&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/eurosys/" target="_blank" rel="external">DBLP</a> European Conf. on Computer Systems</li>
+<li>HotCHIPS@<strong>B</strong>   <a href="http://www.hotchips.org/" target="_blank" rel="external">HotChips</a> Symposium on High Performance Chips</li>
+<li>HPDC@<strong>B</strong>   <a href="http://dl.acm.org/event.cfm?id=RE300&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/hpdc/" target="_blank" rel="external">DBLP</a> High-Performance Distributed Computing</li>
+<li>LISA@<strong>B</strong>   <a href="https://www.usenix.org/conferences/byname/5" target="_blank" rel="external">USENIX</a> , <a href="http://dblp.org/db/conf/lisa/" target="_blank" rel="external">DBLP</a> Large Installation system Administration Conf.</li>
+<li>PODC@<strong>B</strong>   <a href="http://dl.acm.org/event.cfm?id=RE221&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/podc/" target="_blank" rel="external">DBLP</a> Symposium on Principles of Distributed Computing</li>
+<li>SIGMETRICS@<strong>B</strong>   <a href="http://dl.acm.org/event.cfm?id=RE187&amp;tab=pubs" target="_blank" rel="external">ACM</a>，<a href="http://dl.acm.org/citation.cfm?id=J618" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/sigmetrics/" target="_blank" rel="external">DBLP</a> Int. Conf. on Measurement and Modeling of Computer Systems</li>
+<li>VEE@<strong>B</strong>   <a href="http://dl.acm.org/event.cfm?id=RE287&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/vee/" target="_blank" rel="external">DBLP</a> Virtual Execution Environments</li>
+<li>TC@<strong>A</strong>   <a href="https://www.computer.org/web/tc" target="_blank" rel="external">IEEE</a> , <a href="http://dblp.org/db/journals/tc/" target="_blank" rel="external">DBLP</a> Trans. on Computers</li>
+<li>TOCS@<strong>A</strong>   <a href="http://dl.acm.org/pub.cfm?id=J774&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/journals/tocs/" target="_blank" rel="external">DBLP</a> Trans. on Computer Systems</li>
+<li>TOS@<strong>A</strong>   <a href="http://dl.acm.org/pub.cfm?id=J960&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/journals/tos/" target="_blank" rel="external">DBLP</a> Trans. on Storage</li>
+<li>TPDS@<strong>A</strong>   <a href="https://www.computer.org/web/tpds" target="_blank" rel="external">IEEE</a> , <a href="http://dblp.org/db/journals/tpds/" target="_blank" rel="external">DBLP</a> Trans. on Parallel and Distributed Systems</li>
+<li>ISMM   <a href="http://dl.acm.org/event.cfm?id=RE149&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/ismm/" target="_blank" rel="external">DBLP</a> Int. Conf. on Memory Management</li>
+</ul>
+<h2 id="软件工程（软件分析）"><a href="#软件工程（软件分析）" class="headerlink" title="软件工程（软件分析）"></a>软件工程（软件分析）</h2><ul>
+<li>Github上的<a href="https://github.com/tue-mdse/conferenceMetrics" target="_blank" rel="external">软件工程方向会议的数据</a></li>
+<li>UIUC的<a href="http://taoxie.cs.illinois.edu/" target="_blank" rel="external">谢涛老师</a>维护的<a href="http://taoxie.cs.illinois.edu/seconferences.htm" target="_blank" rel="external">软件工程方向的会议统计列表</a></li>
+<li>ASE@<strong>A</strong>   <a href="http://dblp.org/db/conf/kbse/" target="_blank" rel="external">DBLP</a> Int. Conf. on Automated Software Engineering</li>
+<li>FSE/ESEC@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE201&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/sigsoft/" target="_blank" rel="external">DBLP</a> SIGSOFT Symposium on the Foundation of Software Engineering / European Software Engineering Conf.</li>
+<li>ICSE@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE228&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/icse/" target="_blank" rel="external">DBLP</a> FOSE会议：七年一届的展望 Int. Conf. on Software Engineering</li>
+<li>OOPSLA/SPLASH@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE181&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/oopsla/" target="_blank" rel="external">DBLP</a> Onward会议：创新(Nao Dong) Conf. on Object-Oriented Programming Systems, Languages, and Applications</li>
+<li>OSDI@<strong>A</strong>   <a href="https://www.usenix.org/conferences/byname/179" target="_blank" rel="external">USENIX</a> , <a href="http://dblp.org/db/conf/osdi/" target="_blank" rel="external">DBLP</a> USENIX Symposium on Operating Systems Design and Implementations，<strong>双数</strong> 年份召开</li>
+<li>SOSP@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE208&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/sosp/" target="_blank" rel="external">DBLP</a>，Symposium on Operating Systems Principles， <strong>单数</strong> 年份召开，另，<a href="http://sigops.org/sosp/sosp15/history/index.html" target="_blank" rel="external">SOSP 2015 History Day</a></li>
+<li>PLDI@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE200&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/pldi/" target="_blank" rel="external">DBLP</a> SIGPLAN Symposium on Programming Language Design and Implementation</li>
+<li>POPL@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE180&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/popl/" target="_blank" rel="external">DBLP</a> SIGPLAN&amp;SIGACT Symposium on Principles of Programming Languages</li>
+<li>ECOOP@<strong>B</strong>   <a href="http://www.ecoop.org/" target="_blank" rel="external">ECOOP</a> , <a href="http://dblp.org/db/conf/ecoop/" target="_blank" rel="external">DBLP</a> European Conf. on Object-Oriented Programming</li>
+<li>HotOS@<strong>B</strong>   <a href="https://www.usenix.org/conferences/byname/155" target="_blank" rel="external">USENIX</a> , <a href="http://dblp.org/db/conf/hotos/" target="_blank" rel="external">DBLP</a> USENIX Workshop on Hot Topics in Operating Systems</li>
+<li>ICSME@<strong>B</strong>   <a href="http://conferences.computer.org/icsm/" target="_blank" rel="external">IEEE</a> , <a href="http://dblp.org/db/conf/icsm/" target="_blank" rel="external">DBLP</a> Int. Conf. on Software Maintenance</li>
+<li>ISSTA@<strong>B</strong>   <a href="http://dl.acm.org/event.cfm?id=RE222&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/issta/" target="_blank" rel="external">DBLP</a> Int. Symposium on Software Testing and Analysis</li>
+<li>TOPLAS@<strong>A</strong>   <a href="http://dl.acm.org/pub.cfm?id=J783&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/journals/toplas/" target="_blank" rel="external">DBLP</a> Trans. on Programming Languages and Systems</li>
+<li>TOSEM@<strong>A</strong>   <a href="http://dl.acm.org/pub.cfm?id=J790&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/journals/tosem/" target="_blank" rel="external">DBLP</a> Trans. on Software Engineering Methodology</li>
+<li>TSE@<strong>A</strong>   <a href="https://www.computer.org/web/tse" target="_blank" rel="external">IEEE</a> , <a href="http://dblp.org/db/journals/tse/" target="_blank" rel="external">DBLP</a> Trans. on Software Engineering</li>
+</ul>
+<h2 id="云计算，网络，大数据"><a href="#云计算，网络，大数据" class="headerlink" title="云计算，网络，大数据"></a>云计算，网络，大数据</h2><ul>
+<li>SIGMOD@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE227&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/sigmod/" target="_blank" rel="external">DBLP</a> Conf. on Management of Data</li>
+<li>SoCC@<strong>B</strong>   <a href="http://dl.acm.org/event.cfm?id=RE227&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/cloud/" target="_blank" rel="external">DBLP</a> Symposium on Cloud Computing</li>
+<li>PODS@<strong>B</strong>   <a href="http://dl.acm.org/event.cfm?id=RE227&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/pods/" target="_blank" rel="external">DBLP</a> SIGMOD Conf. on Principles of DB Systems</li>
+<li>VLDB Endowment@<strong>A</strong>   <a href="http://dl.acm.org/pub.cfm?id=J1174&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/vldb/" target="_blank" rel="external">DBLP</a> Int. Conf. on Very Large Data Bases</li>
+<li>VLDB Journal@<strong>A</strong>   <a href="http://dl.acm.org/pub.cfm?id=J869&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/journals/vldb/" target="_blank" rel="external">DBLP</a> Int. Journal on Very Large Data Bases</li>
+<li>NSDI@<strong>B</strong>   <a href="https://www.usenix.org/conferences/byname/178" target="_blank" rel="external">USENIX</a> , <a href="http://dblp.org/db/conf/nsdi/" target="_blank" rel="external">DBLP</a> Network System Design and Implementation</li>
+<li>IEEE 云计算系列@<strong>B/C</strong>  <a href="http://cloudcomputing.ieee.org/conferences" target="_blank" rel="external">IEEE</a> , <a href="http://dblp.org/db/conf/IEEEcloud/" target="_blank" rel="external">DBLP</a></li>
+<li>HotCloud   <a href="https://www.usenix.org/conferences/byname/1" target="_blank" rel="external">USENIX</a> , <a href="http://dblp.org/db/conf/hotcloud/" target="_blank" rel="external">DBLP</a> Hot Topics on Cloud Computing</li>
+<li>TCC   <a href="https://www.computer.org/web/tcc" target="_blank" rel="external">IEEE</a> , <a href="http://dblp.org/db/journals/tcc/" target="_blank" rel="external">DBLP</a> IEEE Trans. on Cloud Computing</li>
+<li>TSC@<strong>B</strong>   <a href="https://www.computer.org/web/tsc" target="_blank" rel="external">IEEE</a>, <a href="http://dblp.org/db/journals/tsc/" target="_blank" rel="external">DBLP</a> IEEE Trans. on Services Computing<br>上面体系结构中的 ASPLOS、FAST、ISCA、Micro、ATC、EuroSys、HPDC、LISA、SIGMETRICS、TPDS等，及软工的OSDI、SOSP等也都有不少云计算相关的文章。</li>
+</ul>
+<h2 id="移动计算"><a href="#移动计算" class="headerlink" title="移动计算"></a>移动计算</h2><ul>
+<li>MobiCom@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE366&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/mobicom/" target="_blank" rel="external">DBLP</a> Mobile Computing and Networking</li>
+<li>MobiSys@<strong>B</strong>   <a href="http://dl.acm.org/event.cfm?id=RE191&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/mobisys/" target="_blank" rel="external">DBLP</a> Mobile Systems, Applications, and Services</li>
+<li>HotMobile   <a href="http://dl.acm.org/event.cfm?id=RE142&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/wmcsa/" target="_blank" rel="external">DBLP</a> Mobile Computing Systems and Applications</li>
+</ul>
+<h2 id="ACM-DL列表"><a href="#ACM-DL列表" class="headerlink" title="ACM DL列表"></a>ACM DL列表</h2><ul>
+<li><a href="http://dl.acm.org/contents_dl.cfm" target="_blank" rel="external">收录会议和期刊的完整列表</a></li>
+<li><a href="http://dl.acm.org/events.cfm" target="_blank" rel="external">会议</a></li>
+<li><a href="http://dl.acm.org/proceedings.cfm" target="_blank" rel="external">会议历次论文集</a></li>
+<li><a href="http://dl.acm.org/pubs.cfm" target="_blank" rel="external">期刊和学报</a></li>
+<li><a href="http://dl.acm.org/mags.cfm" target="_blank" rel="external">杂志</a></li>
+</ul>
+<p>关于ACM的杂志，特别推荐</p>
+<ul>
+<li><a href="http://dl.acm.org/citation.cfm?id=J79" target="_blank" rel="external">Communications of the ACM, CACM</a>， <a href="http://dblp.org/db/journals/cacm/" target="_blank" rel="external">in dblp</a></li>
+<li><a href="http://dl.acm.org/toco_arch.cfm?id=J79&amp;lang=chinese" target="_blank" rel="external">CACM中国版</a>，CCF曾经 选译 一部分CACM文章为中文并出版，但2016年后没有继续下去</li>
+<li><a href="http://dl.acm.org/citation.cfm?id=J882" target="_blank" rel="external">Queue</a>也值得一看，不过它与CACM有很多重叠的文章</li>
+</ul>
+<p>期刊中，推荐<a href="http://dl.acm.org/citation.cfm?id=J204" target="_blank" rel="external">ACM Computing Surveys, CSUR</a>， <a href="http://dblp.org/db/journals/csur/" target="_blank" rel="external">in dblp</a></p>
+<blockquote>
+<p>看了ACM DL的列表页面，应该能体会到：1000项以内的列表还是不要分页的好。</p>
+</blockquote>
+<h2 id="IEEE-Computer列表"><a href="#IEEE-Computer列表" class="headerlink" title="IEEE Computer列表"></a>IEEE Computer列表</h2><ul>
+<li><a href="https://www.computer.org/web/conferences/calendar/" target="_blank" rel="external">会议日历</a></li>
+<li><a href="https://www.computer.org/web/publications/transactions" target="_blank" rel="external">期刊和学报</a></li>
+<li><a href="https://www.computer.org/web/publications/magazines" target="_blank" rel="external">杂志</a></li>
+</ul>
+<h2 id="USENIX组织的会议列表"><a href="#USENIX组织的会议列表" class="headerlink" title="USENIX组织的会议列表"></a><a href="https://www.usenix.org/conferences/byname" target="_blank" rel="external">USENIX组织的会议列表</a></h2><p><a href="https://www.usenix.org/conferences/byname" target="_blank" rel="external">USENIX组织的会议列表</a>，其中包括ATC，FAST，LISA，MobiSys，NSDI，OSDI，VEE及HotCloud，HotOS等一系列 HotXXXX 的Workshop。</p>
+<h2 id="国内三个学报"><a href="#国内三个学报" class="headerlink" title="国内三个学报"></a>国内三个学报</h2><ul>
+<li><a href="http://www.jos.org.cn/ch/index.aspx" target="_blank" rel="external">软件学报</a>，<a href="http://rss.cnki.net/KNS/rss.aspx?journal=RJXB&amp;Virtual=KNS" target="_blank" rel="external">CNKI RSS</a></li>
+<li><a href="http://cjc.ict.ac.cn/" target="_blank" rel="external">计算机学报</a>，<a href="http://rss.cnki.net/KNS/rss.aspx?journal=JSJX&amp;Virtual=KNS" target="_blank" rel="external">CNKI RSS</a></li>
+<li><a href="http://crad.ict.ac.cn/CN/volumn/home.shtml" target="_blank" rel="external">计算机研究与发展</a> ，<a href="http://rss.cnki.net/KNS/rss.aspx?journal=JFYZ&amp;Virtual=KNS" target="_blank" rel="external">CNKI RSS</a></li>
+</ul>
+<h2 id="国内论文数据库"><a href="#国内论文数据库" class="headerlink" title="国内论文数据库"></a>国内论文数据库</h2><ul>
+<li><a href="http://www.cnki.net/" target="_blank" rel="external">知网CNKI</a></li>
+<li><a href="http://www.wanfangdata.com.cn/" target="_blank" rel="external">万方数据</a></li>
+</ul>
+<h2 id="其它链接"><a href="#其它链接" class="headerlink" title="其它链接"></a>其它链接</h2><ul>
+<li><a href="https://www.microsoft.com/en-us/research/" target="_blank" rel="external">微软研究院</a></li>
+<li><a href="https://research.google.com/pubs/papers.html" target="_blank" rel="external">谷歌研究院</a></li>
+<li><a href="https://blog.acolyer.org/" target="_blank" rel="external">The morning paper</a>, an interesting-influential-important paper from the world of CS every weekday morning</li>
+<li><a href="http://sites.computer.org/debull/bull_issues.html" target="_blank" rel="external">IEEE Technical Committee on Data Engineering</a></li>
+<li><a href="https://www.youtube.com" target="_blank" rel="external">YouTube</a>，</li>
+<li><strong><a href="http://www1.cs.columbia.edu/~kaiser/relatedwork.htm" target="_blank" rel="external">Suggested Guidelines for Finding Materials to include in the “Related Work” Sections of Conference Papers</a></strong></li>
+<li><a href="http://www.yocsef.org.cn/sites/yocweb/yocltzw.jsp?contentId=2658502145582" target="_blank" rel="external">YOCSEF专题论坛：从LNCS事件反思中国学术论文的发表</a>  </li>
+</ul>
+<h1 id="如何读论文"><a href="#如何读论文" class="headerlink" title="如何读论文"></a>如何读论文</h1><ul>
+<li><a href="http://www.cs.columbia.edu/~hgs/netbib/efficientReading.pdf" target="_blank" rel="external">Efficient Reading of Papers in Science and Technology(.pdf)</a></li>
+<li><a href="http://blizzard.cs.uwaterloo.ca/keshav/home/Papers/data/07/paper-reading.pdf" target="_blank" rel="external">How to Read a Paper(.pdf)</a></li>
+<li><a href="https://www.cs.jhu.edu/~jason/advice/how-to-read-a-paper.html" target="_blank" rel="external">How to Read a Technical Paper</a></li>
+<li><a href="http://item.jd.com/11127141.html" target="_blank" rel="external">《学术研究 - 你的成功之道》第3章</a></li>
+</ul>
+<h1 id="Todo-辅助工具"><a href="#Todo-辅助工具" class="headerlink" title="[Todo]辅助工具"></a>[Todo]辅助工具</h1><ul>
+<li><a href="http://myhuiban.com" target="_blank" rel="external">会伴</a></li>
+<li>Trans. on BigData的学术文献处理专刊 <a href="https://www.computer.org/csdl/trans/bd/2016/01/index.html" target="_blank" rel="external">Vol. 2 Issue 1]</a>，<a href="https://www.computer.org/csdl/trans/bd/2016/02/index.html" target="_blank" rel="external">Vol. 2 Issue 2]</a></li>
+<li><a href="http://www.sciplore.org/" target="_blank" rel="external">Sciplore</a></li>
+<li><a href="https://www.scopus.com/" target="_blank" rel="external">Scopus</a></li>
+<li><a href="http://www.docear.org/" target="_blank" rel="external">Docear</a></li>
+<li><a href="https://www.mendeley.com/" target="_blank" rel="external">Mendeley</a></li>
+<li><a href="https://www.zotero.org/" target="_blank" rel="external">Zotero</a></li>
+<li><a href="https://www.teambition.com/" target="_blank" rel="external">Teambition</a></li>
+<li>Todo，如何整理文献，如何管理时间，<a href="https://www.zhihu.com/question/27956707" target="_blank" rel="external">科研小组里有哪些有效的组会形式 - 知乎</a></li>
+</ul>
+<p>如果所在的实验室没有什么积累，暂时没有好的idea/topic，不妨去浏览一下感兴趣的大方向的A类会议近三年或五年的文章列表，<strong>总会觉得</strong> 有几篇比其它文章更有意思，这就把范围缩小一些了；然后再从这几篇文章里提炼出关键词，去<a href="https://en.wikipedia.org/" target="_blank" rel="external">wikipedia</a>上搜索一下这个关键词，再从Related Work再扩展出去，体验一下这个小领域涉及的问题。找出来这个小领域里发文章比较多的作者和研究小组（实验室），去作者和小组的主页看看。这个前期工作其实花不了一周的时间，然后就收集一些相关的论文，粗览一遍，筛选出值得仔细研读的。我们不妨通过相关论文的数量来定义一个小的领域，武断地说100篇或200篇，这个具体的大小不是关键，但一个领域能发的文章必定是有限的，太多的话说明问题太复杂，还要细分，太少的话，如果不是幸运地发现了新的方向，就是问题太Trivial了。而这其中，又只有几篇或十几篇是开创性的，非常值得仔细研读的。<br>如果读完核心的几篇文章后还是没有新的想法，那就只好重复上面的过程，重新寻找另外感兴趣的领域了。</p>
+<blockquote>
+<p>PS，相比上面列出来一堆链接，其实这几句话才是这篇文章的重点啊 ;-)</p>
+</blockquote>
+<p>一些标题有<code>A systematic review on ...</code>综述文章，其中会介绍收集相关论文的过程，方法都类似，可以找一篇当作论文搜集方法的教程来看。</p>
+<p>再列出知乎上的几个相关问题吧</p>
+<ul>
+<li><a href="https://www.zhihu.com/question/26901116" target="_blank" rel="external">如何总结和整理学术文献？</a></li>
+<li><a href="https://www.zhihu.com/question/26857521" target="_blank" rel="external">如何高效管理文献？</a></li>
+<li><a href="https://www.zhihu.com/question/22790506" target="_blank" rel="external">如何写好一篇高质量的IEEE/ACM Transaction级别的计算机科学论文?</a></li>
+</ul>
+<p><a name="hosts"></a></p>
+<h1 id="Bonus-如何访问Google-Scholar"><a href="#Bonus-如何访问Google-Scholar" class="headerlink" title="[Bonus] 如何访问Google Scholar"></a>[Bonus] 如何访问Google Scholar</h1><h2 id="改hosts"><a href="#改hosts" class="headerlink" title="改hosts"></a><strong>改hosts</strong></h2><ul>
+<li>IP v4， https://raw.githubusercontent.com/racaljk/hosts/master/hosts  或短网址 https://git.io/vWE1N</li>
+<li>IP v6， https://raw.githubusercontent.com/lennylxx/ipv6-hosts/master/host 或短网址 https://git.io/vMjCk</li>
+</ul>
+<h2 id="hosts文件的路径"><a href="#hosts文件的路径" class="headerlink" title="hosts文件的路径"></a><strong>hosts文件的路径</strong></h2><ul>
+<li>Windows：<code>C:\Windows\System32\drivers\etc\hosts</code></li>
+<li>Linux，Mac，Android(均需要root权限)：<code>/etc/hosts</code></li>
+</ul>
+<hr>
+<p>飞鸟集</p>
+<blockquote>
+<p>第83<br>那想做好人的，在门外敲着门，那爱人的，看见门敞开着。</p>
+<p>第142<br>让我设想，在群星之中，有一颗星是指导着我的生命通过不可知的黑暗的。</p>
+</blockquote>
+
+  
+</div>
+
+  <footer>
+  
+  
+  <div class="categories">
+  类别： <a href="/categories/misc/">misc</a>
+  </div>
+
+
+  
+
+  
+  <br />
+  <hr />
+  <br />
+  
+<nav id="article-nav">
+  <div class="article-nav-title">
+  
+    <a style="color:black" href="/2017/03/books/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">新文章: </strong>
+        
+          我们的书架
+        
+    </a>
+  
+  
+      <a style="float:right;color:black" href="/2016/03/hadoop_hive_tez/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">旧文章: </strong>
+        
+          Hadoop, Hive, Tez 搭建笔记
+        
+      </a>
+  
+    </div>
+</nav>
+
+
+  
+
+  <div class="clearfix"></div>
+</footer>
+</div>
+</article>
+
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/OpenStack/">OpenStack</a><small>3</small></li>
+  
+    <li><a href="/categories/TVDCR/">TVDCR</a><small>3</small></li>
+  
+    <li><a href="/categories/east/">east</a><small>2</small></li>
+  
+    <li><a href="/categories/misc/">misc</a><small>1</small></li>
+  
+    <li><a href="/categories/nap/">nap</a><small>4</small></li>
+  
+    <li><a href="/categories/web/">web</a><small>4</small></li>
+  
+    <li><a href="/categories/书架/">书架</a><small>1</small></li>
+  
+    <li><a href="/categories/大数据/">大数据</a><small>1</small></li>
+  
+    <li><a href="/categories/未分类/">未分类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  <a href=http://blog.nxap.org>NAP - Next Application Platform</a> &nbsp;
+  
+  &copy; 2017 NAP Group
+  
+</div>
+<div class="clearfix"></div>
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+</body>
+</html>
+
