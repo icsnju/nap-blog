@@ -293,16 +293,30 @@ article .entry h4,
 article .entry h5,
 article .entry h6,
 article .entry .video-container {
-  margin-top: 15px;
+  margin: 5px;
+}
+article .entry table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+article .entry th {
+  border-top: 2px solid #ddd;
+  border-bottom: 2px solid #ddd;
+}
+article .entry td {
+  border-bottom: 1px solid #ddd;
+  padding: 5px;
+}
+article .entry tr:nth-child(even) {
+  background-color: #cdf;
 }
 article .entry blockquote {
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  font-style: italic;
-  font-family: "Georgia", serif;
-  font-size: 1.2em;
-  padding: 0 30px 15px;
-  text-align: center;
+  border-left: 4px solid #268bd2;
+  background-color: #f7f7f7;
+  font-size: 0.9em;
+  padding: 5px;
 }
 article .entry blockquote footer {
   border-top: none;
