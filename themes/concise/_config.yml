@@ -7,9 +7,50 @@ widgets:
 #- search
 #- recent_posts
 - category
+- links
 #- tagcloud
 
 excerpt_link: 阅读全文 ››
+
+links:
+  - title: 我们的书架
+    url: http://blog.nxap.org/2017/03/books/
+
+#  - title: Nanjing Univ.
+#    url: http://www.nju.edu.cn/
+#  - title: Chun CAO
+#    url: http://chun.nemoworks.info/
+#  - title: Chenchen CAO
+#    url: https://chrisforest.github.io/
+  - title: Jie CHEN
+    url: http://blog.jetmuffin.com/
+  - title: Shuo CHEN
+    url: http://blog.leanote.com/1324480595@qq.com
+#    url: https://cshuo.github.io/
+  - title: Hongjun GE
+    url: https://nap-ghj.github.io/
+# - title:  Huating LIU
+#   url: https://hooting.github.io/
+  - title: Tianchi LIU
+    url: https://itanch.github.io/
+  - title: Ziling LU
+    url: https://Luziling.github.io/
+  - title: Jing DENG
+    url: https://dmemoing.github.io/
+  - title: Chenglin MENG
+    url: https://rdmclin2.github.io/
+  - title: Weiyi WANG
+    url: https://co2y.github.io/
+  - title: Yiqun WANG
+    url: https://qunnn41.github.io/
+  - title: Xiang XU
+    url: https://flyxu.github.io/
+  - title: Weiyu YE
+    url: https://njuywy.github.io/
+  - title: Zhongliang YUAN
+    url: https://monkey-h.github.io/
+  - title: Ying ZHANG
+    url: https://ying-zhang.github.io/
 
 twitter:
   username:
