@@ -1,0 +1,12 @@
+<% if (theme.links){ %>
+<div class="widget tag">
+  <h3 class="title">固定链接</h3>
+  <ul class="entry">
+    <% theme.links.forEach(function(link){ %>
+      <li>
+        <a href="<%= link.url %>" title="<%= link.title %>"><%= link.title %></a>
+      </li>
+    <% }); %>
+  </ul>
+</div>
+<% } %>

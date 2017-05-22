@@ -10,6 +10,9 @@ public/
 logs
 *.log
 
+.swp
+.vs/
+
 # Runtime data
 pids
 *.pid

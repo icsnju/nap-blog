@@ -8,16 +8,54 @@ tags:
 无论是否已经有了一个好的课题或想法，都首先要收集某个研究方向一定数量的论文，来了解相关的工作和最新进展(State of the art & practice）。
 本文介绍了如何检索、收集计算机科学（CS）专业的论文，还介绍了与相关的机构，学术会议和论文数据库。
 文末有 [**Bonus**](#hosts) 哦;-)
-本文原发在 https://ying-zhang.github.io/misc/2016-09-we-love-paper/
 
 <!--more-->
 
 ---
 
+
+
 # tl;dr
-+ 从[CCF推荐目录](/misc/2017-02-ccf-all-in-one/)中自己感兴趣的方向的 **A类会议及期刊** 中找论文即可。
++ 从[CCF推荐目录](https://ying-zhang.github.io/misc/2017/ccf-all-in-one/)中自己感兴趣的方向的 **A类会议及期刊** 中找论文即可。
 + 我关注的云计算，程序分析方向的[会议和期刊列表](#tldr)
 + [**Bonus**](#hosts) 修改Hosts
+
+<!-- TOC -->
+
+- [tl;dr](#tldr)
+- [引子](#引子)
+  - [论文发表的过程](#论文发表的过程)
+- [CS论文数据库](#cs论文数据库)
+  - [ACM, IEEE Computer等](#acm-ieee-computer等)
+    - [ACM SIGs](#acm-sigs)
+  - [[USENIX](https://www.usenix.org/)](#usenixhttpswwwusenixorg)
+  - [[arXiv](http://arxiv.org/)](#arxivhttparxivorg)
+  - [EI和SCI](#ei和sci)
+  - [dblp](#dblp)
+  - [DOI](#doi)
+  - [其它](#其它)
+- [CCF目录](#ccf目录)
+- [Google Scholar（谷歌学术）](#google-scholar谷歌学术)
+  - [创建快讯](#创建快讯)
+- [tl,dr：链接列表](#tldr链接列表)
+  - [体系结构，系统，存储，分布式系统](#体系结构系统存储分布式系统)
+  - [软件工程（软件分析）](#软件工程软件分析)
+  - [云计算，网络，大数据](#云计算网络大数据)
+  - [移动计算](#移动计算)
+  - [ACM DL列表](#acm-dl列表)
+  - [IEEE Computer列表](#ieee-computer列表)
+  - [[USENIX组织的会议列表](https://www.usenix.org/conferences/byname)](#usenix组织的会议列表httpswwwusenixorgconferencesbyname)
+  - [国内三个学报](#国内三个学报)
+  - [国内论文数据库](#国内论文数据库)
+  - [其它链接](#其它链接)
+- [如何读论文](#如何读论文)
+- [[Todo]辅助工具](#todo辅助工具)
+- [[Bonus] 如何访问Google Scholar](#bonus-如何访问google-scholar)
+  - [**改hosts**](#改hosts)
+  - [**hosts文件的路径**](#hosts文件的路径)
+- [PS: [A Survival Guide to a PhD](http://karpathy.github.io/2016/09/07/phd/)](#ps-a-survival-guide-to-a-phdhttpkarpathygithubio20160907phd)
+
+<!-- /TOC -->
 
 # 引子
 按理说，开篇应该先要强调一下Paper对于科研的重要性的，直接把前辈的经验拿来吧：
@@ -47,7 +85,7 @@ Idea -> 编程、实验、写Paper、投稿 <                                   
 
 通过这个过程，我们还可以知道如何**尽快**找到一篇感兴趣的文章：
 + 对于期刊，一般投稿是很多的，编辑部会把已经接收但还没有排到出版期号的文章先放到网上在线出版，称为Early Access；
-+ 对于会议，在确定了接收的文章后，会在会议网站的Program/Accepted Papers/Schedule等类似链接下给出列表，同时会Email通知作者准备提交Camera Ready版。这时有的作者就会把Camera Ready版放到自己的主页上。之后会议组委会将论文集结提供给所有作者，还会将论文集发布到ACM或IEEE(这两个机构直接参与了很多会议的组织)的论文数据库中。不同的会议组委效率不同，有的在开会前就上线出版了，有的在会议结束后后还要等一段时间。
++ 对于会议，在确定了接收的文章后，会在会议网站的Program/Accepted Papers/Schedule等类似链接下给出列表，同时会Email通知作者准备提交Camera Ready版。这时有的作者就会把Camera Ready版放到自己的主页上。之后会议组委将论文集结提供给所有作者，还会将论文集发布到ACM或IEEE（这两个机构直接参与了很多会议的组织）的论文数据库中。不同的会议组委效率不同，有的在开会前就上线出版了，有的在会议结束后还要等一段时间。
 
 # CS论文数据库
 
@@ -91,7 +129,7 @@ ACM之下针对CS多个子方向的“分舵”，称为Special Interest Group�
 ## [arXiv](http://arxiv.org/)
 [arXiv](http://arxiv.org/)， 是archive(归档)的意思，是一个由康乃尔大学维护的免费的多学科论文**预**出版(preprint)数据库。所谓**预**出版，就是说论文还没有经过同行评审，文责自负，文章质量参差不齐，所以一般不会作为正式的学术成果。不过有的学科习惯上先把文章公开到arXiv上，然后再提交到会议上。
 
-<a name="lib" />![图书馆电子资源](/images/paper-lib.png)
+<a name="lib" />![图书馆电子资源](/img/lib.png)
 
 ## EI和SCI
 分别搜索上面的数据库还是有点麻烦，于是就有了一些聚合数据库，又称为索引。想必很多同学在读研之前早就听说EI和SCI，
@@ -120,7 +158,7 @@ dblp 列出了关于CS论文的一些统计数据，比如（2016年10月查询�
 + 论文总数 3,587,354 ， 作者人数 1,825,286，会议数4,912，期刊数 1,491。
 
 另外，ACM DL也有一个[类似的统计](http://dl.acm.org/contents_guide.cfm)。
-![每年发表的CS论文数量](/images/paper-pubs.png)
+![每年发表的CS论文数量](/img/pubs.png)
 
 而且dblp整站的数据都可以下载为一个[xml文件](http://dblp.dagstuhl.de/xml/)，以供进一步挖掘。
 
@@ -138,7 +176,7 @@ dblp 列出了关于CS论文的一些统计数据，比如（2016年10月查询�
 EI和SCI只是两个论文数据库，但能够发表被EI和SCI收录的文章变成了能够毕业，能否获得奖学金，能否获得基金的指标。由于时代的限制，EI和SCI被赋予了不相称的地位和意义，而且短期看还是如此。
 更 “*不幸*” 的是，对于CS的学生，还有一个[CCF目录](http://history.ccf.org.cn/sites/ccf/paiming.jsp)（[2015版的PDF](http://history.ccf.org.cn/sites/paiming/2015ccfmulu.pdf)）摆在面前。其实并非是不幸，而是十分幸运，因为CCF目录不像是一个紧箍咒，而更像是一个入门指南。
 
-首先说[中国计算机学会 CCF](http://www.ccf.org.cn/)是国内的类似于ACM的计算机学术组织。也许某位同学的导师就是CCF会员。相比EI和SCI收录的成百上千的会议和期刊，CCF维护的目录显然[精简得多](/misc/2017-02-ccf-all-in-one/)。
+首先说[中国计算机学会 CCF](http://www.ccf.org.cn/)是国内的类似于ACM的计算机学术组织。也许某位同学的导师就是CCF会员。相比EI和SCI收录的成百上千的会议和期刊，CCF维护的目录显然[精简得多](https://ying-zhang.github.io/misc/2017/ccf-all-in-one/)。
 考虑到对EI和SCI指标要求的实际情况，目录选取的 **大多** 是被EI或SCI收录的，具体划分为10个子方向，并区分出A，B，C三个等级。
 A，B类的会议和期刊的文章学术质量较高，但这个质量不是简单通过所谓影响因子等机械的数据来评价的，而是综合了多种因素。如果翻一下本科的操作系统等骨干专业课教程，会发现其中引用的有不少A类的文章，比如SOSP，OSDI等。所以建议从A类文章开始研究会。
 
@@ -148,7 +186,7 @@ A，B类的会议和期刊的文章学术质量较高，但这个质量不是简
 
 # Google Scholar（谷歌学术）
 [Google Scholar](https://scholar.google.com/)非常强大又简单易用。虽然它不只收录CS专业的文献，但很容易搜索到准确的结果。我习惯先在谷歌学术上搜索，如果搜不到就改用 **高级搜索**，实在不行再去ACM DL、IEEE Xplore。
-![谷歌学术高级搜索](/images/paper-scholar_adv.png)
+![谷歌学术高级搜索](/img/scholar_adv.png)
 
 ## 创建快讯
 与Google网页搜索一样，可以在Google Scholar创建某个关键词或某篇文章的快讯（发送邮件通知最新的搜索结果）；
@@ -160,7 +198,7 @@ A，B类的会议和期刊的文章学术质量较高，但这个质量不是简
 
 # tl,dr：链接列表
 
-## 体系结构，系统，存储，分布式
+## 体系结构，系统，存储，分布式系统
 + ASPLOS@**A**   [ACM](http://dl.acm.org/event.cfm?id=RE178&tab=pubs) , [DBLP](http://dblp.org/db/conf/asplos/) Architectural Support for Programming Languages and Operating Systems
 + FAST@**A**   [ACM](http://dl.acm.org/event.cfm?id=RE425&tab=pubs) , [DBLP](http://dblp.org/db/conf/fast/) Conf. on File and Storage Technologies
 + HPCA@**A**   [IEEE](http://ieeexplore.ieee.org/servlet/opac?punumber=1000335) , [DBLP](http://dblp.org/db/conf/hpca/) High-Performance Computer Architecture
@@ -304,6 +342,8 @@ A，B类的会议和期刊的文章学术质量较高，但这个质量不是简
 ## **hosts文件的路径**
 + Windows：`C:\Windows\System32\drivers\etc\hosts`
 + Linux，Mac，Android(均需要root权限)：`/etc/hosts`
+
+# PS: [A Survival Guide to a PhD](http://karpathy.github.io/2016/09/07/phd/)
 
 ---
 
