@@ -6,7 +6,7 @@
   <title>如何收集和整理论文（面向CS专业） › NAP - Next Application Platform</title>
   <meta name="author" content="NAP Group">
   
-  <meta name="description" content="论文（Paper）是每个研究生读研路上挥之不去的“阴云”。无论是否已经有了一个好的课题或想法，都首先要收集某个研究方向一定数量的论文，来了解相关的工作和最新进展(State of the art &amp;amp; practice）。本文介绍了如何检索、收集计算机科学（CS）专业的论文，还介绍了与相关的机构，学术会议和论文数据库。文末有 Bonus 哦;-)本文原发在 https://ying-zhang.github.io/misc/2016-09-we-love-paper/">
+  <meta name="description" content="论文（Paper）是每个研究生读研路上挥之不去的“阴云”。无论是否已经有了一个好的课题或想法，都首先要收集某个研究方向一定数量的论文，来了解相关的工作和最新进展(State of the art &amp;amp; practice）。本文介绍了如何检索、收集计算机科学（CS）专业的论文，还介绍了与相关的机构，学术会议和论文数据库。文末有 Bonus 哦;-)">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -57,14 +57,62 @@
   </header>
 <div class="entry">
   
-    <p>论文（Paper）是每个研究生读研路上挥之不去的“阴云”。<br>无论是否已经有了一个好的课题或想法，都首先要收集某个研究方向一定数量的论文，来了解相关的工作和最新进展(State of the art &amp; practice）。<br>本文介绍了如何检索、收集计算机科学（CS）专业的论文，还介绍了与相关的机构，学术会议和论文数据库。<br>文末有 <a href="#hosts"><strong>Bonus</strong></a> 哦;-)<br>本文原发在 <a href="https://ying-zhang.github.io/misc/2016-09-we-love-paper/" target="_blank" rel="external">https://ying-zhang.github.io/misc/2016-09-we-love-paper/</a></p>
+    <p>论文（Paper）是每个研究生读研路上挥之不去的“阴云”。<br>无论是否已经有了一个好的课题或想法，都首先要收集某个研究方向一定数量的论文，来了解相关的工作和最新进展(State of the art &amp; practice）。<br>本文介绍了如何检索、收集计算机科学（CS）专业的论文，还介绍了与相关的机构，学术会议和论文数据库。<br>文末有 <a href="#hosts"><strong>Bonus</strong></a> 哦;-)</p>
 <a id="more"></a>
 <hr>
 <h1 id="tl-dr"><a href="#tl-dr" class="headerlink" title="tl;dr"></a>tl;dr</h1><ul>
-<li>从<a href="/misc/2017-02-ccf-all-in-one/">CCF推荐目录</a>中自己感兴趣的方向的 <strong>A类会议及期刊</strong> 中找论文即可。</li>
+<li>从<a href="https://ying-zhang.github.io/misc/2017/ccf-all-in-one/" target="_blank" rel="external">CCF推荐目录</a>中自己感兴趣的方向的 <strong>A类会议及期刊</strong> 中找论文即可。</li>
 <li>我关注的云计算，程序分析方向的<a href="#tldr">会议和期刊列表</a></li>
 <li><a href="#hosts"><strong>Bonus</strong></a> 修改Hosts</li>
 </ul>
+<!-- TOC -->
+<ul>
+<li><a href="#tldr">tl;dr</a></li>
+<li><a href="#引子">引子</a><ul>
+<li><a href="#论文发表的过程">论文发表的过程</a></li>
+</ul>
+</li>
+<li><a href="#cs论文数据库">CS论文数据库</a><ul>
+<li><a href="#acm-ieee-computer等">ACM, IEEE Computer等</a><ul>
+<li><a href="#acm-sigs">ACM SIGs</a></li>
+</ul>
+</li>
+<li><a href="#usenixhttpswwwusenixorg"><a href="https://www.usenix.org/" target="_blank" rel="external">USENIX</a></a></li>
+<li><a href="#arxivhttparxivorg"><a href="http://arxiv.org/" target="_blank" rel="external">arXiv</a></a></li>
+<li><a href="#ei和sci">EI和SCI</a></li>
+<li><a href="#dblp">dblp</a></li>
+<li><a href="#doi">DOI</a></li>
+<li><a href="#其它">其它</a></li>
+</ul>
+</li>
+<li><a href="#ccf目录">CCF目录</a></li>
+<li><a href="#google-scholar谷歌学术">Google Scholar（谷歌学术）</a><ul>
+<li><a href="#创建快讯">创建快讯</a></li>
+</ul>
+</li>
+<li><a href="#tldr链接列表">tl,dr：链接列表</a><ul>
+<li><a href="#体系结构系统存储分布式系统">体系结构，系统，存储，分布式系统</a></li>
+<li><a href="#软件工程软件分析">软件工程（软件分析）</a></li>
+<li><a href="#云计算网络大数据">云计算，网络，大数据</a></li>
+<li><a href="#移动计算">移动计算</a></li>
+<li><a href="#acm-dl列表">ACM DL列表</a></li>
+<li><a href="#ieee-computer列表">IEEE Computer列表</a></li>
+<li><a href="#usenix组织的会议列表httpswwwusenixorgconferencesbyname"><a href="https://www.usenix.org/conferences/byname" target="_blank" rel="external">USENIX组织的会议列表</a></a></li>
+<li><a href="#国内三个学报">国内三个学报</a></li>
+<li><a href="#国内论文数据库">国内论文数据库</a></li>
+<li><a href="#其它链接">其它链接</a></li>
+</ul>
+</li>
+<li><a href="#如何读论文">如何读论文</a></li>
+<li><a href="#todo辅助工具">[Todo]辅助工具</a></li>
+<li><a href="#bonus-如何访问google-scholar">[Bonus] 如何访问Google Scholar</a><ul>
+<li><a href="#改hosts"><strong>改hosts</strong></a></li>
+<li><a href="#hosts文件的路径"><strong>hosts文件的路径</strong></a></li>
+</ul>
+</li>
+<li><a href="#ps-a-survival-guide-to-a-phdhttpkarpathygithubio20160907phd">PS: <a href="http://karpathy.github.io/2016/09/07/phd/" target="_blank" rel="external">A Survival Guide to a PhD</a></a></li>
+</ul>
+<!-- /TOC -->
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>按理说，开篇应该先要强调一下Paper对于科研的重要性的，直接把前辈的经验拿来吧：</p>
 <ul>
 <li>周志华老师的一篇关于<a href="/doc/research_and_paper_zhou_zhihua_2007_ppt.pdf">做研究与写论文的ppt</a></li>
@@ -86,7 +134,7 @@ Idea -> 编程、实验、写Paper、投稿 <                                   
 <p>通过这个过程，我们还可以知道如何<strong>尽快</strong>找到一篇感兴趣的文章：</p>
 <ul>
 <li>对于期刊，一般投稿是很多的，编辑部会把已经接收但还没有排到出版期号的文章先放到网上在线出版，称为Early Access；</li>
-<li>对于会议，在确定了接收的文章后，会在会议网站的Program/Accepted Papers/Schedule等类似链接下给出列表，同时会Email通知作者准备提交Camera Ready版。这时有的作者就会把Camera Ready版放到自己的主页上。之后会议组委会将论文集结提供给所有作者，还会将论文集发布到ACM或IEEE(这两个机构直接参与了很多会议的组织)的论文数据库中。不同的会议组委效率不同，有的在开会前就上线出版了，有的在会议结束后后还要等一段时间。</li>
+<li>对于会议，在确定了接收的文章后，会在会议网站的Program/Accepted Papers/Schedule等类似链接下给出列表，同时会Email通知作者准备提交Camera Ready版。这时有的作者就会把Camera Ready版放到自己的主页上。之后会议组委将论文集结提供给所有作者，还会将论文集发布到ACM或IEEE（这两个机构直接参与了很多会议的组织）的论文数据库中。不同的会议组委效率不同，有的在开会前就上线出版了，有的在会议结束后还要等一段时间。</li>
 </ul>
 <h1 id="CS论文数据库"><a href="#CS论文数据库" class="headerlink" title="CS论文数据库"></a>CS论文数据库</h1><h2 id="ACM-IEEE-Computer等"><a href="#ACM-IEEE-Computer等" class="headerlink" title="ACM, IEEE Computer等"></a>ACM, IEEE Computer等</h2><p>一般会议和期刊都有自己的网站，但很少能在上面获取到论文全文。又因为来源分散，直接从它们那里检索Paper很不方便。有几个大型的论文数据库，它们与期刊或者会议主办方合作，或者自己组织会议或编辑出版期刊，比如下面的表格及<a href="#lib">图书馆页面截图</a>。</p>
 <blockquote>
@@ -148,7 +196,7 @@ Idea -> 编程、实验、写Paper、投稿 <                                   
 <p>除此之外，有的SIG会选择一些高质量的文章，以Review，Newsletter 或Notes的形式重新发表。</p>
 <h2 id="USENIX"><a href="#USENIX" class="headerlink" title="USENIX"></a><a href="https://www.usenix.org/" target="_blank" rel="external">USENIX</a></h2><p>要是学校的图书馆不差钱，把所有有价值的论文数据库都买买买来，那么下面截图中的电子资源列表应该很全了吧？然而还是少了一个重要的数据库：USENIX —— 它是免费的。<br>话说<strong><a href="https://www.usenix.org/" target="_blank" rel="external">USENIX</a></strong> 实在是个良心组织。USENIX最初称为Unix User Group。它组织了OSDI 、ATC、FAST、NSDI、LISA等会议，不但学术水平很高，贴近工业界，而且免费提供全文下载，还提供一些论文作者在会议上的slices及演讲视频。slices是对文章的提炼，读论文时可以参考。拿slices和视频来学习做Presentation，练习英语听力和口语也不错。</p>
 <h2 id="arXiv"><a href="#arXiv" class="headerlink" title="arXiv"></a><a href="http://arxiv.org/" target="_blank" rel="external">arXiv</a></h2><p><a href="http://arxiv.org/" target="_blank" rel="external">arXiv</a>， 是archive(归档)的意思，是一个由康乃尔大学维护的免费的多学科论文<strong>预</strong>出版(preprint)数据库。所谓<strong>预</strong>出版，就是说论文还没有经过同行评审，文责自负，文章质量参差不齐，所以一般不会作为正式的学术成果。不过有的学科习惯上先把文章公开到arXiv上，然后再提交到会议上。</p>
-<p><a name="lib"><img src="/images/paper-lib.png" alt="图书馆电子资源"></a></p>
+<p><a name="lib"><img src="/img/lib.png" alt="图书馆电子资源"></a></p>
 <h2 id="EI和SCI"><a href="#EI和SCI" class="headerlink" title="EI和SCI"></a>EI和SCI</h2><p>分别搜索上面的数据库还是有点麻烦，于是就有了一些聚合数据库，又称为索引。想必很多同学在读研之前早就听说EI和SCI，</p>
 <ul>
 <li>EI <em>Engineering Index</em> <a href="https://www.engineeringvillage.com/" target="_blank" rel="external">https://www.engineeringvillage.com/</a></li>
@@ -170,7 +218,7 @@ Idea -> 编程、实验、写Paper、投稿 <                                   
 <li><a href="http://dblp.dagstuhl.de/statistics/distributionofpublicationtype.html" target="_blank" rel="external">论文发表的类型</a>，其中会议论文占53%，</li>
 <li>论文总数 3,587,354 ， 作者人数 1,825,286，会议数4,912，期刊数 1,491。</li>
 </ul>
-<p>另外，ACM DL也有一个<a href="http://dl.acm.org/contents_guide.cfm" target="_blank" rel="external">类似的统计</a>。<br><img src="/images/paper-pubs.png" alt="每年发表的CS论文数量"></p>
+<p>另外，ACM DL也有一个<a href="http://dl.acm.org/contents_guide.cfm" target="_blank" rel="external">类似的统计</a>。<br><img src="/img/pubs.png" alt="每年发表的CS论文数量"></p>
 <p>而且dblp整站的数据都可以下载为一个<a href="http://dblp.dagstuhl.de/xml/" target="_blank" rel="external">xml文件</a>，以供进一步挖掘。</p>
 <h2 id="DOI"><a href="#DOI" class="headerlink" title="DOI"></a>DOI</h2><p>在查找或引用论文时经常会遇到DOI(Digital Object Identifier)，<a href="https://zh.wikipedia.org/wiki/DOI" target="_blank" rel="external">wikipedia介绍DOI</a>“是一套识别数字资源的机制，涵括的对象有视频、报告或书籍等等。它既有一套为资源命名的机制，也有一套将识别号解析为具体地址的协议”。</p>
 <h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p>从Google Scholar搜索全文时可能会跳转到下面这几个网站，因为它们会保存一些别人分享的全文。</p>
@@ -180,18 +228,18 @@ Idea -> 编程、实验、写Paper、投稿 <                                   
 <li>ResearchGate [<a href="https://www.researchgate.net/" target="_blank" rel="external">https://www.researchgate.net/</a>] ，这是一个学术社交网络</li>
 </ul>
 <h1 id="CCF目录"><a href="#CCF目录" class="headerlink" title="CCF目录"></a>CCF目录</h1><p>EI和SCI只是两个论文数据库，但能够发表被EI和SCI收录的文章变成了能够毕业，能否获得奖学金，能否获得基金的指标。由于时代的限制，EI和SCI被赋予了不相称的地位和意义，而且短期看还是如此。<br>更 “<em>不幸</em>” 的是，对于CS的学生，还有一个<a href="http://history.ccf.org.cn/sites/ccf/paiming.jsp" target="_blank" rel="external">CCF目录</a>（<a href="http://history.ccf.org.cn/sites/paiming/2015ccfmulu.pdf" target="_blank" rel="external">2015版的PDF</a>）摆在面前。其实并非是不幸，而是十分幸运，因为CCF目录不像是一个紧箍咒，而更像是一个入门指南。</p>
-<p>首先说<a href="http://www.ccf.org.cn/" target="_blank" rel="external">中国计算机学会 CCF</a>是国内的类似于ACM的计算机学术组织。也许某位同学的导师就是CCF会员。相比EI和SCI收录的成百上千的会议和期刊，CCF维护的目录显然<a href="/misc/2017-02-ccf-all-in-one/">精简得多</a>。<br>考虑到对EI和SCI指标要求的实际情况，目录选取的 <strong>大多</strong> 是被EI或SCI收录的，具体划分为10个子方向，并区分出A，B，C三个等级。<br>A，B类的会议和期刊的文章学术质量较高，但这个质量不是简单通过所谓影响因子等机械的数据来评价的，而是综合了多种因素。如果翻一下本科的操作系统等骨干专业课教程，会发现其中引用的有不少A类的文章，比如SOSP，OSDI等。所以建议从A类文章开始研究会。</p>
+<p>首先说<a href="http://www.ccf.org.cn/" target="_blank" rel="external">中国计算机学会 CCF</a>是国内的类似于ACM的计算机学术组织。也许某位同学的导师就是CCF会员。相比EI和SCI收录的成百上千的会议和期刊，CCF维护的目录显然<a href="https://ying-zhang.github.io/misc/2017/ccf-all-in-one/" target="_blank" rel="external">精简得多</a>。<br>考虑到对EI和SCI指标要求的实际情况，目录选取的 <strong>大多</strong> 是被EI或SCI收录的，具体划分为10个子方向，并区分出A，B，C三个等级。<br>A，B类的会议和期刊的文章学术质量较高，但这个质量不是简单通过所谓影响因子等机械的数据来评价的，而是综合了多种因素。如果翻一下本科的操作系统等骨干专业课教程，会发现其中引用的有不少A类的文章，比如SOSP，OSDI等。所以建议从A类文章开始研究会。</p>
 <blockquote>
 <p>如果只看标题和摘要，有的期刊/会议文章看起来非常值得一读，比如 <a href="http://dblp.org/db/journals/fgcs/" target="_blank" rel="external">FGCS    Future Generation Computer Systems</a>上的文章。但如果仔细读一下文章全文，经常是大失所望。好在CCF只给了FGCS C类的评级。</p>
 </blockquote>
 <p>上面提到ACM有三十多个SIGs，而CCF则只划分了10个子方向，不同的视角有不同的划分结果，这里有ACM的更详细的<a href="http://dl.acm.org/ccs/ccs.cfm" target="_blank" rel="external">分类系统CCS</a>，以及有重叠的<a href="https://www.acm.org/special-interest-groups/sigs-by-knowledge-area" target="_blank" rel="external">SIGs大类划分</a>，还有<a href="https://en.wikipedia.org/wiki/Outline_of_computer_science" target="_blank" rel="external">wikipedia上的一个划分</a>。</p>
-<h1 id="Google-Scholar（谷歌学术）"><a href="#Google-Scholar（谷歌学术）" class="headerlink" title="Google Scholar（谷歌学术）"></a>Google Scholar（谷歌学术）</h1><p><a href="https://scholar.google.com/" target="_blank" rel="external">Google Scholar</a>非常强大又简单易用。虽然它不只收录CS专业的文献，但很容易搜索到准确的结果。我习惯先在谷歌学术上搜索，如果搜不到就改用 <strong>高级搜索</strong>，实在不行再去ACM DL、IEEE Xplore。<br><img src="/images/paper-scholar_adv.png" alt="谷歌学术高级搜索"></p>
+<h1 id="Google-Scholar（谷歌学术）"><a href="#Google-Scholar（谷歌学术）" class="headerlink" title="Google Scholar（谷歌学术）"></a>Google Scholar（谷歌学术）</h1><p><a href="https://scholar.google.com/" target="_blank" rel="external">Google Scholar</a>非常强大又简单易用。虽然它不只收录CS专业的文献，但很容易搜索到准确的结果。我习惯先在谷歌学术上搜索，如果搜不到就改用 <strong>高级搜索</strong>，实在不行再去ACM DL、IEEE Xplore。<br><img src="/img/scholar_adv.png" alt="谷歌学术高级搜索"></p>
 <h2 id="创建快讯"><a href="#创建快讯" class="headerlink" title="创建快讯"></a>创建快讯</h2><p>与Google网页搜索一样，可以在Google Scholar创建某个关键词或某篇文章的快讯（发送邮件通知最新的搜索结果）；<br>此外，注意搜索到的论文的作者是否有链接，打开即是Google Scholar创建的作者个人资料页，上面一般有作者的单位、联系方式，文章列表等，在 <strong>作者的个人资料页</strong> 可以创建关于他的新文章或新引用的快讯，及时获取动态。</p>
 <blockquote>
 <p>话说体验一下<a href="http://www.bing.com/academic" target="_blank" rel="external">必应学术</a>、<a href="http://xueshu.baidu.com/" target="_blank" rel="external">百度学术</a>和<a href="http://scholar.sogou.com/" target="_blank" rel="external">搜狗学术</a>也未尝不可。</p>
 </blockquote>
 <p><a name="tldr"></a></p>
-<h1 id="tl-dr：链接列表"><a href="#tl-dr：链接列表" class="headerlink" title="tl,dr：链接列表"></a>tl,dr：链接列表</h1><h2 id="体系结构，系统，存储，分布式"><a href="#体系结构，系统，存储，分布式" class="headerlink" title="体系结构，系统，存储，分布式"></a>体系结构，系统，存储，分布式</h2><ul>
+<h1 id="tl-dr：链接列表"><a href="#tl-dr：链接列表" class="headerlink" title="tl,dr：链接列表"></a>tl,dr：链接列表</h1><h2 id="体系结构，系统，存储，分布式系统"><a href="#体系结构，系统，存储，分布式系统" class="headerlink" title="体系结构，系统，存储，分布式系统"></a>体系结构，系统，存储，分布式系统</h2><ul>
 <li>ASPLOS@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE178&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/asplos/" target="_blank" rel="external">DBLP</a> Architectural Support for Programming Languages and Operating Systems</li>
 <li>FAST@<strong>A</strong>   <a href="http://dl.acm.org/event.cfm?id=RE425&amp;tab=pubs" target="_blank" rel="external">ACM</a> , <a href="http://dblp.org/db/conf/fast/" target="_blank" rel="external">DBLP</a> Conf. on File and Storage Technologies</li>
 <li>HPCA@<strong>A</strong>   <a href="http://ieeexplore.ieee.org/servlet/opac?punumber=1000335" target="_blank" rel="external">IEEE</a> , <a href="http://dblp.org/db/conf/hpca/" target="_blank" rel="external">DBLP</a> High-Performance Computer Architecture</li>
@@ -328,7 +376,7 @@ Idea -> 编程、实验、写Paper、投稿 <                                   
 <li>Windows：<code>C:\Windows\System32\drivers\etc\hosts</code></li>
 <li>Linux，Mac，Android(均需要root权限)：<code>/etc/hosts</code></li>
 </ul>
-<hr>
+<h1 id="PS-A-Survival-Guide-to-a-PhD"><a href="#PS-A-Survival-Guide-to-a-PhD" class="headerlink" title="PS: A Survival Guide to a PhD"></a>PS: <a href="http://karpathy.github.io/2016/09/07/phd/" target="_blank" rel="external">A Survival Guide to a PhD</a></h1><hr>
 <p>飞鸟集</p>
 <blockquote>
 <p>第83<br>那想做好人的，在门外敲着门，那爱人的，看见门敞开着。</p>
